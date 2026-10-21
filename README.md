@@ -584,6 +584,7 @@ sudo systemctl daemon-reload && sudo systemctl enable --now jiaoda-mynode
 
 | 症状 | 最可能原因 | 检查 | 处理 |
 | --- | --- | --- | --- |
+| 发 `/cmd_vel` 车"不动"、但固件有 `Serial` 回显 | **机器人被架起来了**，轮子空转不产生位移 | 看轮子是否接触地面 | 放回地面再测；架起时只能验证"轮子转不转"，不能验证位姿 |
 | 发 `/cmd_vel` 车不动、无 `Serial` 回显 | 固件在 RC 模式（接收机有信号，含失控保护值） | `timeout 5 rostopic echo /jiaoda/esp_tel \| grep Serial` | 拔接收机 → **重启 ESP32**（RTS 脉冲）|
 | 拔了接收机还是 0 回显 | 固件 `pulseWidths` 保留旧值，不重启不切模式 | 同上 | 复位主控一次 |
 | `/unilidar/cloud` 无数据、`eth1` 显示 `NO-CARRIER` | 雷达网线松/断，或雷达断电 | `cat /sys/class/net/eth1/carrier`（1=通） | 插回 RJ45；`ping 192.168.1.62` |
