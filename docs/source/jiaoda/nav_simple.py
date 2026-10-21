@@ -19,9 +19,9 @@ from nav_msgs.msg import OccupancyGrid, Path
 from actionlib_msgs.msg import GoalID
 
 # ===== 速度限制 =====
-VX_MAX        = 1.0
-VX_MIN        = 0.5   # 不允许后退 (车不能后退)
-VYAW_MAX      = 0.8
+VX_MAX        = 0.20   # 安全限速：首测阶段最高 0.2 m/s
+VX_MIN        = 0.05   # 允许极慢速爬行（原 0.5 太快）
+VYAW_MAX      = 0.30   # 安全限速：最大 0.3 rad/s
 
 # ===== Pure Pursuit =====
 LOOKAHEAD_DIST = 0.8   # 路径上前方多远找跟踪点
