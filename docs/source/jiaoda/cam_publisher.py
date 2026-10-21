@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Camera -> ROS Image, with auto-reconnect.
+"""Camera -> ROS Image，带自动重连（修 2026-10-21 的 NoneType 崩溃）。
 
-替换原版：原版只打开一次设备且不重连，设备重新枚举后永久失效。
-支持稳定设备名 CAMPUB_DEV（如 /dev/v4l/by-path/...），否则退回 CAMPUB_INDEX。
-手动编码成 bgr8，去掉 cv_bridge 依赖（避免 cv_bridge 导入顺序坑）。
+设备用 CAMPUB_DEV（稳定 by-path）或 CAMPUB_INDEX；打不开每 2 s 重试，
+连续 10 帧读失败自动重开。手动填 Image，去掉 cv_bridge 依赖。
 """
 import os, time
 import rospy
@@ -38,15 +37,17 @@ def main():
     rate = rospy.Rate(FPS)
     while not rospy.is_shutdown():
         if cap is None:
-            if time.time() - last_try >= 2.0:
-                last_try = time.time()
-                cap = open_cap()
-                if cap is None:
-                    rospy.logwarn_throttle(30, "open %s fail, retrying", DEV or IDX)
-                    rate.sleep()
-                    continue
-                rospy.loginfo("camera opened: %s", DEV or IDX)
-                fails = 0
+            if time.time() - last_try < 2.0:
+                rospy.sleep(0.2)
+                continue
+            last_try = time.time()
+            cap = open_cap()
+            if cap is None:
+                rospy.logwarn_throttle(30, "open %s fail, retrying", DEV or IDX)
+                rospy.sleep(0.5)
+                continue
+            rospy.loginfo("camera opened: %s", DEV or IDX)
+            fails = 0
         ok, fr = cap.read()
         if not ok or fr is None:
             fails += 1

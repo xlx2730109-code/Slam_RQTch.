@@ -1,0 +1,10 @@
+[Unit]
+Description=Periodic wlan0 IP check
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=120s
+Unit=jiaoda-netwatch.service
+
+[Install]
+WantedBy=timers.target
