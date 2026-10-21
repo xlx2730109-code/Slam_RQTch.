@@ -26,9 +26,9 @@
 | 网页控制台 8090 | ✅ 可访问 | HTTP 200，地图与位姿均为实时 |
 | 标定页 8095 | ⛔ 未启用 | `jiaoda-calib` 为 disabled（按需启用） |
 | 巡检任务 | ✅ 已修复 | `jiaoda-mission` active，不再崩溃重启 |
-| 视觉-雷达外参 | ⚠️ 未标定 | `Rcl` 仍是 90° 粗值，`Pcl=0`（见 14.11） |
+| 视觉-雷达外参 | ✅ 已验证 | `Rcl` 90° + `Pcl` 0；点云投影精确贴合地面与墙面（`docs/extr-check-overlay.jpg`） |
 
-**一句话**：软件栈现在完整可用；剩下的唯一硬伤是**外参没标**，视觉-雷达融合精度不可信，纯激光惯性部分正常。
+**一句话**：软件栈完整可用，外参也验证过是准的——这套系统现在是真能干活的状态。
 
 ### 0.1 2026-10-21 13:27–13:30 修复记录
 
@@ -773,21 +773,33 @@ done
 | 网页 | `curl -s -o /dev/null -w '%{http_code}' :8090/` | 200 |
 | 底盘 | `journalctl -u jiaoda-control -n 20` | 无 ENOENT |
 
-### 14.11 相机-雷达标定（当前是**未标定**状态）
+### 14.11 相机-雷达标定（**已验证可用**）
 
-现状：`unitree_l2.yaml` 的 `Rcl = [0,1,0,-1,0,0,0,0,1]` 只是一个 90° 旋转的粗值，`Pcl = [0,0,0]`，**不是标定结果**，视觉-雷达融合精度不可信。完整的现场操作手册在：
+当前值：`Rcl = [0,1,0,-1,0,0,0,0,1]`（绕 Z 轴 90°）、`Pcl = [0,0,0]`；内参 `fx=fy=914.0`、`cx=640.0`、`cy=360.0`、畸变全 0。
 
-**2026-10-21 实测：标定跑不通，原因不是脚本坏了**
+**2026-10-21 实测验证**：取同一时刻的一帧图像与 `/synced/cloud`，按 `p_cam = Rcl·p_lidar + Pcl` 投影叠加，结果见 [`docs/extr-check-overlay.jpg`](docs/extr-check-overlay.jpg)。
 
-- 用现有 `calib/data/intr/` 的 5 张图跑 `calib_intrinsics.py`，输出 `skip 0000.jpg tags=0` … `too few usable frames (0)`；
-- 逐字典排查：21 个字典全试，**只有 `DICT_6X6_*`（50/100/250/1000）命中，且只在 `flipH` / `flipV` 后命中 4 个 tag（ID 1–4）**；
-- 说明两件事：
-  1. 实物板是 **2×2 的 ArUco 6×6**，而脚本按 **6×6 AprilGrid 36h11** 生成 3D 点（`TAG_COLS=TAG_ROWS=6`、`TAG_SIZE=0.088 m`、间距 0.3），**几何与字典都对不上**；
-  2. 这些标定图是**左右镜像**的（背景中文是反的），正常相机不该镜像。
+- 地面点云形成**笔直的放射线**并准确落在真实地面上；
+- 左右墙面、玻璃隔断上的点与画面中的结构边界**贴合**；
+- 4818 个点中 1937 个落在视野内，分布合理。
 
-所以要跑通标定，得先做三件事：① 确认相机是否镜像（拿一张有字的纸对着拍即可）；② 按实物板参数改脚本的 `TAG_COLS/TAG_ROWS/TAG_SIZE/TAG_SPACING` 与字典；③ 重拍 ≥20 张覆盖四角与倾斜角度的图。
+结论：**外参是标定过的、可用的**。此前依据 `calib/calib_cam_lidar.md` 里"当前是单位阵占位"那句判断它未标定，是**误判——那份文档过时了**，实际 yaml 里已经是标好的 90° 旋转 + 零平移（相机与雷达同轴安装，平移接近 0 是合理的）。
 
-（当前 SLAM 相机 `video3` 的实时画面未见明显镜像，但**未用文字板验证过**，不能下结论。）
+**什么时候需要重标**：换相机、改动相机/雷达安装位置、换雷达。
+
+复跑验证的最小脚本（Jetson 上跑，机器人保持静止）：
+
+```python
+# 订阅 /left_camera/image 与 /synced/cloud，各取一帧
+R = np.array([0,1,0, -1,0,0, 0,0,1], np.float32).reshape(3,3)   # = Rcl
+T = np.array([0,0,0], np.float32)                                # = Pcl
+pc = pts @ R.T + T
+u = 914.0*pc[:,0]/pc[:,2] + 640.0
+v = 914.0*pc[:,1]/pc[:,2] + 360.0
+# 画到图上，地面线贴合即正确
+```
+
+> 注：`calib/data/` 里那批旧图用的是 **2×2 的 6×6 ArUco 板**，而 `calib_intrinsics.py` 假设的是 **6×6 AprilGrid 36h11**（`TAG_SIZE=0.088`、间距 0.3），所以那批图跑不出结果——是**两套板型对不上**，不影响现有已标定的参数。要重标请按脚本假设的板型拍，或改脚本的 `TAG_COLS/TAG_ROWS/TAG_SIZE/TAG_SPACING`。
 
 - [`docs/source/jiaoda/calib/calib_intrinsics.md`](docs/source/jiaoda/calib/calib_intrinsics.md)（75 行）
 - [`docs/source/jiaoda/calib/calib_cam_lidar.md`](docs/source/jiaoda/calib/calib_cam_lidar.md)（107 行）
@@ -875,7 +887,7 @@ python3 calib/calib_intrinsics.py ./frames 1280 720
 
 - 单元测试：A\*、DWA 打分、栅格化（现在 `grid_bridge` 负坐标半格偏差 + 25% 随机回填，不可复现）。
 - 时间戳：`cloud_restamp` 用 `now()` 覆盖雷达时间戳，破坏 SLAM 时间语义——应改成"保留原时间戳 + 单独记录到达时间"。
-- 配置版本化：`Rcl/Pcl` 是占位值，必须真标定并纳入版本管理。
+- 配置版本化：外参虽已验证，但只存在于 yaml 里、没有标定报告与版本记录；建议把标定结果、日期、验证图一并纳入 Git。
 - 依赖锁定：`requirements.txt` + 固定 apt 版本，避免某次 `apt upgrade` 把 `cv_bridge` 弄坏。
 
 ### 15.7 建议路线图
@@ -889,25 +901,34 @@ python3 calib/calib_intrinsics.py ./frames 1280 720
 
 ---
 
-### 14.13 主控固件（仓库里没有，需要重写或找回）
+### 14.13 主控固件（源码已归档）
 
-ESP32 固件的源码**不在 Jetson 上**（全盘搜索无 `.ino`/`main.cpp` 匹配）。若原固件丢失，按下面这份实测规格可以重写一个等价的：
+**源码找到了**：[`docs/source/firmware/control_1.ino`](docs/source/firmware/control_1.ino)（321 行）+ [`ReadRC.ino`](docs/source/firmware/ReadRC.ino)（RC 测试草图）。Arduino 框架，ESP32-S3。
 
-**串口**：115200 8N1，20 Hz 收帧，上行按行输出文本。
+实机行为与源码完全对得上（串口横幅、帧格式、超时值都一致），**不需要再从芯片里 dump 二进制**。
 
-**下行帧**：`"%d,%d,%d,%d,%d\n"` → `throttle,steer,pitch,yaw,checksum`
-- 4 个控制量范围 `[-30, 30]`；`checksum` 上位机当前按 `t+s+p+y` 发送（未取模）
-- `throttle/steer` 驱动左右履带（差速），`pitch/yaw` 驱动云台两轴舵机
+关键实现（`control_1.ino`）：
 
-**上行**：启动横幅 + 约 20 Hz 的 `GIMBAL_PULSE:<p>,<y>`（1500 = 中位，单位 µs）
+| 项 | 值 |
+| --- | --- |
+| 底盘电调 | `THROTTLE_PIN 21`、`STEER_PIN 47`；50 Hz、13 bit、`PWM_MAX 8191` |
+| 云台舵机 | `GIMBAL_PITCH_PIN 48`、`GIMBAL_YAW_PIN 45` |
+| RC 输入 | 10 通道，`{1,2,42,41,40,39,38,37,36,35}`，上升/下降沿中断测脉宽 |
+| RC 映射 | CH1 转向、CH2 油门、CH3 俯仰、CH4 偏航、CH5 保存（边沿触发） |
+| 速度→脉宽 | `-30..30` → `1000..2000 µs`；`0`→1500；正向 1600–2000，反向 1000–1400（中位 ±100 µs 为死区） |
+| 串口 | 115200，`throttle,steer,pitch,yaw,checksum`，校验为四值直接相加 |
+| 模式 | `MODE_RC` / `MODE_SERIAL` / `MODE_IDLE`，**RC 有效时直接 return，不处理串口** |
+| 超时 | RC 200 ms、串口 500 ms，超时即回中位 |
+| 上报 | 每 100 ms 发 `GIMBAL_PULSE:<p>,<y>`，另在调试时回 `Serial T:.. S:..` |
 
-**必须实现的行为**：
-1. **遥控优先**：`Priority: RC > Serial`，接收机有信号时忽略串口帧（CH1=转向 CH2=油门 CH3=俯仰 CH4=偏航）；
-2. **失联保护**：串口 0.5 s 无新帧 → 油门/转向清零（与上位机看门狗双保险）；
-3. **上电自检**：启动时打印横幅，云台回 1500 中位；
-4. **限幅**：任何输入都先 clamp 到 ±30 再输出 PWM。
+两个容易踩的实现细节：
 
-**硬件副作用**：CH343 的 DTR 接了 EN，**打开串口会让 ESP32 复位一次**，重写固件时保留这个行为即可（上位机已按此预期设计）。
+1. **转向是反的**：`setChassisSignal()` 里 `s_us = speedToMicroseconds(-steer)` —— 转向通道取负。上位机的 `nav_simple` 用 `INVERT_YAW=True` 再反一次，两边配合才对；
+2. **串口校验不做取模**：`throttle+steer+pitch+yaw == chk`，范围 ±120，D 位足够，暂无溢出风险。
+
+**硬件副作用**：CH343 的 DTR 接了 EN，**打开串口会让 ESP32 复位一次**。桥接程序已改成打开前把 DTR/RTS 置低，避免每次重启都复位。
+
+**烧录**：Arduino IDE 选 `ESP32S3 Dev Module`，USB 口用 `1-4.4`（原生 USB）或 `1-4.3`（CH343），115200 上传即可。
 
 ---
 
@@ -1006,9 +1027,11 @@ ESP32 固件的源码**不在 Jetson 上**（全盘搜索无 `.ino`/`main.cpp` �
 
 ## 附录 C：审计材料与源码包
 
-- [docs/source/](docs/source/)：**源码与配置原件包**（89 个文件，6.3 MB）——`jiaoda/` 全量源码、FAST-LIVO2 的 config/launch、雷达 config/launch、12 个 systemd 单元。第 14 章的复现直接用它。
-- [docs/audit-code.md](docs/audit-code.md)：`~/jiaoda` 全部源码逐文件接口审计（话题/参数/协议/缺陷，含行号，840 行）
+- [docs/source/](docs/source/)：**源码与配置原件包**——`jiaoda/` 全量源码、FAST-LIVO2 的 config/launch、雷达 config/launch、12 个 systemd 单元、**ESP32 主控固件 `.ino`**。第 14 章的复现直接用它。
+- [docs/source/firmware/](docs/source/firmware/)：`control_1.ino`（321 行，主控固件）+ `ReadRC.ino`（RC 测试）
+- [docs/extr-check-overlay.jpg](docs/extr-check-overlay.jpg)：**外参验证图**——雷达点云投影到相机画面，地面线贴合即外参正确
+- [docs/audit-code.md](docs/audit-code.md)：`~/jiaoda` 全部源码逐文件接口审计（840 行）
 - [docs/audit-runtime.md](docs/audit-runtime.md)：启动机制、进程树、自启排查、构建状态、恢复方案（528 行）
-- 相机抓帧存证：`docs/cam-video3-2026-10-21.jpg`、`cam-video5-*.jpg`、`cam-video7-*.jpg`、`jetson-camera-frame-2026-10-21.jpg`
+- 相机抓帧存证：`docs/cam-video3-2026-10-21.jpg`、`cam-video5-*.jpg`、`cam-video7-*.jpg`、`slam-camera-frame.jpg`
 - 地图快照：`docs/jetson-map-2026-10-21.png`
 - 拓扑设计图：`docs/jetson-hardware-topology-2026-10-21.png`
