@@ -4,8 +4,8 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 from std_msgs.msg import Int16MultiArray
 from sensor_msgs.msg import Image
-from cv_bridge import CvBridge
 import cv2
+from cv_bridge import CvBridge
 
 MISSION = "/dev/shm/jiaoda_mission.json"
 CMD = "/dev/shm/jiaoda_nav_cmd"

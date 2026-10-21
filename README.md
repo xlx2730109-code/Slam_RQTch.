@@ -11,21 +11,36 @@
 
 ## 0. 当前状态速览（先看这个）
 
-| 子系统 | 状态 | 证据（2026-10-21 13:20） |
+> **2026-10-21 13:30 更新**：三个 P0 已修复并验证，系统现在是真的闭环了。修复前的故障态见 0.1。
+
+| 子系统 | 状态 | 证据（2026-10-21 13:30 实测） |
 | --- | --- | --- |
 | 宇树 L2 雷达 | ✅ 正常 | `/unilidar/cloud` 11.94 Hz，`/unilidar/imu` 252.8 Hz |
 | 点云转发 | ✅ 正常 | `/synced/cloud` 11.97 Hz |
-| FAST-LIVO2 进程 | ⚠️ 存活但**无输出** | `/aft_mapped_to_init`、`/cloud_registered`、`/Laser_map`、`/LIVO2/imu_propagate` 连续 8 s 零消息 |
-| 定位 `/slam_pose` | ❌ 无数据 | 上游 `aft_mapped_to_init` 空，pose_bridge 转发不出东西 |
-| 四路相机（硬件） | ✅ 正常 | `/dev/video0,1,3,4,5,6,7,8`，逐路抓帧成功 |
-| 相机 ROS 发布 | ❌ 停摆 | `cam_publisher` 持有 `/dev/video2 (deleted)`，`/left_camera/image` 有发布者零数据 |
-| 导航 `nav_simple` | ⚠️ 空转 | `/cmd_vel` 15.9 Hz 但**全为 0**，因无定位输入 |
-| 底盘串口 | ❌ 未接通 | `chassis_gimbal_bridge` 每 3 s 报 `/dev/ttyCH343USB0` 不存在；实际应为 `/dev/ttyACM0` |
-| 网页控制台 8090 | ✅ 可访问 | HTTP 200，但显示的是**冻结的旧地图与旧位姿** |
-| 标定页 8095 | ⛔ 未启用 | 单元 `jiaoda-calib` 为 disabled |
-| 巡检任务 | ❌ 崩溃循环 | `jiaoda-mission` 已重启 1800+ 次（`cv_bridge` 导入失败） |
+| 相机发布 | ✅ 已恢复 | `/left_camera/image` **14.98 Hz**，`/dev/video3` |
+| FAST-LIVO2 | ✅ 已恢复 | `/aft_mapped_to_init` **11.96 Hz**，VIO 特征点 1755 |
+| 定位 `/slam_pose` | ✅ 已恢复 | 与 SLAM 同频；`/api/pose` 实时变化 |
+| 2D 建图 | ✅ 已恢复 | `/map` 1 Hz 且内容持续更新（PNG 哈希变化） |
+| 导航 `nav_simple` | ✅ 就绪 | 定位输入正常；无目标时不发 `cmd_vel`（符合设计） |
+| 底盘串口 | ✅ 已接通 | `serial opened: /dev/ttyACM0 @115200`，`/jiaoda/esp_tel` 9.96 Hz 回传 `GIMBAL_PULSE:1500,1500` |
+| 网页控制台 8090 | ✅ 可访问 | HTTP 200，地图与位姿均为实时 |
+| 标定页 8095 | ⛔ 未启用 | `jiaoda-calib` 为 disabled（按需启用） |
+| 巡检任务 | ✅ 已修复 | `jiaoda-mission` active，不再崩溃重启 |
+| 视觉-雷达外参 | ⚠️ 未标定 | `Rcl` 仍是 90° 粗值，`Pcl=0`（见 14.11） |
 
-**一句话**：整套软件都在运行，**数据链条断在相机这一环**——相机进程抓着一个已被内核删除的设备节点，FAST-LIVO2 因收不到图像而完全不出结果，下游导航、建图、网页全部拿到的是停摆前的快照。
+**一句话**：软件栈现在完整可用；剩下的唯一硬伤是**外参没标**，视觉-雷达融合精度不可信，纯激光惯性部分正常。
+
+### 0.1 2026-10-21 13:27–13:30 修复记录
+
+| # | 问题 | 改动 | 验证 |
+| --- | --- | --- | --- |
+| 1 | 相机索引失效且不重连 | 重写 `cam_publisher.py`：`by-path`/索引双模式、2 s 重试、连续 10 帧失败自动重开、手动编码 `bgr8` 去掉 `cv_bridge` 依赖；`run_campub.sh` 改 `CAMPUB_INDEX=3` | 14.98 Hz，fd → `/dev/video3` ✓ |
+| 2 | `nav_mission` 崩溃循环 | 第 7/8 行对调，`import cv2` 提到 `cv_bridge` 之前 | `active`，重启计数不再增长 ✓ |
+| 3 | 底盘串口名错位 | `CTL_PORT` 默认改 `/dev/ttyACM0`；打开前把 DTR/RTS 置低，避免每次启动复位 ESP32 | `serial opened`，遥测 9.96 Hz ✓ |
+
+备份：`~/backup/jiaoda-before-fix-1021-1327.tar.gz`。修复后的源码已同步到 [`docs/source/jiaoda/`](docs/source/jiaoda/)。
+
+> 修复前的状态（保留作对照）：相机进程持有 `/dev/video2 (deleted)` → 图像 0 Hz → SLAM 全部输出静默 → 导航空转、网页显示冻结快照、任务服务崩溃循环 1800+ 次。
 
 ---
 
@@ -434,7 +449,9 @@ Priority: RC > Serial
 
 四台全是**同型号 RGB**（`0c45:6366`，2592×1944 MJPG，序列号同为 `SN0001`），**没有热成像、没有深度相机**。`/dev/v4l/by-id` 因序列号冲突只有一个条目，稳定映射只能用 `by-path`。
 
-### 8.2 `cam_publisher` 的缺陷（当前 P0 故障根因）
+### 8.2 `cam_publisher` 的缺陷（2026-10-21 已修复）
+
+**修复前**（保留说明故障原理）：
 
 ```python
 IDX = int(os.environ.get("CAMPUB_INDEX", "2"))   # 第 6 行：写死 2
@@ -443,10 +460,14 @@ cap = cv2.VideoCapture(IDX, cv2.CAP_V4L2)        # 第 13 行：只打开一次�
 
 设备重新枚举后 `video2` 消失，进程不重连、不报错、不打日志，话题有发布者但零数据。
 
-修复方向（三选一）：
-1. 把 `run_campub.sh` 的 `CAMPUB_INDEX` 改成实际用于 SLAM 的相机编号（需先确定哪路是前视）；
-2. 给 `cam_publisher` 加重连逻辑（推荐的长期方案）；
-3. 改用 `by-path` 稳定设备名，避免再被枚举顺序坑。
+**修复后**（现版本）：
+
+- 支持 `CAMPUB_DEV`（稳定 by-path）/`CAMPUB_INDEX` 双模式，当前 `CAMPUB_INDEX=3`；
+- 打不开就每 2 s 重试；连续 10 帧读失败自动 `release()` 重开；
+- 手动填 `sensor_msgs/Image`（`bgr8`），**不再 import `cv_bridge`**，绕开导入顺序坑；
+- 分辨率/帧率可用 `CAMPUB_W/H/FPS` 覆盖。
+
+复现方式见 [`docs/source/jiaoda/cam_publisher.py`](docs/source/jiaoda/cam_publisher.py)。原版备份在 `~/backup/jiaoda-before-fix-1021-1327.tar.gz`。
 
 ### 8.3 标定页 8095
 
@@ -581,21 +602,21 @@ sudo systemctl daemon-reload && sudo systemctl enable --now jiaoda-mynode
 
 > 编号沿用 [docs/audit-code.md](docs/audit-code.md) 的缺陷编号，便于交叉检索；P0/P1/P2 表示修复优先级。
 
-### 13.1 P0 · 阻断功能
+### 13.1 P0 · 已修复（2026-10-21 13:30）
 
-| 编号 | 问题 | 位置 | 修复 |
+| 编号 | 问题 | 位置 | 处理 |
 | --- | --- | --- | --- |
-| P1 | `cam_publisher` 打开不存在的 `video2`，且不重连、不报错 | `cam_publisher.py:6,13`、`run_campub.sh:4` | 改索引 + 加重连 |
-| P2 | 串口默认值 `/dev/ttyCH343USB0` 不存在 | `chassis_gimbal_bridge.py:8` | 改 `/dev/ttyACM0` 或建 udev 软链 |
+| P1 | `cam_publisher` 打开不存在的 `video2`，且不重连、不报错 | `cam_publisher.py`、`run_campub.sh` | **已重写**：重连 + 索引 3 + 去掉 cv_bridge 依赖 |
+| P2 | 串口默认值 `/dev/ttyCH343USB0` 不存在 | `chassis_gimbal_bridge.py:8` | **已改** `/dev/ttyACM0`，并关闭 DTR 复位 |
 
 ### 13.2 P1 · 严重但可绕过
 
-| 编号 | 问题 | 位置 |
-| --- | --- | --- |
-| N1 | `nav_mission` 因 `cv_bridge` 导入失败无限重启（1800+ 次） | `nav_mission.py:7` |
-| M3 | 旧 `cmd_vel_to_pwm.py` 无速度看门狗（已 disabled，勿启用） | `cmd_vel_to_pwm.py:18-28` |
-| C1 | 控制台无鉴权，`/api/ctl/drive` 无限幅 | `console_backend.py:237` |
-| CL1 | 标定页可无鉴权覆写 FAST-LIVO 配置且不备份 | `calib_web.py:200-211` |
+| 编号 | 问题 | 位置 | 状态 |
+| --- | --- | --- | --- |
+| N1 | `nav_mission` 因 `cv_bridge` 导入失败无限重启 | `nav_mission.py:7` | **已修复**（对调 import） |
+| M3 | 旧 `cmd_vel_to_pwm.py` 无速度看门狗（已 disabled，勿启用） | `cmd_vel_to_pwm.py:18-28` | 未动，保持禁用 |
+| C1 | 控制台无鉴权，`/api/ctl/drive` 无限幅 | `console_backend.py:237` | **未修，仍暴露** |
+| CL1 | 标定页可无鉴权覆写 FAST-LIVO 配置且不备份 | `calib_web.py:200-211` | 未动（服务未启用） |
 
 ### 13.3 P2 · 影响精度/可维护性
 
@@ -755,6 +776,18 @@ done
 ### 14.11 相机-雷达标定（当前是**未标定**状态）
 
 现状：`unitree_l2.yaml` 的 `Rcl = [0,1,0,-1,0,0,0,0,1]` 只是一个 90° 旋转的粗值，`Pcl = [0,0,0]`，**不是标定结果**，视觉-雷达融合精度不可信。完整的现场操作手册在：
+
+**2026-10-21 实测：标定跑不通，原因不是脚本坏了**
+
+- 用现有 `calib/data/intr/` 的 5 张图跑 `calib_intrinsics.py`，输出 `skip 0000.jpg tags=0` … `too few usable frames (0)`；
+- 逐字典排查：21 个字典全试，**只有 `DICT_6X6_*`（50/100/250/1000）命中，且只在 `flipH` / `flipV` 后命中 4 个 tag（ID 1–4）**；
+- 说明两件事：
+  1. 实物板是 **2×2 的 ArUco 6×6**，而脚本按 **6×6 AprilGrid 36h11** 生成 3D 点（`TAG_COLS=TAG_ROWS=6`、`TAG_SIZE=0.088 m`、间距 0.3），**几何与字典都对不上**；
+  2. 这些标定图是**左右镜像**的（背景中文是反的），正常相机不该镜像。
+
+所以要跑通标定，得先做三件事：① 确认相机是否镜像（拿一张有字的纸对着拍即可）；② 按实物板参数改脚本的 `TAG_COLS/TAG_ROWS/TAG_SIZE/TAG_SPACING` 与字典；③ 重拍 ≥20 张覆盖四角与倾斜角度的图。
+
+（当前 SLAM 相机 `video3` 的实时画面未见明显镜像，但**未用文字板验证过**，不能下结论。）
 
 - [`docs/source/jiaoda/calib/calib_intrinsics.md`](docs/source/jiaoda/calib/calib_intrinsics.md)（75 行）
 - [`docs/source/jiaoda/calib/calib_cam_lidar.md`](docs/source/jiaoda/calib/calib_cam_lidar.md)（107 行）

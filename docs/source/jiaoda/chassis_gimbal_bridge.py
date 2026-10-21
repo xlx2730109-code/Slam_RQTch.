@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
+"""chassis + gimbal -> serial bridge.
+
+改动（相对原版）：
+  1. 默认端口 /dev/ttyACM0（CH343 以 CDC 模式枚举，系统里没有 ttyCH343USB0）；
+  2. 打开前把 DTR/RTS 置低，避免每次启动把 ESP32 复位；
+  3. 协议、限幅、看门狗保持不变。
+"""
 import os, threading, time
 import rospy
 import serial
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String, Int16MultiArray
 
-PORT = os.environ.get("CTL_PORT", "/dev/ttyCH343USB0")
+PORT = os.environ.get("CTL_PORT", "/dev/ttyACM0")
 BAUD = 115200
 THR_K = float(os.environ.get("THR_K", "55"))
 STR_K = float(os.environ.get("STR_K", "45"))
@@ -30,6 +37,19 @@ def on_gimbal(m):
         cmd["p"] = clamp(m.data[0])
         cmd["y"] = clamp(m.data[1])
 
+def open_port():
+    p = serial.Serial()
+    p.port = PORT
+    p.baudrate = BAUD
+    p.timeout = 0.1
+    p.write_timeout = 0.3
+    p.dtr = False
+    p.rts = False
+    p.open()
+    p.dtr = False
+    p.rts = False
+    return p
+
 def reader(pub):
     buf = b""
     while not rospy.is_shutdown():
@@ -51,9 +71,11 @@ def main():
     rospy.Subscriber("/jiaoda/gimbal", Int16MultiArray, on_gimbal, queue_size=1)
     while ser is None and not rospy.is_shutdown():
         try:
-            ser = serial.Serial(PORT, BAUD, timeout=0.1, write_timeout=0.3)
+            ser = open_port()
+            rospy.loginfo("serial opened: %s @%d", PORT, BAUD)
         except Exception as e:
-            rospy.logwarn("open %s fail: %r", PORT, e); time.sleep(3)
+            rospy.logwarn("open %s fail: %r", PORT, e)
+            time.sleep(3)
     threading.Thread(target=reader, args=(pub,), daemon=True).start()
     r = rospy.Rate(20)
     while not rospy.is_shutdown():
