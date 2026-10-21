@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>巡检机器人控制台</title>
+<style>
+:root{
+  --bg:#eef2f8; --card:#ffffff; --ink:#1a2233; --sub:#6b7691;
+  --line:#e2e8f2; --blue:#2f6bff; --blue2:#4f7cff; --navy:#2b3452;
+  --navy2:#39456a; --ok:#22b07d; --warn:#f0a020; --bad:#e5484d;
+  --shadow:0 6px 20px rgba(30,50,90,.08); --r:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,"Segoe UI",Roboto,"Microsoft YaHei",sans-serif;-webkit-user-select:none;user-select:none}
+.app{max-width:1400px;margin:0 auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+/* header */
+.hdr{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:var(--r);padding:10px 18px;box-shadow:var(--shadow);flex-wrap:wrap}
+.hstat{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap}
+.hdrtiles{display:flex;gap:8px}
+.hdrtiles .tile{min-width:60px;padding:5px 10px}
+.logo{width:40px;height:40px;flex:0 0 40px}
+.logo svg{width:100%;height:100%}
+.title{font-size:22px;font-weight:800;letter-spacing:1px}
+.hdr .spacer{flex:1}
+.pill{display:flex;align-items:center;gap:7px;background:#f4f7fc;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--sub)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--bad)}
+.dot.on{background:var(--ok)}
+.stat{font-weight:700;color:var(--ink)}
+/* mode switch */
+.modebar{display:flex;background:var(--card);border-radius:var(--r);padding:6px;box-shadow:var(--shadow);gap:6px}
+.modebtn{flex:1;text-align:center;padding:12px;border-radius:10px;font-size:16px;font-weight:700;color:var(--sub);cursor:pointer;transition:.15s}
+.modebtn.active{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,107,255,.35)}
+/* layout */
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:12px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h3 .tag{margin-left:auto;font-size:12px;color:var(--sub);font-weight:500}
+.col{display:flex;flex-direction:column;gap:12px}
+/* map */
+.maptabs{display:flex;gap:8px;margin-bottom:10px}
+.maptab{padding:6px 14px;border-radius:8px;background:#f4f7fc;border:1px solid var(--line);font-size:13px;cursor:pointer}
+.maptab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.mapwrap{position:relative;background:#0f1524;border-radius:10px;overflow:hidden;aspect-ratio:16/10}
+#map{width:100%;height:100%;display:block;cursor:crosshair}
+.maptip{position:absolute;left:10px;top:10px;background:rgba(15,21,36,.7);color:#cfe0ff;font-size:12px;padding:4px 9px;border-radius:6px}
+.mapbtns{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.mini{background:rgba(255,255,255,.9);border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;cursor:pointer;color:var(--navy)}
+/* camera */
+.cam{position:relative;background:#0f1524;border-radius:10px;overflow:hidden;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+.cam img{width:100%;height:100%;object-fit:cover}
+.cam .nofeed{color:#4a5a80;font-size:13px}
+.cam .ov{position:absolute;left:8px;bottom:8px;background:rgba(15,21,36,.7);color:#cfe0ff;font-size:11px;padding:3px 8px;border-radius:6px}
+.cam .rec{position:absolute;right:8px;top:8px;display:flex;align-items:center;gap:5px;color:#ff6b6b;font-size:11px;font-weight:700}
+.cam .rec .dot{background:#ff6b6b}
+/* camera PIP overlaid on map top-left */
+.campip{position:absolute;left:10px;top:10px;width:32%;max-width:260px;aspect-ratio:16/9;background:#0f1524;border:1px solid rgba(255,255,255,.18);border-radius:8px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.45);z-index:3}
+.campip img{width:100%;height:100%;object-fit:cover}
+.campip .nofeed{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5a6a90;font-size:11px;text-align:center;padding:6px}
+.campip .cvlab{position:absolute;left:5px;bottom:4px;background:rgba(15,21,36,.72);color:#cfe0ff;font-size:10px;padding:2px 6px;border-radius:5px}
+.campip .rec{position:absolute;right:5px;top:4px;display:flex;align-items:center;gap:4px;color:#ff6b6b;font-size:10px;font-weight:700}
+.campip .rec .dot{background:#ff6b6b}
+/* buttons */
+.btn{border:none;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;cursor:pointer;color:#fff;background:var(--navy);transition:.12s}
+.btn:active{transform:translateY(1px)}
+.btn.blue{background:var(--blue)} .btn.green{background:var(--ok)} .btn.warn{background:var(--warn)} .btn.red{background:var(--bad)} .btn.ghost{background:#f4f7fc;color:var(--navy);border:1px solid var(--line)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row .btn{flex:1;min-width:80px}
+.seg{display:flex;background:var(--navy);border-radius:10px;overflow:hidden}
+.seg div{flex:1;text-align:center;padding:10px;color:#aab6d6;font-weight:700;cursor:pointer}
+.seg div.on{background:var(--blue2);color:#fff}
+/* slider row */
+.sld{display:flex;align-items:center;gap:10px;margin:8px 0}
+.sld label{width:76px;color:var(--sub);font-size:13px}
+.sld input{flex:1}
+.sld .val{width:64px;text-align:right;font-weight:700}
+input[type=range]{-webkit-appearance:none;height:6px;border-radius:3px;background:#d8e0ef;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--blue2);cursor:pointer;box-shadow:0 2px 6px rgba(47,107,255,.5)}
+/* waypoint list */
+.wplist{display:flex;flex-direction:column;gap:6px;max-height:230px;overflow:auto}
+.wp{display:flex;align-items:center;gap:10px;background:#f7f9fd;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.wp .idx{width:26px;height:26px;flex:0 0 26px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.wp.done .idx{background:var(--ok)} .wp.cur .idx{background:var(--warn);box-shadow:0 0 0 4px rgba(240,160,32,.25)}
+.wp .info{flex:1;min-width:0}
+.wp .info b{font-size:13px} .wp .info small{color:var(--sub);display:block;font-size:11px}
+.wp .x{background:none;border:none;color:var(--bad);cursor:pointer;font-size:18px;padding:2px 6px}
+/* gimbal pad */
+.pad{width:150px;height:150px;margin:0 auto;position:relative;background:radial-gradient(circle at 50% 45%,#f4f7fc,#e7edf7);border-radius:50%;border:1px solid var(--line);touch-action:none}
+.pad .knob{width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#6d97ff,#2f6bff);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 6px 14px rgba(47,107,255,.5)}
+.pad .cross{position:absolute;inset:0}
+.pad .cross:before,.pad .cross:after{content:"";position:absolute;background:#cfd8e8}
+.pad .cross:before{left:50%;top:12%;bottom:12%;width:1px;transform:translateX(-.5px)}
+.pad .cross:after{top:50%;left:12%;right:12%;height:1px;transform:translateY(-.5px)}
+.padval{display:flex;justify-content:space-around;margin-top:8px;color:var(--sub);font-size:12px}
+.padval b{color:var(--ink)}
+/* drive joysticks */
+.joys{display:flex;gap:14px}
+.joy{flex:1;aspect-ratio:1;max-width:150px;margin:0 auto;position:relative;background:radial-gradient(circle at 50% 45%,#f4f7fc,#e7edf7);border-radius:50%;border:1px solid var(--line);touch-action:none}
+.joy .knob{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#8aa9ff,#4f7cff);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 6px 14px rgba(79,124,255,.5)}
+.joy .lab{position:absolute;left:0;right:0;bottom:-20px;text-align:center;color:var(--sub);font-size:12px}
+/* stat tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tile{background:#f7f9fd;border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.tile .v{font-size:18px;font-weight:800} .tile .k{font-size:11px;color:var(--sub)}
+/* log */
+.log{height:120px;overflow:auto;background:#0f1524;border-radius:10px;padding:10px;color:#9fb4dd;font:12px/1.6 ui-monospace,Consolas,monospace}
+.log b{color:#6fe0b0} .log .w{color:#ffcf7a} .log .e{color:#ff8a8a}
+.hidden{display:none!important}
+.note{font-size:12px;color:var(--sub);background:#f4f7fc;border:1px dashed var(--line);border-radius:8px;padding:8px 10px}
+.field{display:flex;gap:8px;align-items:center;margin:6px 0}
+.field label{width:72px;color:var(--sub);font-size:13px}
+.field input,.field select{flex:1;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="logo"><svg viewBox="0 0 100 100"><path d="M50 8 L86 28 L86 72 L50 92 L14 72 L14 28 Z" fill="none" stroke="#2f6bff" stroke-width="6"/><path d="M50 30 L68 40 L68 60 L50 70 L32 60 L32 40 Z" fill="#2f6bff" opacity=".85"/></svg></div>
+    <div class="title">巡检机器人</div>
+    <div class="hstat">
+      <div class="pill"><span id="connDot" class="dot"></span><span id="connTxt">未连接</span></div>
+      <div class="pill">模式 <span id="modeTxt" class="stat">建图</span></div>
+      <div class="pill">状态 <span id="navTxt" class="stat">待命</span></div>
+      <div class="tiles hdrtiles">
+        <div class="tile"><div class="v" id="tBat">—</div><div class="k">电量</div></div>
+        <div class="tile"><div class="v" id="tTemp">—</div><div class="k">最高温</div></div>
+        <div class="tile"><div class="v" id="tHz">—</div><div class="k">里程计Hz</div></div>
+        <div class="tile"><div class="v" id="tWp">0/0</div><div class="k">途径点</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mode switch -->
+  <div class="modebar">
+    <div class="modebtn active" data-mode="map">🗺️ 建图模式</div>
+    <div class="modebtn" data-mode="patrol">📸 巡检模式</div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT: map + camera -->
+    <div class="col">
+      <div class="card">
+        <div class="maptabs">
+          <div class="maptab active" data-map="2d">二维栅格图</div>
+          <div class="maptab" data-map="3d">三维点云</div>
+        </div>
+        <div class="mapwrap">
+          <canvas id="map"></canvas>
+          <div class="campip">
+            <img id="camImg" alt="" class="hidden">
+            <div class="nofeed" id="camNo">巡检相机未连接</div>
+            <div class="rec hidden" id="recBadge"><span class="dot"></span>REC</div>
+            <div class="cvlab">巡检相机 · <span id="camOv">P0° T0°</span></div>
+          </div>
+          <div class="maptip" id="mapTip" style="top:auto;bottom:10px">建图模式 · 右键/点击地图添加途径点</div>
+          <div class="mapbtns">
+            <button class="mini" onclick="view.zoom(1.2)">＋</button>
+            <button class="mini" onclick="view.zoom(.83)">－</button>
+            <button class="mini" onclick="view.reset()">复位</button>
+            <button class="mini" onclick="app.follow=!app.follow;log('跟随: '+(app.follow?'开':'关'))">跟随</button>
+            <button class="mini" onclick="api.calib()">航向标定</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>运行日志</h3>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: controls -->
+    <div class="col">
+
+      <div class="card">
+        <h3>导航参数</h3>
+        <div class="sld"><label>行走速度</label><input type="range" id="pSpeed" min="0.2" max="1.0" step="0.05" value="0.55"><span class="val" id="vSpeed">0.55 m/s</span></div>
+        <div class="sld"><label>转向速度</label><input type="range" id="pYaw" min="10" max="60" step="5" value="40"><span class="val" id="vYaw">40 °/s</span></div>
+        <div class="sld"><label>避障余量</label><input type="range" id="pClear" min="0.1" max="0.6" step="0.05" value="0.25"><span class="val" id="vClear">0.25 m</span></div>
+        <div class="sld"><label>停车距离</label><input type="range" id="pStop" min="0.2" max="1.2" step="0.1" value="0.5"><span class="val" id="vStop">0.5 m</span></div>
+        <div class="note">⚠ 合同要求过 800mm 窄门（车宽 580mm）。避障余量+膨胀过大会判定门过不去，窄门场景需调小。</div>
+      </div>
+
+      <!-- ===== BUILDING MODE ===== -->
+      <div id="panMap" class="col">
+        <div class="card">
+          <h3>建图控制</h3>
+          <div class="row">
+            <button class="btn green" onclick="api.map('start')">▶ 开始建图</button>
+            <button class="btn ghost" onclick="api.map('freeze')">❄ 冻结</button>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn blue" onclick="api.map('save')">■ 停止并保存地图</button>
+            <button class="btn ghost" onclick="api.map('clear')">清空重建</button>
+          </div>
+          <div class="field" style="margin-top:10px"><label>地图名</label><input id="mapName" value="floor1"></div>
+        </div>
+
+        <div class="card">
+          <h3>手动驾驶 <span class="tag">建图时遥控走一遍</span></h3>
+          <div class="joys">
+            <div class="joy" id="joyL"><div class="knob"></div><div class="lab">前进 / 后退</div></div>
+            <div class="joy" id="joyR"><div class="knob"></div><div class="lab">左转 / 右转</div></div>
+          </div>
+          <div style="height:26px"></div>
+          <div class="sld"><label>速度档</label>
+            <div class="seg" style="flex:1"><div data-gear="0">慢</div><div data-gear="1" class="on">中</div><div data-gear="2">快</div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== PATROL MODE ===== -->
+      <div id="panPatrol" class="col hidden">
+        <div class="card">
+          <h3>途径点管理 <span class="tag">点地图添加 · 可设云台朝向</span></h3>
+          <div class="wplist" id="wpList"></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn ghost" onclick="wp.clear()">清空路点</button>
+            <button class="btn ghost" onclick="wp.saveRoute()">保存路线</button>
+            <button class="btn ghost" onclick="wp.loadRoute()">调用路线</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>一键巡检</h3>
+          <div class="row">
+            <button class="btn green" id="btnStart" onclick="patrol.start()">▶ 开始巡检</button>
+            <button class="btn warn" id="btnPause" onclick="patrol.pause()" disabled>⏸ 暂停</button>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn red" onclick="patrol.estop()">■ 急停 / E-STOP</button>
+          </div>
+          <div class="note" style="margin-top:10px" id="patrolStat">未开始 · 到每个点自动调云台角度并拍照保存。</div>
+        </div>
+
+        <div class="card">
+          <h3>两自由度云台</h3>
+          <div class="pad" id="gimbal"><div class="cross"></div><div class="knob"></div></div>
+          <div class="padval">水平 <b id="gP">0°</b> · 俯仰 <b id="gT">0°</b></div>
+          <div class="row" style="margin-top:10px">
+            <button class="btn ghost" onclick="gim.center()">回中</button>
+            <button class="btn ghost" onclick="gim.snap()">📷 拍照</button>
+            <button class="btn ghost" onclick="wp.bindGimbal()">绑定到当前途径点</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== API endpoints (same-origin; board backend to implement) =====
+const EP={ctl:'/api/ctl',map:'/api/map',pose:'/api/pose',route:'/api/route',gimbal:'/api/gimbal',cam:'/api/cam/stream.mjpg'};
+const DEMO = location.protocol==='file:' || location.protocol==='data:';   // standalone preview -> demo data
+
+const app={mode:'map',mapView:'2d',follow:true,pose:{x:0,y:0,th:0},wps:[],cur:-1,running:false,paused:false};
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+function log(m,c=''){const l=$('#log');const t=new Date().toTimeString().slice(0,8);l.innerHTML+=`<div><span style="color:#5b6b8f">${t}</span> <span class="${c}">${m}</span></div>`;l.scrollTop=l.scrollHeight;}
+
+// ---- backend call with demo fallback ----
+async function call(url,opt){ if(DEMO) return {ok:true,demo:true}; try{const r=await fetch(url,opt);return await r.json().catch(()=>({ok:r.ok}));}catch(e){log('后端未连接: '+url,'e');return{ok:false};} }
+
+// ===== mode switch =====
+$$('.modebtn').forEach(b=>b.onclick=()=>{
+  $$('.modebtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  app.mode=b.dataset.mode; $('#modeTxt').textContent=app.mode==='map'?'建图':'巡检';
+  $('#panMap').classList.toggle('hidden',app.mode!=='map');
+  $('#panPatrol').classList.toggle('hidden',app.mode==='map');
+  $('#mapTip').textContent=app.mode==='map'?'建图模式 · 遥控走一遍环境':'巡检模式 · 点地图添加途径点';
+  log('切换到'+(app.mode==='map'?'建图':'巡检')+'模式');
+});
+
+// ===== map tabs =====
+$$('.maptab').forEach(t=>t.onclick=()=>{$$('.maptab').forEach(x=>x.classList.remove('active'));t.classList.add('active');app.mapView=t.dataset.map;draw();});
+
+// ===== canvas map =====
+const cv=$('#map'),cx=cv.getContext('2d');
+const view={s:26,ox:0,oy:0,zoom(f){this.s*=f;draw();},reset(){this.s=26;this.ox=0;this.oy=0;draw();}};
+function fit(){const r=cv.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);draw();}
+// demo occupancy grid
+const GW=60,GH=38,grid=[];
+for(let j=0;j<GH;j++){grid[j]=[];for(let i=0;i<GW;i++){let wall=(i<2||j<2||i>GW-3||j>GH-3)?1:0; if(j===18&&i>10&&i<48&&!(i>27&&i<31))wall=1; if(i===30&&j>2&&j<14)wall=1; grid[j][i]=wall?1:(Math.random()<.9?0:-1);}}
+let mapImg=new Image(), mapMeta=null, mapReady=false, mapT=null;
+mapImg.onload=()=>{mapReady=true;draw();};
+mapImg.onerror=()=>{mapReady=false;};
+function w2s(x,y){ if(mapT){return [mapT.dx+((x-mapT.x0)/mapT.mpp)*mapT.s, mapT.dy+((mapT.y0top-y)/mapT.mpp)*mapT.s];} const r=cv.getBoundingClientRect();return[r.width/2+(x*view.s)+view.ox, r.height/2-(y*view.s)+view.oy];}
+function s2w(px,py){ if(mapT){return [mapT.x0+((px-mapT.dx)/mapT.s)*mapT.mpp, mapT.y0top-((py-mapT.dy)/mapT.s)*mapT.mpp];} const r=cv.getBoundingClientRect();return[((px-r.width/2-view.ox)/view.s), -((py-r.height/2-view.oy)/view.s)];}
+function draw(){
+  const r=cv.getBoundingClientRect();cx.clearRect(0,0,r.width,r.height);
+  if(app.mapView==='3d'){cx.fillStyle='#0f1524';cx.fillRect(0,0,r.width,r.height);cx.fillStyle='#4a5a80';cx.font='14px sans-serif';cx.textAlign='center';cx.fillText('三维点云视图（SLAM 上线后接 Fast-LIVO2 点云）',r.width/2,r.height/2);return;}
+  cx.fillStyle='#0f1524';cx.fillRect(0,0,r.width,r.height);
+  if(!DEMO && mapReady && mapMeta && mapMeta.mpp){
+    const sc=Math.min(r.width/mapImg.width, r.height/mapImg.height);
+    const dw=mapImg.width*sc, dh=mapImg.height*sc, dx=(r.width-dw)/2, dy=(r.height-dh)/2;
+    cx.drawImage(mapImg,dx,dy,dw,dh);
+    mapT={dx,dy,s:sc,mpp:mapMeta.mpp,x0:mapMeta.x0,y0top:mapMeta.y0top};
+  } else {
+    mapT=null;
+    for(let j=0;j<GH;j++)for(let i=0;i<GW;i++){const v=grid[j][i];if(v===-1)continue;const wx=(i-GW/2)*.2,wy=(GH/2-j)*.2;const[sx,sy]=w2s(wx,wy);const sz=view.s*.2+.5;cx.fillStyle=v===1?'#3a4d78':'#18365e';cx.fillRect(sx-sz/2,sy-sz/2,sz,sz);}
+  }
+  // path
+  if(app.wps.length){cx.strokeStyle='#5cff9d';cx.lineWidth=2;cx.beginPath();const[hx,hy]=w2s(app.pose.x,app.pose.y);cx.moveTo(hx,hy);app.wps.forEach(w=>{const[x,y]=w2s(w.x,w.y);cx.lineTo(x,y);});cx.stroke();}
+  // waypoints
+  app.wps.forEach((w,k)=>{const[x,y]=w2s(w.x,w.y);cx.beginPath();cx.arc(x,y,11,0,7);cx.fillStyle=k<app.cur?'#22b07d':(k===app.cur?'#f0a020':'#2f6bff');cx.fill();cx.fillStyle='#fff';cx.font='bold 12px sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText(k+1,x,y);
+    if(w.gp!=null){cx.strokeStyle='#ffd479';cx.lineWidth=2;cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+Math.cos(-w.gp*Math.PI/180)*20,y+Math.sin(-w.gp*Math.PI/180)*20);cx.stroke();}});
+  // robot
+  const[rx,ry]=w2s(app.pose.x,app.pose.y);cx.save();cx.translate(rx,ry);cx.rotate(-app.pose.th);cx.fillStyle='#ff5a5a';cx.beginPath();cx.moveTo(14,0);cx.lineTo(-9,8);cx.lineTo(-9,-8);cx.closePath();cx.fill();cx.restore();
+}
+cv.addEventListener('contextmenu',e=>e.preventDefault());
+cv.addEventListener('pointerdown',e=>{ if(app.mode!=='patrol')return; const rc=cv.getBoundingClientRect();const[wx,wy]=s2w(e.clientX-rc.left,e.clientY-rc.top);wp.add(wx,wy); });
+
+// ===== waypoints =====
+const wp={
+  add(x,y){app.wps.push({x:+x.toFixed(2),y:+y.toFixed(2),th:0,gp:null,gt:null});app.sel=app.wps.length-1;render();draw();log(`加途径点 #${app.wps.length} (${x.toFixed(2)}, ${y.toFixed(2)})`);},
+  del(k){app.wps.splice(k,1);render();draw();},
+  clear(){app.wps=[];app.cur=-1;render();draw();log('清空途径点');},
+  bindGimbal(){if(app.sel==null){log('先选一个途径点','w');return;}app.wps[app.sel].gp=gim.p;app.wps[app.sel].gt=gim.t;render();draw();log(`途径点#${app.sel+1} 绑定云台 P${gim.p}° T${gim.t}°`);},
+  saveRoute(){call(EP.route+'/save',{method:'POST',body:JSON.stringify(app.wps)});log('保存路线（'+app.wps.length+'点）');},
+  loadRoute(){log('调用路线（后端接 /api/route/load）');},
+};
+function render(){
+  const L=$('#wpList');L.innerHTML='';
+  app.wps.forEach((w,k)=>{const d=document.createElement('div');d.className='wp'+(k<app.cur?' done':'')+(k===app.cur?' cur':'');
+    d.innerHTML=`<div class="idx">${k+1}</div><div class="info"><b>(${w.x}, ${w.y})</b><small>姿态 ${(w.th*57.3|0)}° · 云台 ${w.gp!=null?('P'+w.gp+'° T'+w.gt+'°'):'未设'}</small></div><button class="x">×</button>`;
+    d.querySelector('.x').onclick=ev=>{ev.stopPropagation();wp.del(k);};
+    d.onclick=()=>{app.sel=k;render();};
+    if(k===app.sel)d.style.outline='2px solid var(--blue)';
+    L.appendChild(d);});
+  $('#tWp').textContent=(app.cur<0?0:app.cur)+'/'+app.wps.length;
+}
+
+// ===== patrol runner (demo) =====
+const patrol={
+  start(){if(!app.wps.length){log('先加途径点','w');return;}app.paused=false;app.cur=0;$('#btnStart').disabled=true;$('#btnPause').disabled=false;log('开始巡检','b');
+    if(DEMO){app.running=true;this.step();}
+    else{post('/api/nav/start',{wps:app.wps.map(w=>({x:w.x,y:w.y,gp:w.gp,gt:w.gt})),route:'route'});app.running=true;}},
+  pause(){app.paused=!app.paused;$('#btnPause').textContent=app.paused?'▶ 继续':'⏸ 暂停';log(app.paused?'暂停':'继续');if(!app.paused)this.step();},
+  estop(){app.running=false;app.paused=false;app.cur=-1;$('#btnStart').disabled=false;$('#btnPause').disabled=true;$('#btnPause').textContent='⏸ 暂停';render();draw();log('急停','e');if(!DEMO){post('/api/nav/cancel',{});post(EP.ctl+'/drive',{v:0,w:0});}},
+  step(){ if(!app.running||app.paused)return; if(app.cur>=app.wps.length){log('巡检完成 ✓','b');$('#patrolStat').textContent='巡检完成 ✓';this.estop();return;}
+    const w=app.wps[app.cur];$('#patrolStat').textContent=`前往途径点 ${app.cur+1}/${app.wps.length} …`;render();
+    const dur=DEMO?900:0; const t0=performance.now(),sx=app.pose.x,sy=app.pose.y;
+    const anim=t=>{let k=Math.min(1,(t-t0)/dur||1);app.pose.x=sx+(w.x-sx)*k;app.pose.y=sy+(w.y-sy)*k;app.pose.th=Math.atan2(w.y-sy,w.x-sx);draw();
+      if(k<1&&DEMO)requestAnimationFrame(anim);else this.arrive();};
+    if(DEMO)requestAnimationFrame(anim);else this.arrive();
+  },
+  arrive(){const w=app.wps[app.cur];log(`到达途径点 ${app.cur+1}`);
+    if(w.gp!=null){gim.set(w.gp,w.gt);log(`云台调到 P${w.gp}° T${w.gt}°`);}
+    $('#recBadge').classList.remove('hidden');log(`拍照保存 wp${app.cur+1}.jpg 📸`);
+    setTimeout(()=>{$('#recBadge').classList.add('hidden');app.cur++;render();this.step();},DEMO?700:0);
+  }
+};
+
+// ===== gimbal =====
+const gim={p:0,t:0,set(p,t){this.p=Math.max(-90,Math.min(90,p|0));this.t=Math.max(-45,Math.min(45,t|0));$('#gP').textContent=this.p+'°';$('#gT').textContent=this.t+'°';$('#camOv').textContent=`P${this.p}° T${this.t}°`;knob();call(EP.gimbal,{method:'POST',body:JSON.stringify({p:this.p,t:this.t})});},
+  center(){this.set(0,0);},snap(){$('#recBadge').classList.remove('hidden');setTimeout(()=>$('#recBadge').classList.add('hidden'),600);log('云台拍照 📸');}};
+function knob(){const pad=$('#gimbal'),k=pad.querySelector('.knob');k.style.left=(50+gim.p/90*40)+'%';k.style.top=(50-gim.t/45*40)+'%';}
+(function(){const pad=$('#gimbal');let drag=false;const move=e=>{if(!drag)return;const r=pad.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;gim.set(x*180,-y*90);};pad.addEventListener('pointerdown',e=>{drag=true;pad.setPointerCapture(e.pointerId);move(e);});pad.addEventListener('pointermove',move);pad.addEventListener('pointerup',()=>{drag=false;gim.center();});pad.addEventListener('pointerleave',()=>{if(drag){drag=false;gim.center();}});})();
+
+// ===== drive joysticks =====
+function joystick(el,cb){let drag=false;const k=el.querySelector('.knob');const upd=e=>{const r=el.getBoundingClientRect();let x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;x=Math.max(-.5,Math.min(.5,x));y=Math.max(-.5,Math.min(.5,y));k.style.left=(50+x*100)+'%';k.style.top=(50+y*100)+'%';cb(x*2,-y*2);};
+  el.addEventListener('pointerdown',e=>{drag=true;el.setPointerCapture(e.pointerId);upd(e);});el.addEventListener('pointermove',e=>drag&&upd(e));
+  const rel=()=>{drag=false;k.style.left='50%';k.style.top='50%';cb(0,0);};el.addEventListener('pointerup',rel);el.addEventListener('pointerleave',rel);}
+let drv={v:0,w:0};
+joystick($('#joyL'),(x,y)=>{drv.v=y;sendDrive();});
+joystick($('#joyR'),(x,y)=>{drv.w=x;sendDrive();});
+let driveT=0;function sendDrive(){const now=Date.now();if(now-driveT<80)return;driveT=now;call(EP.ctl+'/drive',{method:'POST',body:JSON.stringify(drv)});if(DEMO&&app.mode==='map'){app.pose.x+=drv.v*.05*Math.cos(app.pose.th);app.pose.y+=drv.v*.05*Math.sin(app.pose.th);app.pose.th+=drv.w*.04;draw();}}
+
+// ===== gear + sliders =====
+$$('.seg [data-gear]').forEach(g=>g.onclick=()=>{g.parentNode.querySelectorAll('div').forEach(x=>x.classList.remove('on'));g.classList.add('on');const sp=[0.35,0.55,0.9][g.dataset.gear];$('#pSpeed').value=sp;$('#pSpeed').dispatchEvent(new Event('input'));log('速度档: '+['慢','中','快'][g.dataset.gear]);});
+function bindS(id,vid,fmt){const s=$(id);s.addEventListener('input',()=>{$(vid).textContent=fmt(s.value);call(EP.ctl+'/param',{method:'POST',body:JSON.stringify({[id.slice(2).toLowerCase()]:+s.value})});});}
+bindS('#pSpeed','#vSpeed',v=>(+v).toFixed(2)+' m/s');bindS('#pYaw','#vYaw',v=>v+' °/s');bindS('#pClear','#vClear',v=>(+v).toFixed(2)+' m');bindS('#pStop','#vStop',v=>(+v).toFixed(1)+' m');
+
+// ===== map/calib/api actions =====
+const api={
+  map(a){const name=$('#mapName').value;call(EP.map+'/'+a,{method:'POST',body:JSON.stringify({name})});
+    log({start:'开始建图',freeze:'冻结建图',save:'停止并保存地图: '+name,clear:'清空重建'}[a],a==='save'?'b':'');},
+  calib(){log('航向标定：前进一步实测车头朝向…');call(EP.ctl+'/calib_heading',{method:'POST'});setTimeout(()=>log('航向标定完成 ✓','b'),DEMO?1200:0);},
+};
+
+// ===== poll status =====
+async function poll(){
+  if(DEMO){const b=(60+Math.sin(Date.now()/9000)*8)|0;set(b,42+(Math.random()*4|0),10);}
+  else{const p=await call(EP.pose);if(p&&p.x!=null){app.pose=p;draw();}const s=await call(EP.ctl+'/status');if(s&&s.temp!==undefined){set(s.bat,s.temp,s.hz,s.nav);connOK(true);}else connOK(false);
+    if(app.mode==='patrol'){const ns=await call('/api/nav/status');if(ns&&ns.state){app.cur=ns.cur;render();$('#patrolStat').textContent=`${ns.state} · ${ns.cur}/${ns.total} ${ns.msg||''}`;if(ns.state==='done'||ns.state==='idle'){app.running=false;$('#btnStart').disabled=false;$('#btnPause').disabled=true;}}}}
+}
+function set(bat,temp,hz,nav){$('#tBat').textContent=(bat==null?'—':bat+'%');$('#tTemp').textContent=(temp==null?'—':temp+'°C');$('#tHz').textContent=(hz==null?'—':hz+' Hz');if(nav)$('#navTxt').textContent=nav;}
+function connOK(ok){$('#connDot').classList.toggle('on',ok);$('#connTxt').textContent=ok?'已连接':(DEMO?'演示模式':'未连接');}
+
+// ===== camera stream =====
+function cam(){ if(DEMO){$('#camNo').textContent='演示模式 · 相机画面占位（上线接 MJPEG /api/cam）';return;} const im=$('#camImg');im.src=EP.cam+'?t='+Date.now();im.onload=()=>{im.classList.remove('hidden');$('#camNo').classList.add('hidden');};im.onerror=()=>{im.classList.add('hidden');$('#camNo').classList.remove('hidden');}; }
+
+// init
+window.addEventListener('resize',fit);
+fit();render();gim.center();cam();connOK(DEMO?false:true);
+$('#connTxt').textContent=DEMO?'演示模式':'连接中';
+log('控制台就绪。'+(DEMO?'当前为演示模式（未连板子后端）。':''),'b');
+async function refreshMap(){ if(DEMO)return; const m=await call('/api/mapinfo'); if(m&&m.mpp){mapMeta=m;mapImg.src=EP.map+'?t='+Date.now();} }
+setInterval(poll,1000);poll();
+setInterval(refreshMap,1500);refreshMap();
+</script>
+</body>
+</html>

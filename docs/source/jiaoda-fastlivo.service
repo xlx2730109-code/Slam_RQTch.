@@ -1,0 +1,11 @@
+[Unit]
+Description=Fast-LIVO2 SLAM
+After=jiaoda-restamp.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_fastlivo.sh
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target

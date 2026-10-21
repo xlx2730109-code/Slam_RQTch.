@@ -1,0 +1,11 @@
+[Unit]
+Description=Unitree L2 lidar driver
+After=network.target
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_lidar.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target

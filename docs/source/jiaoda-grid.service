@@ -1,0 +1,11 @@
+[Unit]
+Description=2D occupancy grid bridge
+After=jiaoda-fastlivo.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_grid.sh
+Restart=always
+RestartSec=4
+[Install]
+WantedBy=multi-user.target
