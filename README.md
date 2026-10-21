@@ -427,6 +427,8 @@ Priority: RC > Serial
 
 - **`Priority: RC > Serial`**：遥控器有信号时，串口指令被完全忽略。联调前必须先关遥控器。
 - **怎么判断它现在收不收串口**：固件每收一帧合法指令都会回一行 `Serial T:x S:y P:x Y:y`。若发 `/cmd_vel` 后 `/jiaoda/esp_tel` 里**没有**这行，就是还在 RC 模式（2026-10-21 实测就是这种情况：发了 1.5 s 的 0.08 m/s，车没动，回显 0 行）。
+- **⚠️ 固件 bug：拔掉接收机后必须重启主控才会切模式。** `pulseWidths[]` 只在下沿中断里更新，信号消失后**保留最后一次的值**；`isRCActive()` 只看数值范围，所以会一直返回 true，永远不进 `RC Signal Lost` 分支。实测：拔接收机后不重启，仍然 0 回显；**给 ESP32 复位一次**后，开机日志里不再出现 `Mode: RC Control`，串口立即生效（实测 `Serial T:16` 正常回显）。
+- **复位主控的正确姿势**：给 `RTS` 一个脉冲（`p.rts=True; sleep(0.15); p.rts=False`）是正常复位；单独拉 `DTR` 会把它打进 **DOWNLOAD 模式**（日志 `boot:0x23 (DOWNLOAD(USB/UART0))` + `waiting for download`），这时固件不跑，需要再用 RTS 复位一次。
 - 自报 `GIMBAL_PULSE:1500,1500`（约 20 Hz），云台中位。
 - **打开串口会因 DTR→EN 让 ESP32 复位一次**，属正常现象，不是故障。
 
@@ -582,6 +584,9 @@ sudo systemctl daemon-reload && sudo systemctl enable --now jiaoda-mynode
 
 | 症状 | 最可能原因 | 检查 | 处理 |
 | --- | --- | --- | --- |
+| 发 `/cmd_vel` 车不动、无 `Serial` 回显 | 固件在 RC 模式（接收机有信号，含失控保护值） | `timeout 5 rostopic echo /jiaoda/esp_tel \| grep Serial` | 拔接收机 → **重启 ESP32**（RTS 脉冲）|
+| 拔了接收机还是 0 回显 | 固件 `pulseWidths` 保留旧值，不重启不切模式 | 同上 | 复位主控一次 |
+| `/unilidar/cloud` 无数据、`eth1` 显示 `NO-CARRIER` | 雷达网线松/断，或雷达断电 | `cat /sys/class/net/eth1/carrier`（1=通） | 插回 RJ45；`ping 192.168.1.62` |
 | 网页地图有图、位姿不动 | SLAM 停摆（相机无图） | `rostopic hz /aft_mapped_to_init` | 修相机索引后重启 fastlivo |
 | `/left_camera/image` 无数据 | 相机索引失效 | `ls -l /proc/1094/fd \| grep video` | 改 `CAMPUB_INDEX` 或加重连 |
 | 发 `/cmd_vel` 车不动 | 串口名错 / RC 优先 / 急停 | 看 bridge 日志、遥控器是否开着 | 改 `CTL_PORT=/dev/ttyACM0`；关遥控器 |
