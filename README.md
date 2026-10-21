@@ -690,45 +690,53 @@ sudo apt install -y build-essential cmake git libeigen3-dev libpcl-dev \
 
 ### 14.4 步骤 2：编译 Sophus
 
+源码**已随仓库提供**（`docs/source/Sophus_src`，140 KB）：
+
 ```bash
-git clone https://github.com/strasdat/Sophus.git ~/Sophus_src
-cd ~/Sophus_src && git checkout a621ff2e
-mkdir -p build && cd build
+cp -r <本仓库>/docs/source/Sophus_src ~/Sophus_src
+cd ~/Sophus_src && mkdir -p build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release && make -j4 && sudo make install
 ```
 
 > 本机其实**没有 install**：`CMakeCache.txt` 里 `Sophus_DIR=/home/sjytt/Sophus_src/build`，是靠这个路径找到的。复现时建议直接 `make install` 到 `/usr/local`，省得每次传路径。
 
-### 14.5 步骤 3：FAST-LIVO2
+### 14.5 步骤 3：FAST-LIVO2 + rpg_vikit
+
+**源码已随仓库提供，不需要联网 clone**（`docs/source/` 里是完整可编译代码，含本机改过的三个文件）：
 
 ```bash
-mkdir -p ~/livo2_ws/src && cd ~/livo2_ws/src
-git clone https://github.com/hku-mars/FAST-LIVO2.git
-cd FAST-LIVO2 && git checkout 0d2c034
-cd ~/livo2_ws/src
-git clone https://github.com/xuankuzcr/rpg_vikit.git
-cd rpg_vikit && git checkout 6c886c8
-
-# 覆盖本机改过的 3 个文件（原件在 docs/source/livo2_ws/src/FAST-LIVO2/）
-#   config/unitree_l2.yaml
-#   config/camera_unitree.yaml
-#   launch/mapping_unitree_l2.launch
-
+mkdir -p ~/livo2_ws/src
+cp -r <本仓库>/docs/source/FAST-LIVO2  ~/livo2_ws/src/
+cp -r <本仓库>/docs/source/rpg_vikit   ~/livo2_ws/src/
 cd ~/livo2_ws && catkin_make -j4 -DCMAKE_BUILD_TYPE=Release
 source ~/livo2_ws/devel/setup.bash
 # 若找不到 Sophus：catkin_make -DSophus_DIR=$HOME/Sophus_src/build
 ```
 
+想用上游仓库也行（两者等价）：`hku-mars/FAST-LIVO2@0d2c034` + `xuankuzcr/rpg_vikit@6c886c8`，再覆盖 `config/unitree_l2.yaml`、`config/camera_unitree.yaml`、`launch/mapping_unitree_l2.launch` 三个文件。
+
 ### 14.6 步骤 4：雷达驱动
 
+**包和 SDK 都随仓库提供**。注意：ROS 包的 `CMakeLists.txt` 用**相对路径** `../../../unitree_lidar_sdk`
+引用 SDK 的头文件和 `lib/aarch64/libunilidar_sdk2.a`，**少放 SDK 就编不过**：
+
 ```bash
-cd ~ && git clone https://github.com/unitreerobotics/unilidar_sdk2.git
-cd ~/unilidar_sdk2 && git checkout 0e3c51f
-cd unitree_lidar_ros && catkin_make
+mkdir -p ~/unilidar_sdk2/unitree_lidar_ros/src
+cp -r <本仓库>/docs/source/unitree_lidar_sdk  ~/unilidar_sdk2/
+cp -r <本仓库>/docs/source/unitree_lidar_ros  ~/unilidar_sdk2/unitree_lidar_ros/src/
+cd ~/unilidar_sdk2/unitree_lidar_ros && catkin_make
 ```
 
-雷达参数在 `unitree_lidar_ros/src/unitree_lidar_ros/config/config.yaml`（原件见 `docs/source/unilidar_sdk2/`）：
-`initialize_type=2`（UDP）、`lidar_ip=192.168.1.62`、`pc_ip=192.168.1.2`、端口 6101/6201。
+部署后的目录形状必须是：
+
+```
+~/unilidar_sdk2/
+├── unitree_lidar_sdk/          # include/ + lib/aarch64/
+└── unitree_lidar_ros/
+    └── src/unitree_lidar_ros/  # 这个包
+```
+
+雷达参数在 `config/config.yaml`：`initialize_type=2`（UDP）、`lidar_ip=192.168.1.62`、`pc_ip=192.168.1.2`、端口 6101/6201。
 
 ### 14.7 步骤 5：部署 `~/jiaoda`
 
@@ -751,13 +759,15 @@ ping -c 2 192.168.1.62
 ### 14.9 步骤 7：systemd 托管
 
 ```bash
-sudo cp docs/source/jiaoda-*.service /etc/systemd/system/
+sudo cp <本仓库>/docs/source/systemd/*.service /etc/systemd/system/
 sudo systemctl daemon-reload
 for s in lidar restamp campub fastlivo grid posebridge nav control console; do
   sudo systemctl enable --now jiaoda-$s
 done
-# mission 先别启用，等 cv_bridge 问题修好
+# mission 可选：sudo systemctl enable --now jiaoda-mission
 ```
+
+> 单元文件里的 `ExecStart` 指向 `~/jiaoda/run_*.sh`，如果换用户/换路径要一起改。
 
 ### 14.10 步骤 8：验收清单
 
@@ -1027,7 +1037,11 @@ python3 calib/calib_intrinsics.py ./frames 1280 720
 
 ## 附录 C：审计材料与源码包
 
-- [docs/source/](docs/source/)：**源码与配置原件包**——`jiaoda/` 全量源码、FAST-LIVO2 的 config/launch、雷达 config/launch、12 个 systemd 单元、**ESP32 主控固件 `.ino`**。第 14 章的复现直接用它。
+- [docs/source/](docs/source/)：**自包含复现包**（`docs/source/README.md` 有部署对照表）——
+  `jiaoda/` 全部应用代码、`FAST-LIVO2/` 完整可编译源码（含本地 3 个改动）、`rpg_vikit/`、
+  `Sophus_src/`、`unitree_lidar_ros/` + `unitree_lidar_sdk/`（含 aarch64 预编译库）、
+  `firmware/`（ESP32 固件）、`systemd/`（12 个单元）、`verify.sh`（部署自检）。
+  **clone 本仓库后不需要再访问任何其他仓库。**
 - [docs/source/firmware/](docs/source/firmware/)：`control_1.ino`（321 行，主控固件）+ `ReadRC.ino`（RC 测试）
 - [docs/extr-check-overlay.jpg](docs/extr-check-overlay.jpg)：**外参验证图**——雷达点云投影到相机画面，地面线贴合即外参正确
 - [docs/audit-code.md](docs/audit-code.md)：`~/jiaoda` 全部源码逐文件接口审计（840 行）
