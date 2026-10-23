@@ -1,0 +1,14 @@
+[Unit]
+Description=Send neutral PWM before power off
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+After=jiaoda-control.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /home/sjytt/jiaoda/safe_stop.py
+TimeoutStartSec=8
+RemainAfterExit=yes
+
+[Install]
+WantedBy=shutdown.target reboot.target halt.target
