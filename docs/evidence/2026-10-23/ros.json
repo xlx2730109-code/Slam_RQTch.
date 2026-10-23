@@ -1,0 +1,1653 @@
+{
+  "utc": "2026-10-23T13:44:54.026837Z",
+  "system_state": {
+    "code": 1,
+    "message": "current system state",
+    "value": [
+      [
+        [
+          "/rosout",
+          [
+            "/unitree_lidar_ros_node",
+            "/chassis_gimbal_bridge",
+            "/console_backend_1091_1792761038143",
+            "/cloud_restamp",
+            "/pose_bridge",
+            "/cam_publisher",
+            "/nav_simple",
+            "/nav_mission",
+            "/laserMapping",
+            "/grid_bridge"
+          ]
+        ],
+        [
+          "/rosout_agg",
+          [
+            "/rosout"
+          ]
+        ],
+        [
+          "/tf",
+          [
+            "/unitree_lidar_ros_node",
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/unilidar/cloud",
+          [
+            "/unitree_lidar_ros_node"
+          ]
+        ],
+        [
+          "/unilidar/imu",
+          [
+            "/unitree_lidar_ros_node"
+          ]
+        ],
+        [
+          "/unilidar/laserscan",
+          [
+            "/unitree_lidar_ros_node"
+          ]
+        ],
+        [
+          "/jiaoda/esp_tel",
+          [
+            "/chassis_gimbal_bridge"
+          ]
+        ],
+        [
+          "/cmd_vel",
+          [
+            "/console_backend_1091_1792761038143",
+            "/nav_simple"
+          ]
+        ],
+        [
+          "/jiaoda/gimbal",
+          [
+            "/console_backend_1091_1792761038143",
+            "/nav_mission"
+          ]
+        ],
+        [
+          "/synced/cloud",
+          [
+            "/cloud_restamp"
+          ]
+        ],
+        [
+          "/slam_pose",
+          [
+            "/pose_bridge"
+          ]
+        ],
+        [
+          "/imu",
+          [
+            "/pose_bridge"
+          ]
+        ],
+        [
+          "/left_camera/image",
+          [
+            "/cam_publisher"
+          ]
+        ],
+        [
+          "/nav_path",
+          [
+            "/nav_simple"
+          ]
+        ],
+        [
+          "/move_base_simple/goal",
+          [
+            "/nav_mission"
+          ]
+        ],
+        [
+          "/cloud_registered",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/visualization_marker",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/cloud_visual_sub_map_before",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/cloud_effected",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/Laser_map",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/aft_mapped_to_init",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/path",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/planner_normal",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/voxels",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/dyn_obj",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/dyn_obj_removed",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/dyn_obj_dbg_hist",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/mavros/vision_pose/pose",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/rgb_img/compressed",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/rgb_img/compressed/parameter_descriptions",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/rgb_img/compressed/parameter_updates",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/rgb_img",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/LIVO2/imu_propagate",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/planes",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/map",
+          [
+            "/grid_bridge"
+          ]
+        ]
+      ],
+      [
+        [
+          "/rosout",
+          [
+            "/rosout"
+          ]
+        ],
+        [
+          "/cmd_vel",
+          [
+            "/chassis_gimbal_bridge"
+          ]
+        ],
+        [
+          "/jiaoda/gimbal",
+          [
+            "/chassis_gimbal_bridge"
+          ]
+        ],
+        [
+          "/aft_mapped_to_init",
+          [
+            "/console_backend_1091_1792761038143",
+            "/pose_bridge",
+            "/grid_bridge"
+          ]
+        ],
+        [
+          "/Odometry",
+          [
+            "/console_backend_1091_1792761038143"
+          ]
+        ],
+        [
+          "/lio_sam/mapping/odometry",
+          [
+            "/console_backend_1091_1792761038143"
+          ]
+        ],
+        [
+          "/unilidar/cloud",
+          [
+            "/cloud_restamp",
+            "/nav_simple",
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/slam_pose",
+          [
+            "/nav_simple",
+            "/nav_mission"
+          ]
+        ],
+        [
+          "/imu",
+          [
+            "/nav_simple"
+          ]
+        ],
+        [
+          "/map",
+          [
+            "/nav_simple"
+          ]
+        ],
+        [
+          "/move_base_simple/goal",
+          [
+            "/nav_simple"
+          ]
+        ],
+        [
+          "/move_base/cancel",
+          [
+            "/nav_simple"
+          ]
+        ],
+        [
+          "/left_camera/image",
+          [
+            "/nav_mission",
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/unilidar/imu",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/cloud_registered",
+          [
+            "/grid_bridge"
+          ]
+        ]
+      ],
+      [
+        [
+          "/rosout/get_loggers",
+          [
+            "/rosout"
+          ]
+        ],
+        [
+          "/unitree_lidar_ros_node/get_loggers",
+          [
+            "/unitree_lidar_ros_node"
+          ]
+        ],
+        [
+          "/rosout/set_logger_level",
+          [
+            "/rosout"
+          ]
+        ],
+        [
+          "/unitree_lidar_ros_node/set_logger_level",
+          [
+            "/unitree_lidar_ros_node"
+          ]
+        ],
+        [
+          "/chassis_gimbal_bridge/get_loggers",
+          [
+            "/chassis_gimbal_bridge"
+          ]
+        ],
+        [
+          "/chassis_gimbal_bridge/set_logger_level",
+          [
+            "/chassis_gimbal_bridge"
+          ]
+        ],
+        [
+          "/console_backend_1091_1792761038143/get_loggers",
+          [
+            "/console_backend_1091_1792761038143"
+          ]
+        ],
+        [
+          "/console_backend_1091_1792761038143/set_logger_level",
+          [
+            "/console_backend_1091_1792761038143"
+          ]
+        ],
+        [
+          "/cloud_restamp/get_loggers",
+          [
+            "/cloud_restamp"
+          ]
+        ],
+        [
+          "/pose_bridge/get_loggers",
+          [
+            "/pose_bridge"
+          ]
+        ],
+        [
+          "/cloud_restamp/set_logger_level",
+          [
+            "/cloud_restamp"
+          ]
+        ],
+        [
+          "/pose_bridge/set_logger_level",
+          [
+            "/pose_bridge"
+          ]
+        ],
+        [
+          "/cam_publisher/get_loggers",
+          [
+            "/cam_publisher"
+          ]
+        ],
+        [
+          "/nav_simple/get_loggers",
+          [
+            "/nav_simple"
+          ]
+        ],
+        [
+          "/cam_publisher/set_logger_level",
+          [
+            "/cam_publisher"
+          ]
+        ],
+        [
+          "/nav_simple/set_logger_level",
+          [
+            "/nav_simple"
+          ]
+        ],
+        [
+          "/nav_mission/get_loggers",
+          [
+            "/nav_mission"
+          ]
+        ],
+        [
+          "/nav_mission/set_logger_level",
+          [
+            "/nav_mission"
+          ]
+        ],
+        [
+          "/laserMapping/get_loggers",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/laserMapping/set_logger_level",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/rgb_img/compressed/set_parameters",
+          [
+            "/laserMapping"
+          ]
+        ],
+        [
+          "/grid_bridge/get_loggers",
+          [
+            "/grid_bridge"
+          ]
+        ],
+        [
+          "/grid_bridge/set_logger_level",
+          [
+            "/grid_bridge"
+          ]
+        ]
+      ]
+    ]
+  },
+  "topic_types": {
+    "code": 1,
+    "message": "current system state",
+    "value": [
+      [
+        "/rosout",
+        "rosgraph_msgs/Log"
+      ],
+      [
+        "/rosout_agg",
+        "rosgraph_msgs/Log"
+      ],
+      [
+        "/tf",
+        "tf2_msgs/TFMessage"
+      ],
+      [
+        "/unilidar/cloud",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/unilidar/imu",
+        "sensor_msgs/Imu"
+      ],
+      [
+        "/unilidar/laserscan",
+        "sensor_msgs/LaserScan"
+      ],
+      [
+        "/jiaoda/esp_tel",
+        "std_msgs/String"
+      ],
+      [
+        "/cmd_vel",
+        "geometry_msgs/Twist"
+      ],
+      [
+        "/jiaoda/gimbal",
+        "std_msgs/Int16MultiArray"
+      ],
+      [
+        "/aft_mapped_to_init",
+        "nav_msgs/Odometry"
+      ],
+      [
+        "/Odometry",
+        "nav_msgs/Odometry"
+      ],
+      [
+        "/lio_sam/mapping/odometry",
+        "nav_msgs/Odometry"
+      ],
+      [
+        "/synced/cloud",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/slam_pose",
+        "geometry_msgs/PoseStamped"
+      ],
+      [
+        "/imu",
+        "sensor_msgs/Imu"
+      ],
+      [
+        "/left_camera/image",
+        "sensor_msgs/Image"
+      ],
+      [
+        "/nav_path",
+        "nav_msgs/Path"
+      ],
+      [
+        "/map",
+        "nav_msgs/OccupancyGrid"
+      ],
+      [
+        "/move_base_simple/goal",
+        "geometry_msgs/PoseStamped"
+      ],
+      [
+        "/move_base/cancel",
+        "actionlib_msgs/GoalID"
+      ],
+      [
+        "/cloud_registered",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/visualization_marker",
+        "visualization_msgs/MarkerArray"
+      ],
+      [
+        "/cloud_visual_sub_map_before",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/cloud_effected",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/Laser_map",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/path",
+        "nav_msgs/Path"
+      ],
+      [
+        "/planner_normal",
+        "visualization_msgs/Marker"
+      ],
+      [
+        "/voxels",
+        "visualization_msgs/MarkerArray"
+      ],
+      [
+        "/dyn_obj",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/dyn_obj_removed",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/dyn_obj_dbg_hist",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/mavros/vision_pose/pose",
+        "geometry_msgs/PoseStamped"
+      ],
+      [
+        "/rgb_img/compressed",
+        "sensor_msgs/CompressedImage"
+      ],
+      [
+        "/rgb_img/compressed/parameter_descriptions",
+        "dynamic_reconfigure/ConfigDescription"
+      ],
+      [
+        "/rgb_img/compressed/parameter_updates",
+        "dynamic_reconfigure/Config"
+      ],
+      [
+        "/rgb_img",
+        "sensor_msgs/Image"
+      ],
+      [
+        "/LIVO2/imu_propagate",
+        "nav_msgs/Odometry"
+      ],
+      [
+        "/planes",
+        "visualization_msgs/MarkerArray"
+      ]
+    ]
+  },
+  "published_topics": {
+    "code": 1,
+    "message": "current topics",
+    "value": [
+      [
+        "/rosout",
+        "rosgraph_msgs/Log"
+      ],
+      [
+        "/rosout_agg",
+        "rosgraph_msgs/Log"
+      ],
+      [
+        "/tf",
+        "tf2_msgs/TFMessage"
+      ],
+      [
+        "/unilidar/cloud",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/unilidar/imu",
+        "sensor_msgs/Imu"
+      ],
+      [
+        "/unilidar/laserscan",
+        "sensor_msgs/LaserScan"
+      ],
+      [
+        "/jiaoda/esp_tel",
+        "std_msgs/String"
+      ],
+      [
+        "/cmd_vel",
+        "geometry_msgs/Twist"
+      ],
+      [
+        "/jiaoda/gimbal",
+        "std_msgs/Int16MultiArray"
+      ],
+      [
+        "/synced/cloud",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/slam_pose",
+        "geometry_msgs/PoseStamped"
+      ],
+      [
+        "/imu",
+        "sensor_msgs/Imu"
+      ],
+      [
+        "/left_camera/image",
+        "sensor_msgs/Image"
+      ],
+      [
+        "/nav_path",
+        "nav_msgs/Path"
+      ],
+      [
+        "/move_base_simple/goal",
+        "geometry_msgs/PoseStamped"
+      ],
+      [
+        "/cloud_registered",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/visualization_marker",
+        "visualization_msgs/MarkerArray"
+      ],
+      [
+        "/cloud_visual_sub_map_before",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/cloud_effected",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/Laser_map",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/aft_mapped_to_init",
+        "nav_msgs/Odometry"
+      ],
+      [
+        "/path",
+        "nav_msgs/Path"
+      ],
+      [
+        "/planner_normal",
+        "visualization_msgs/Marker"
+      ],
+      [
+        "/voxels",
+        "visualization_msgs/MarkerArray"
+      ],
+      [
+        "/dyn_obj",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/dyn_obj_removed",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/dyn_obj_dbg_hist",
+        "sensor_msgs/PointCloud2"
+      ],
+      [
+        "/mavros/vision_pose/pose",
+        "geometry_msgs/PoseStamped"
+      ],
+      [
+        "/rgb_img/compressed",
+        "sensor_msgs/CompressedImage"
+      ],
+      [
+        "/rgb_img/compressed/parameter_descriptions",
+        "dynamic_reconfigure/ConfigDescription"
+      ],
+      [
+        "/rgb_img/compressed/parameter_updates",
+        "dynamic_reconfigure/Config"
+      ],
+      [
+        "/rgb_img",
+        "sensor_msgs/Image"
+      ],
+      [
+        "/LIVO2/imu_propagate",
+        "nav_msgs/Odometry"
+      ],
+      [
+        "/planes",
+        "visualization_msgs/MarkerArray"
+      ],
+      [
+        "/map",
+        "nav_msgs/OccupancyGrid"
+      ]
+    ]
+  },
+  "params": {
+    "/rosversion": {
+      "code": 1,
+      "message": "Parameter [/rosversion]",
+      "value": "1.17.4\n"
+    },
+    "/rosdistro": {
+      "code": 1,
+      "message": "Parameter [/rosdistro]",
+      "value": "noetic\n"
+    },
+    "/unitree_lidar_ros_node/initialize_type": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/initialize_type]",
+      "value": 2
+    },
+    "/unitree_lidar_ros_node/work_mode": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/work_mode]",
+      "value": 0
+    },
+    "/unitree_lidar_ros_node/use_system_timestamp": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/use_system_timestamp]",
+      "value": true
+    },
+    "/unitree_lidar_ros_node/range_min": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/range_min]",
+      "value": 0
+    },
+    "/unitree_lidar_ros_node/range_max": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/range_max]",
+      "value": 100
+    },
+    "/unitree_lidar_ros_node/cloud_scan_num": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/cloud_scan_num]",
+      "value": 18
+    },
+    "/unitree_lidar_ros_node/serial_port": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/serial_port]",
+      "value": "/dev/ttyACM0"
+    },
+    "/unitree_lidar_ros_node/baudrate": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/baudrate]",
+      "value": 4000000
+    },
+    "/unitree_lidar_ros_node/lidar_port": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/lidar_port]",
+      "value": 6101
+    },
+    "/unitree_lidar_ros_node/lidar_ip": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/lidar_ip]",
+      "value": "192.168.1.62"
+    },
+    "/unitree_lidar_ros_node/pc_port": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/pc_port]",
+      "value": 6201
+    },
+    "/unitree_lidar_ros_node/pc_ip": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/pc_ip]",
+      "value": "192.168.1.2"
+    },
+    "/unitree_lidar_ros_node/cloud_frame": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/cloud_frame]",
+      "value": "unilidar_lidar"
+    },
+    "/unitree_lidar_ros_node/cloud_topic": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/cloud_topic]",
+      "value": "unilidar/cloud"
+    },
+    "/unitree_lidar_ros_node/imu_frame": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/imu_frame]",
+      "value": "unilidar_imu"
+    },
+    "/unitree_lidar_ros_node/imu_topic": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/imu_topic]",
+      "value": "unilidar/imu"
+    },
+    "/unitree_lidar_ros_node/laserscan_frame": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/laserscan_frame]",
+      "value": "unilidar_laserscan"
+    },
+    "/unitree_lidar_ros_node/laserscan_topic": {
+      "code": 1,
+      "message": "Parameter [/unitree_lidar_ros_node/laserscan_topic]",
+      "value": "unilidar/laserscan"
+    },
+    "/common/img_topic": {
+      "code": 1,
+      "message": "Parameter [/common/img_topic]",
+      "value": "/left_camera/image"
+    },
+    "/common/lid_topic": {
+      "code": 1,
+      "message": "Parameter [/common/lid_topic]",
+      "value": "/unilidar/cloud"
+    },
+    "/common/imu_topic": {
+      "code": 1,
+      "message": "Parameter [/common/imu_topic]",
+      "value": "/unilidar/imu"
+    },
+    "/common/img_en": {
+      "code": 1,
+      "message": "Parameter [/common/img_en]",
+      "value": 0
+    },
+    "/common/lidar_en": {
+      "code": 1,
+      "message": "Parameter [/common/lidar_en]",
+      "value": 1
+    },
+    "/common/ros_driver_bug_fix": {
+      "code": 1,
+      "message": "Parameter [/common/ros_driver_bug_fix]",
+      "value": false
+    },
+    "/extrin_calib/extrinsic_T": {
+      "code": 1,
+      "message": "Parameter [/extrin_calib/extrinsic_T]",
+      "value": [
+        -0.007698,
+        -0.014655,
+        0.00667
+      ]
+    },
+    "/extrin_calib/extrinsic_R": {
+      "code": 1,
+      "message": "Parameter [/extrin_calib/extrinsic_R]",
+      "value": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    "/extrin_calib/Rcl": {
+      "code": 1,
+      "message": "Parameter [/extrin_calib/Rcl]",
+      "value": [
+        0.0,
+        1.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "/extrin_calib/Pcl": {
+      "code": 1,
+      "message": "Parameter [/extrin_calib/Pcl]",
+      "value": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "/time_offset/imu_time_offset": {
+      "code": 1,
+      "message": "Parameter [/time_offset/imu_time_offset]",
+      "value": 0.0
+    },
+    "/time_offset/img_time_offset": {
+      "code": 1,
+      "message": "Parameter [/time_offset/img_time_offset]",
+      "value": 0.0
+    },
+    "/time_offset/exposure_time_init": {
+      "code": 1,
+      "message": "Parameter [/time_offset/exposure_time_init]",
+      "value": 0.0
+    },
+    "/preprocess/point_filter_num": {
+      "code": 1,
+      "message": "Parameter [/preprocess/point_filter_num]",
+      "value": 3
+    },
+    "/preprocess/filter_size_surf": {
+      "code": 1,
+      "message": "Parameter [/preprocess/filter_size_surf]",
+      "value": 0.1
+    },
+    "/preprocess/lidar_type": {
+      "code": 1,
+      "message": "Parameter [/preprocess/lidar_type]",
+      "value": 2
+    },
+    "/preprocess/scan_line": {
+      "code": 1,
+      "message": "Parameter [/preprocess/scan_line]",
+      "value": 18
+    },
+    "/preprocess/blind": {
+      "code": 1,
+      "message": "Parameter [/preprocess/blind]",
+      "value": 0.5
+    },
+    "/vio/max_iterations": {
+      "code": 1,
+      "message": "Parameter [/vio/max_iterations]",
+      "value": 5
+    },
+    "/vio/outlier_threshold": {
+      "code": 1,
+      "message": "Parameter [/vio/outlier_threshold]",
+      "value": 1000
+    },
+    "/vio/img_point_cov": {
+      "code": 1,
+      "message": "Parameter [/vio/img_point_cov]",
+      "value": 100
+    },
+    "/vio/patch_size": {
+      "code": 1,
+      "message": "Parameter [/vio/patch_size]",
+      "value": 8
+    },
+    "/vio/patch_pyrimid_level": {
+      "code": 1,
+      "message": "Parameter [/vio/patch_pyrimid_level]",
+      "value": 4
+    },
+    "/vio/normal_en": {
+      "code": 1,
+      "message": "Parameter [/vio/normal_en]",
+      "value": true
+    },
+    "/vio/raycast_en": {
+      "code": 1,
+      "message": "Parameter [/vio/raycast_en]",
+      "value": false
+    },
+    "/vio/inverse_composition_en": {
+      "code": 1,
+      "message": "Parameter [/vio/inverse_composition_en]",
+      "value": false
+    },
+    "/vio/exposure_estimate_en": {
+      "code": 1,
+      "message": "Parameter [/vio/exposure_estimate_en]",
+      "value": true
+    },
+    "/vio/inv_expo_cov": {
+      "code": 1,
+      "message": "Parameter [/vio/inv_expo_cov]",
+      "value": 0.1
+    },
+    "/imu/imu_en": {
+      "code": 1,
+      "message": "Parameter [/imu/imu_en]",
+      "value": true
+    },
+    "/imu/imu_int_frame": {
+      "code": 1,
+      "message": "Parameter [/imu/imu_int_frame]",
+      "value": 30
+    },
+    "/imu/acc_cov": {
+      "code": 1,
+      "message": "Parameter [/imu/acc_cov]",
+      "value": 0.5
+    },
+    "/imu/gyr_cov": {
+      "code": 1,
+      "message": "Parameter [/imu/gyr_cov]",
+      "value": 0.3
+    },
+    "/imu/b_acc_cov": {
+      "code": 1,
+      "message": "Parameter [/imu/b_acc_cov]",
+      "value": 0.0001
+    },
+    "/imu/b_gyr_cov": {
+      "code": 1,
+      "message": "Parameter [/imu/b_gyr_cov]",
+      "value": 0.0001
+    },
+    "/lio/max_iterations": {
+      "code": 1,
+      "message": "Parameter [/lio/max_iterations]",
+      "value": 5
+    },
+    "/lio/dept_err": {
+      "code": 1,
+      "message": "Parameter [/lio/dept_err]",
+      "value": 0.02
+    },
+    "/lio/beam_err": {
+      "code": 1,
+      "message": "Parameter [/lio/beam_err]",
+      "value": 0.05
+    },
+    "/lio/min_eigen_value": {
+      "code": 1,
+      "message": "Parameter [/lio/min_eigen_value]",
+      "value": 0.0025
+    },
+    "/lio/voxel_size": {
+      "code": 1,
+      "message": "Parameter [/lio/voxel_size]",
+      "value": 0.5
+    },
+    "/lio/max_layer": {
+      "code": 1,
+      "message": "Parameter [/lio/max_layer]",
+      "value": 2
+    },
+    "/lio/max_points_num": {
+      "code": 1,
+      "message": "Parameter [/lio/max_points_num]",
+      "value": 50
+    },
+    "/lio/layer_init_num": {
+      "code": 1,
+      "message": "Parameter [/lio/layer_init_num]",
+      "value": [
+        5,
+        5,
+        5,
+        5,
+        5
+      ]
+    },
+    "/local_map/map_sliding_en": {
+      "code": 1,
+      "message": "Parameter [/local_map/map_sliding_en]",
+      "value": false
+    },
+    "/local_map/half_map_size": {
+      "code": 1,
+      "message": "Parameter [/local_map/half_map_size]",
+      "value": 100
+    },
+    "/local_map/sliding_thresh": {
+      "code": 1,
+      "message": "Parameter [/local_map/sliding_thresh]",
+      "value": 8
+    },
+    "/uav/imu_rate_odom": {
+      "code": 1,
+      "message": "Parameter [/uav/imu_rate_odom]",
+      "value": false
+    },
+    "/uav/gravity_align_en": {
+      "code": 1,
+      "message": "Parameter [/uav/gravity_align_en]",
+      "value": true
+    },
+    "/publish/dense_map_en": {
+      "code": 1,
+      "message": "Parameter [/publish/dense_map_en]",
+      "value": true
+    },
+    "/publish/pub_effect_point_en": {
+      "code": 1,
+      "message": "Parameter [/publish/pub_effect_point_en]",
+      "value": false
+    },
+    "/publish/pub_plane_en": {
+      "code": 1,
+      "message": "Parameter [/publish/pub_plane_en]",
+      "value": false
+    },
+    "/publish/pub_scan_num": {
+      "code": 1,
+      "message": "Parameter [/publish/pub_scan_num]",
+      "value": 1
+    },
+    "/publish/blind_rgb_points": {
+      "code": 1,
+      "message": "Parameter [/publish/blind_rgb_points]",
+      "value": 0.0
+    },
+    "/evo/seq_name": {
+      "code": 1,
+      "message": "Parameter [/evo/seq_name]",
+      "value": "jiaoda_inspect_01"
+    },
+    "/evo/pose_output_en": {
+      "code": 1,
+      "message": "Parameter [/evo/pose_output_en]",
+      "value": false
+    },
+    "/pcd_save/pcd_save_en": {
+      "code": 1,
+      "message": "Parameter [/pcd_save/pcd_save_en]",
+      "value": false
+    },
+    "/pcd_save/type": {
+      "code": 1,
+      "message": "Parameter [/pcd_save/type]",
+      "value": 0
+    },
+    "/pcd_save/colmap_output_en": {
+      "code": 1,
+      "message": "Parameter [/pcd_save/colmap_output_en]",
+      "value": false
+    },
+    "/pcd_save/filter_size_pcd": {
+      "code": 1,
+      "message": "Parameter [/pcd_save/filter_size_pcd]",
+      "value": 0.15
+    },
+    "/pcd_save/interval": {
+      "code": 1,
+      "message": "Parameter [/pcd_save/interval]",
+      "value": -1
+    },
+    "/image_save/img_save_en": {
+      "code": 1,
+      "message": "Parameter [/image_save/img_save_en]",
+      "value": false
+    },
+    "/image_save/interval": {
+      "code": 1,
+      "message": "Parameter [/image_save/interval]",
+      "value": 1
+    },
+    "/laserMapping/cam_model": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_model]",
+      "value": "Pinhole"
+    },
+    "/laserMapping/cam_width": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_width]",
+      "value": 1280
+    },
+    "/laserMapping/cam_height": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_height]",
+      "value": 720
+    },
+    "/laserMapping/scale": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/scale]",
+      "value": 0.5
+    },
+    "/laserMapping/cam_fx": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_fx]",
+      "value": 914.0
+    },
+    "/laserMapping/cam_fy": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_fy]",
+      "value": 914.0
+    },
+    "/laserMapping/cam_cx": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_cx]",
+      "value": 640.0
+    },
+    "/laserMapping/cam_cy": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_cy]",
+      "value": 360.0
+    },
+    "/laserMapping/cam_d0": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_d0]",
+      "value": 0.0
+    },
+    "/laserMapping/cam_d1": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_d1]",
+      "value": 0.0
+    },
+    "/laserMapping/cam_d2": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_d2]",
+      "value": 0.0
+    },
+    "/laserMapping/cam_d3": {
+      "code": 1,
+      "message": "Parameter [/laserMapping/cam_d3]",
+      "value": 0.0
+    },
+    "/rgb_img/compressed/format": {
+      "code": 1,
+      "message": "Parameter [/rgb_img/compressed/format]",
+      "value": "jpeg"
+    },
+    "/rgb_img/compressed/jpeg_quality": {
+      "code": 1,
+      "message": "Parameter [/rgb_img/compressed/jpeg_quality]",
+      "value": 80
+    },
+    "/rgb_img/compressed/jpeg_progressive": {
+      "code": 1,
+      "message": "Parameter [/rgb_img/compressed/jpeg_progressive]",
+      "value": false
+    },
+    "/rgb_img/compressed/jpeg_optimize": {
+      "code": 1,
+      "message": "Parameter [/rgb_img/compressed/jpeg_optimize]",
+      "value": false
+    },
+    "/rgb_img/compressed/jpeg_restart_interval": {
+      "code": 1,
+      "message": "Parameter [/rgb_img/compressed/jpeg_restart_interval]",
+      "value": 0
+    },
+    "/rgb_img/compressed/png_level": {
+      "code": 1,
+      "message": "Parameter [/rgb_img/compressed/png_level]",
+      "value": 9
+    }
+  },
+  "process_env": [
+    {
+      "pid": 1091,
+      "argv": [
+        "python3",
+        "-u",
+        "/home/sjytt/jiaoda/console_backend.py",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/home/sjytt/livo2_ws/src:/opt/ros/noetic/share",
+        "PYTHONPATH": "/home/sjytt/livo2_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/home/sjytt/livo2_ws/devel/lib:/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 1094,
+      "argv": [
+        "python3",
+        "-u",
+        "/home/sjytt/jiaoda/cam_publisher.py",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/opt/ros/noetic/share",
+        "PYTHONPATH": "/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 1096,
+      "argv": [
+        "python3",
+        "-u",
+        "/home/sjytt/jiaoda/chassis_gimbal_bridge.py",
+        ""
+      ],
+      "env": {
+        "THR_K": "6.7",
+        "ROS_PACKAGE_PATH": "/opt/ros/noetic/share",
+        "PYTHONPATH": "/opt/ros/noetic/lib/python3/dist-packages",
+        "STR_K": "6.7",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "CTL_PORT": "/dev/ttyACM0",
+        "LD_LIBRARY_PATH": "/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 1097,
+      "argv": [
+        "python3",
+        "-u",
+        "/home/sjytt/jiaoda/cloud_restamp.py",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/opt/ros/noetic/share",
+        "PYTHONPATH": "/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 1099,
+      "argv": [
+        "python3",
+        "-u",
+        "/home/sjytt/jiaoda/grid_bridge.py",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/opt/ros/noetic/share",
+        "PYTHONPATH": "/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 1100,
+      "argv": [
+        "python3",
+        "-u",
+        "/home/sjytt/jiaoda/nav_simple.py",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/opt/ros/noetic/share",
+        "PYTHONPATH": "/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 1101,
+      "argv": [
+        "python3",
+        "-u",
+        "/home/sjytt/jiaoda/nav_mission.py",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/opt/ros/noetic/share",
+        "PYTHONPATH": "/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 1102,
+      "argv": [
+        "python3",
+        "-u",
+        "/home/sjytt/jiaoda/pose_bridge.py",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/opt/ros/noetic/share",
+        "PYTHONPATH": "/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 2625,
+      "argv": [
+        "/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/unitree_lidar_ros/unitree_lidar_ros_node",
+        "__name:=unitree_lidar_ros_node",
+        "__log:=/home/sjytt/.ros/log/2206fec4-cee3-11f1-89a8-3c6d66b13904/unitree_lidar_ros_node-2.log",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/home/sjytt/unilidar_sdk2/unitree_lidar_ros/src:/home/sjytt/unilidar_sdk/unitree_lidar_ros/src:/opt/ros/noetic/share",
+        "PYTHONPATH": "/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/lib:/opt/ros/noetic/lib"
+      }
+    },
+    {
+      "pid": 3041,
+      "argv": [
+        "/home/sjytt/livo2_ws/devel/lib/fast_livo/fastlivo_mapping",
+        "__name:=laserMapping",
+        "__log:=/home/sjytt/.ros/log/2206fec4-cee3-11f1-89a8-3c6d66b13904/laserMapping-1.log",
+        ""
+      ],
+      "env": {
+        "ROS_PACKAGE_PATH": "/home/sjytt/livo2_ws/src:/opt/ros/noetic/share",
+        "PYTHONPATH": "/home/sjytt/livo2_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages",
+        "ROS_MASTER_URI": "http://localhost:11311",
+        "LD_LIBRARY_PATH": "/home/sjytt/livo2_ws/devel/lib:/opt/ros/noetic/lib"
+      }
+    }
+  ],
+  "param_names": {
+    "code": 1,
+    "message": "Parameter names",
+    "value": [
+      "/run_id",
+      "/roslaunch/uris/host_sjytt_desktop__40947",
+      "/roslaunch/uris/host_sjytt_desktop__34331",
+      "/rosversion",
+      "/rosdistro",
+      "/unitree_lidar_ros_node/initialize_type",
+      "/unitree_lidar_ros_node/work_mode",
+      "/unitree_lidar_ros_node/use_system_timestamp",
+      "/unitree_lidar_ros_node/range_min",
+      "/unitree_lidar_ros_node/range_max",
+      "/unitree_lidar_ros_node/cloud_scan_num",
+      "/unitree_lidar_ros_node/serial_port",
+      "/unitree_lidar_ros_node/baudrate",
+      "/unitree_lidar_ros_node/lidar_port",
+      "/unitree_lidar_ros_node/lidar_ip",
+      "/unitree_lidar_ros_node/pc_port",
+      "/unitree_lidar_ros_node/pc_ip",
+      "/unitree_lidar_ros_node/cloud_frame",
+      "/unitree_lidar_ros_node/cloud_topic",
+      "/unitree_lidar_ros_node/imu_frame",
+      "/unitree_lidar_ros_node/imu_topic",
+      "/unitree_lidar_ros_node/laserscan_frame",
+      "/unitree_lidar_ros_node/laserscan_topic",
+      "/common/img_topic",
+      "/common/lid_topic",
+      "/common/imu_topic",
+      "/common/img_en",
+      "/common/lidar_en",
+      "/common/ros_driver_bug_fix",
+      "/extrin_calib/extrinsic_T",
+      "/extrin_calib/extrinsic_R",
+      "/extrin_calib/Rcl",
+      "/extrin_calib/Pcl",
+      "/time_offset/imu_time_offset",
+      "/time_offset/img_time_offset",
+      "/time_offset/exposure_time_init",
+      "/preprocess/point_filter_num",
+      "/preprocess/filter_size_surf",
+      "/preprocess/lidar_type",
+      "/preprocess/scan_line",
+      "/preprocess/blind",
+      "/vio/max_iterations",
+      "/vio/outlier_threshold",
+      "/vio/img_point_cov",
+      "/vio/patch_size",
+      "/vio/patch_pyrimid_level",
+      "/vio/normal_en",
+      "/vio/raycast_en",
+      "/vio/inverse_composition_en",
+      "/vio/exposure_estimate_en",
+      "/vio/inv_expo_cov",
+      "/imu/imu_en",
+      "/imu/imu_int_frame",
+      "/imu/acc_cov",
+      "/imu/gyr_cov",
+      "/imu/b_acc_cov",
+      "/imu/b_gyr_cov",
+      "/lio/max_iterations",
+      "/lio/dept_err",
+      "/lio/beam_err",
+      "/lio/min_eigen_value",
+      "/lio/voxel_size",
+      "/lio/max_layer",
+      "/lio/max_points_num",
+      "/lio/layer_init_num",
+      "/local_map/map_sliding_en",
+      "/local_map/half_map_size",
+      "/local_map/sliding_thresh",
+      "/uav/imu_rate_odom",
+      "/uav/gravity_align_en",
+      "/publish/dense_map_en",
+      "/publish/pub_effect_point_en",
+      "/publish/pub_plane_en",
+      "/publish/pub_scan_num",
+      "/publish/blind_rgb_points",
+      "/evo/seq_name",
+      "/evo/pose_output_en",
+      "/pcd_save/pcd_save_en",
+      "/pcd_save/type",
+      "/pcd_save/colmap_output_en",
+      "/pcd_save/filter_size_pcd",
+      "/pcd_save/interval",
+      "/image_save/img_save_en",
+      "/image_save/interval",
+      "/laserMapping/cam_model",
+      "/laserMapping/cam_width",
+      "/laserMapping/cam_height",
+      "/laserMapping/scale",
+      "/laserMapping/cam_fx",
+      "/laserMapping/cam_fy",
+      "/laserMapping/cam_cx",
+      "/laserMapping/cam_cy",
+      "/laserMapping/cam_d0",
+      "/laserMapping/cam_d1",
+      "/laserMapping/cam_d2",
+      "/laserMapping/cam_d3",
+      "/rgb_img/compressed/format",
+      "/rgb_img/compressed/jpeg_quality",
+      "/rgb_img/compressed/jpeg_progressive",
+      "/rgb_img/compressed/jpeg_optimize",
+      "/rgb_img/compressed/jpeg_restart_interval",
+      "/rgb_img/compressed/png_level"
+    ]
+  },
+  "nodes": {
+    "/cam_publisher": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:41441/"
+    },
+    "/chassis_gimbal_bridge": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:33867/"
+    },
+    "/cloud_restamp": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:45369/"
+    },
+    "/console_backend_1091_1792761038143": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:35587/"
+    },
+    "/grid_bridge": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:33601/"
+    },
+    "/laserMapping": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:37219/"
+    },
+    "/nav_mission": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:45671/"
+    },
+    "/nav_simple": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:35553/"
+    },
+    "/pose_bridge": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:41419/"
+    },
+    "/rosout": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:45719/"
+    },
+    "/unitree_lidar_ros_node": {
+      "code": 1,
+      "message": "node api",
+      "value": "http://sjytt-desktop:34875/"
+    }
+  },
+  "runtime_logs": {
+    "jiaoda-fastlivo": {
+      "returncode": 0,
+      "stdout": "-- Logs begin at Wed 2023-03-15 23:04:15 CST, end at Fri 2026-10-23 21:44:55 CST. --\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: [pcl::VoxelGrid::applyFilter] Leaf size is too small for the input dataset. Integer indices would overflow.+-------------------------------------------------------------+\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: |                         LIO Mapping Time                    |\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: +-------------------------------------------------------------+\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: | Algorithm Stage               | Time (secs)                 |\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: +-------------------------------------------------------------+\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: | DownSample                    | 0.000053                    |\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: | ICP                           | 0.001734                    |\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: | updateVoxelMap                | 0.001564                    |\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: +-------------------------------------------------------------+\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: | Current Total Time            | 0.003915                    |\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: | Average Total Time            | 0.005315                    |\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: +-------------------------------------------------------------+\n[ 1613.087552] sjytt-desktop run_fastlivo.sh[3041]: [ LIO ] Raw feature num: 1743, downsampled feature num:1743 effective feature num: 0 average residual: nan\n[ 1613.088581] sjytt-desktop run_fastlivo.sh[3041]: [ LIO ] Raw feature num: 1743, downsampled feature num:1743 effective feature num: 0 average residual: nan\n[ 1613.089863] sjytt-desktop run_fastlivo.sh[3041]: [ LIO ] Update Voxel Map\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: [pcl::VoxelGrid::applyFilter] Leaf size is too small for the input dataset. Integer indices would overflow.+-------------------------------------------------------------+\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: |                         LIO Mapping Time                    |\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: +-------------------------------------------------------------+\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: | Algorithm Stage               | Time (secs)                 |\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: +-------------------------------------------------------------+\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: | DownSample                    | 0.000072                    |\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: | ICP                           | 0.001667                    |\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: | updateVoxelMap                | 0.001650                    |\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: +-------------------------------------------------------------+\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: | Current Total Time            | 0.003484                    |\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: | Average Total Time            | 0.005315                    |\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: +-------------------------------------------------------------+\n[ 1613.172081] sjytt-desktop run_fastlivo.sh[3041]: [ LIO ] Raw feature num: 1773, downsampled feature num:1773 effective feature num: 0 average residual: nan\n[ 1613.173161] sjytt-desktop run_fastlivo.sh[3041]: [ LIO ] Raw feature num: 1773, downsampled feature num:1773 effective feature num: 0 average residual: nan\n[ 1613.175307] sjytt-desktop run_fastlivo.sh[3041]: [ LIO ] Update Voxel Map\n",
+      "stderr": ""
+    },
+    "jiaoda-campub": {
+      "returncode": 0,
+      "stdout": "-- Logs begin at Wed 2023-03-15 23:04:15 CST, end at Fri 2026-10-23 21:44:55 CST. --\n[   16.487117] sjytt-desktop systemd[1]: Started Camera to ROS image publisher.\n[   23.816493] sjytt-desktop run_campub.sh[1094]: [INFO] [1792761038.674331]: camera opened: /dev/v4l/by-path/platform-3610000.xhci-usb-0:4.2.1.3:1.0-video-index0\n",
+      "stderr": ""
+    },
+    "jiaoda-control": {
+      "returncode": 0,
+      "stdout": "-- Logs begin at Wed 2023-03-15 23:04:15 CST, end at Fri 2026-10-23 21:44:55 CST. --\n[   16.489052] sjytt-desktop systemd[1]: Started Chassis+Gimbal serial control bridge.\n[   23.282200] sjytt-desktop run_control.sh[1096]: [INFO] [1792761038.140120]: serial opened: /dev/ttyACM0 @115200\n",
+      "stderr": ""
+    },
+    "jiaoda-nav": {
+      "returncode": 0,
+      "stdout": "-- Logs begin at Wed 2023-03-15 23:04:15 CST, end at Fri 2026-10-23 21:44:55 CST. --\n[   16.496724] sjytt-desktop systemd[1]: Started jiaoda nav.\n[   23.413214] sjytt-desktop run_nav_simple.sh[1100]: ============================================================\n[   23.413214] sjytt-desktop run_nav_simple.sh[1100]:   nav_simple v8 - A* + Pure Pursuit + DWA\n[   23.413214] sjytt-desktop run_nav_simple.sh[1100]:   VX_MAX=0.3 VYAW_MAX=0.3 INVERT_YAW=True\n[   23.413214] sjytt-desktop run_nav_simple.sh[1100]:   LOOKAHEAD=0.8m  ARRIVE=0.3m\n[   23.413214] sjytt-desktop run_nav_simple.sh[1100]:   DWA: 5x11 samples, predict 2.0s\n[   23.413214] sjytt-desktop run_nav_simple.sh[1100]:   ROBOT_RADIUS=0.5m  SAFE_DIST=0.7m\n[   23.413214] sjytt-desktop run_nav_simple.sh[1100]: ============================================================\n",
+      "stderr": ""
+    },
+    "jiaoda-mission": {
+      "returncode": 0,
+      "stdout": "-- Logs begin at Wed 2023-03-15 23:04:15 CST, end at Fri 2026-10-23 21:44:55 CST. --\n[   16.498614] sjytt-desktop systemd[1]: Started jiaoda inspection mission.\n",
+      "stderr": ""
+    }
+  }
+}

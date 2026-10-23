@@ -12,3 +12,7 @@
 *.jpg       binary
 *.png       binary
 *.npz       binary
+# Preserve collected reference/original bytes so retained raw SHA256 remains valid.
+docs/source-support/** -text
+docs/project-materials/** -text
+*.tsv text eol=lf

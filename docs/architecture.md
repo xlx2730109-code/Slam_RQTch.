@@ -1,6 +1,8 @@
 # 消防巡检机器人实现与接口
 
-目标：根据提交 `3b664ba` 的本地源码解释系统怎样运行，区分现有实现、历史记录和需要补齐的功能。复现进度与固定结论编号见根 `README.md`。
+目标：解释源码与2026-10-23原机实际链路，区分历史版本、当前配置和未完成能力。复现进度与固定结论编号见根 `README.md`，原始证据见[实机核查](live-audit-20261023.md)。历史基准为`3b664ba`，本次核对的是后续`9d6e531`及其当前源码。
+
+当前`img_en=0`，FAST-LIVO2直接使用`/unilidar/cloud`和IMU；相机仍用于拍照，`/synced/cloud`仍发布但不是当前SLAM输入。静止定位已经严重发散，以下模块解释不表示当前功能可用或合同验收通过。
 
 ## 总体链路
 
@@ -11,9 +13,8 @@ flowchart TD
   camera[USB RGB 相机] --> image[/left_camera/image]
   cloud --> stamp[cloud_restamp 覆盖头时间]
   stamp --> synced[/synced/cloud]
-  synced --> livo[FAST-LIVO2]
+  cloud --> livo[FAST-LIVO2 LIO]
   imu --> livo
-  image --> livo
   livo --> odom[/aft_mapped_to_init]
   livo --> points[/cloud_registered]
   odom --> pose[pose_bridge]
@@ -35,7 +36,7 @@ flowchart TD
   esp --> motor[油门 转向 云台 PWM]
 ```
 
-机器人靠雷达、相机和 IMU 估计位置，再根据地图和目标点计算行驶命令。ESP32 把命令转换成电调和舵机需要的 PWM。上层有定位反馈，但底层没有实际轮速闭环；不能把整条链概括为“已经有精确车速控制”。
+当前机器人靠雷达和IMU估计位置；原算法支持视觉融合，但现配置关闭。再根据地图和目标点计算行驶命令。ESP32把命令转换成电调和舵机需要的PWM。上层有定位反馈接口，但底层没有实际轮速闭环；不能把整条链概括为“已经有精确车速控制”。
 
 ## 模块与关键接口
 
@@ -65,13 +66,13 @@ flowchart TD
 
 | 数据 | 当前时间来源 | 影响 |
 | --- | --- | --- |
-| 原始点云头 | SDK 的 `cloud.stamp` | `use_system_timestamp=false` 时走硬件时间配置 |
+| 原始点云头 | SDK 的 `cloud.stamp` | 当前`use_system_timestamp=true`，历史false配置另行保留 |
 | `/synced/cloud` 头 | `rospy.Time.now()` | 只是接收端改时标，不是硬件同步 |
 | 原始 IMU 头 | 驱动 `ros::Time::now()` | 接收时刻，不是传感器原始采样时间 |
 | RGB 图像头 | 采集后 `rospy.Time.now()` | 包含读取和传输延迟 |
 | 融合输出头 | C++ 发布时 `ros::Time::now()` | 不能直接当作滤波状态对应的测量时刻 |
 
-SDK 协议定义 `time_increment` 为秒，工具函数据此累计点内相对时间，并转发为浮点 `time`。FAST-LIVO2 的 `lidar_type=2` 对应 `VELO16` 分支，该分支把 `time / 1000.0` 存入 `curvature`，而后续同步按 `curvature / 1000.0` 还原秒。按声明单位推导，80ms可能被解释为80ns，存在百万倍尺度疑点。静态 SDK 库内的合帧行为未在本轮实测，应采集 `fields`、点内 `time` 范围和相邻帧时间后再决定补丁，不能只改系数后宣称精度提高。
+SDK协议定义`time_increment`为秒，工具函数据此累计点内相对时间，并转发为浮点`time`。FAST-LIVO2的`lidar_type=2`对应`VELO16`分支，该分支把`time / 1000.0`存入`curvature`，而后续同步按`curvature / 1000.0`还原秒。2026-10-23实测点内time范围约0.000007723至0.081184，支持百万倍尺度疑点；但尚无修改前后同数据回放，不能把它定为唯一根因或宣称改后精度提高。
 
 PCL输出的 `x/y/z/intensity/time` 是float，`ring`是uint16，与当前读取结构的字段声明相符；字段声明相符不代表扫描时序和合帧语义已验证。`scan_line=18`也不能直接解读为L2物理18线。
 
@@ -82,7 +83,7 @@ PCL输出的 `x/y/z/intensity/time` 是float，`ring`是uint16，与当前读取
 1. `standard_pcl_cbk`根据`lidar_type`预处理点云，保存点内时间与帧头时间。
 2. `imu_cbk`保存惯性数据并处理时间偏移。
 3. `img_cbk`读取相机图像，保存图像时间。
-4. `sync_packages`按图像时刻切分点云和IMU；当前启用视觉，因此没有图像就等待。
+4. `sync_packages`按模式组织数据；启用视觉时按图像时刻切分，当前`img_en=0`走激光惯性模式。
 5. IMU传播预测运动状态并辅助点云去畸变。
 6. LIO利用点云与体素平面匹配校正状态并更新局部几何地图。
 7. VIO利用图像块与视觉地图的光度关系继续校正状态。
@@ -143,8 +144,8 @@ FAST-LIVO2源码实际广播`camera_init -> aft_mapped`。雷达驱动另广播�
 ## 串口和固件
 
 ```text
-Twist.linear.x × 55  -> 整数限幅±30 -> throttle
-Twist.angular.z ×45 -> 整数限幅±30 -> steer
+Twist.linear.x × THR_K -> 整数限幅±30 -> throttle
+Twist.angular.z × STR_K -> 整数限幅±30 -> steer
 云台两项限幅±30
 四项直接求和 -> checksum
 20Hz发送ASCII一行 -> ESP32

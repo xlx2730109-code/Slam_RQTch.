@@ -1,0 +1,62 @@
+[
+  {
+    "id": "S1",
+    "path": "docs/project-materials/北京市科技计划“揭榜挂帅”项目军令状(1).pdf",
+    "bytes": 2366188,
+    "sha256": "a254ed8b0effefe0fd96c265eb2172d0391e40a9941cba1f9e11c80958b6dad1"
+  },
+  {
+    "id": "S2",
+    "path": "docs/project-materials/服务合同_室内履带机器人巡检系统_修订版(1)(1).pdf",
+    "bytes": 1050230,
+    "sha256": "22f77bb7e904b4d6e3d8e5dca8e71ecbc0736435ab938042e0d098647cb92705"
+  },
+  {
+    "id": "S3",
+    "path": "docs/project-materials/0515进展报告_bjtu(1).docx",
+    "bytes": 2073539,
+    "sha256": "5e3ae3bab9a34f48f5c8e35918ffdbc67dd12e240436d0c118550920acd16432"
+  },
+  {
+    "id": "S4",
+    "path": "docs/project-materials/0617-进展报告_bjtu(1).docx",
+    "bytes": 4673533,
+    "sha256": "79971950647d2f59be1197d4b04acf00024040271ed64e63fb8149d410a92ca9"
+  },
+  {
+    "id": "S5",
+    "path": "docs/project-materials/火灾隐患非现场监管智能巡检装备研究与示范应用项目-完成情况汇报(1).docx",
+    "bytes": 2342336,
+    "sha256": "d2b0ecbb7e2b3ad4d47f0d62d48d7c021401737facb32b7d8425cbed16d2a969"
+  },
+  {
+    "id": "S6",
+    "path": "docs/project-materials/消防.pptx",
+    "bytes": 130012,
+    "sha256": "a4404482ac8e6f6ed9add2faecb85ca437b5fdad78b9194beb34eefbaef98e8a"
+  },
+  {
+    "id": "S7",
+    "path": "docs/project-materials/9dfc062e5ef651741d9ef5f5e4818d29.png",
+    "bytes": 330893,
+    "sha256": "56236b56f198112cf4fdfd81a4c950902e68fd8465dd3a6a18f0902378c1f562"
+  },
+  {
+    "id": "S8",
+    "path": "docs/project-materials/calib_board(1).pdf",
+    "bytes": 346541,
+    "sha256": "7baf06e0b72917481d8bcb21cba915bd67d02db6b49721e75448a6e9f13de43c"
+  },
+  {
+    "id": "S9",
+    "path": "docs/project-materials/control_1.ino",
+    "bytes": 11049,
+    "sha256": "4fb5c3e5134308e40f329187dd8312635acb32ab8be5694ea07ac4c838b6f06f"
+  },
+  {
+    "id": "S10",
+    "path": "docs/project-materials/ReadRC.ino",
+    "bytes": 1878,
+    "sha256": "e984fc1c55a072937708190397e6a5c7695aef70144ef55396310bda3d1c7f01"
+  }
+]
