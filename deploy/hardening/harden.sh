@@ -38,6 +38,8 @@ status() {
   sysctl vm.swappiness vm.min_free_kbytes kernel.panic 2>/dev/null
   echo "--- jiaoda-memguard: $(systemctl is-active jiaoda-memguard 2>/dev/null)"
   echo "--- jiaoda-netguard: $(systemctl is-active jiaoda-netguard 2>/dev/null)"
+  echo "--- jiaoda-blackbox: $(systemctl is-active jiaoda-blackbox 2>/dev/null)"
+  systemctl show user-1000.slice -p CPUQuotaPerSecUSec -p MemoryLimit -p MemoryMax 2>/dev/null
   sw=/sys/fs/cgroup/memory/system.slice/jiaoda-fastlivo.service/memory.swappiness
   [ -r "$sw" ] && echo "fastlivo cgroup swappiness=$(cat $sw)"
   swapon --show 2>/dev/null
@@ -113,10 +115,20 @@ EOF
   install -m 0644 "$HERE/jiaoda-memguard.service" /etc/systemd/system/jiaoda-memguard.service
   install -m 0755 "$HERE/jiaoda-netguard.sh" /usr/local/sbin/jiaoda-netguard.sh
   install -m 0644 "$HERE/jiaoda-netguard.service" /etc/systemd/system/jiaoda-netguard.service
+  install -m 0755 "$HERE/jiaoda-blackbox.sh" /usr/local/sbin/jiaoda-blackbox.sh
+  install -m 0644 "$HERE/jiaoda-blackbox.service" /etc/systemd/system/jiaoda-blackbox.service
+
+  # 远程登录会话（含各类自动化工具）的资源上限，防止一条重命令拖垮整机；SLAM 服务不在此 slice，不受影响
+  mkdir -p /etc/systemd/system/user-1000.slice.d
+  if [ "$CG" = 2 ]; then
+    printf '[Slice]\nCPUQuota=300%%\nMemoryMax=16G\n' > /etc/systemd/system/user-1000.slice.d/90-hardening.conf
+  else
+    printf '[Slice]\nCPUQuota=300%%\nMemoryLimit=16G\n' > /etc/systemd/system/user-1000.slice.d/90-hardening.conf
+  fi
 
   systemctl daemon-reload
-  systemctl enable jiaoda-memguard.service jiaoda-netguard.service >/dev/null 2>&1
-  systemctl restart jiaoda-memguard.service jiaoda-netguard.service
+  systemctl enable jiaoda-memguard.service jiaoda-netguard.service jiaoda-blackbox.service >/dev/null 2>&1
+  systemctl restart jiaoda-memguard.service jiaoda-netguard.service jiaoda-blackbox.service
 
   # 对已运行的 SLAM 立即把交换倾向置 0（cgroup v1）
   sw=/sys/fs/cgroup/memory/system.slice/jiaoda-fastlivo.service/memory.swappiness
