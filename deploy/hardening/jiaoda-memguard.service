@@ -1,0 +1,14 @@
+[Unit]
+Description=Low-memory guard for the SLAM stack
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/jiaoda-memguard.sh
+Restart=always
+RestartSec=2
+Nice=-5
+OOMScoreAdjust=-900
+
+[Install]
+WantedBy=multi-user.target
