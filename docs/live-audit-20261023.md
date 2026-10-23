@@ -114,7 +114,7 @@ FAST-LIVO2 -> /aft_mapped_to_init -> pose_bridge -> /slam_pose -> nav_simple
 | 历史清单差异 | 7个同路径文件已不同；增加文件等使旧audit报告30项不一致，不是本次采集损坏 |
 | 新快照 | `deploy/live-manifest-20261023.json`固定当前源码、证据、补充参考及原件；不覆盖旧清单 |
 | 补充参考 | `source-support/`保存64项udev、旧启动备份、CH343部分源码和厂商许可/说明，附原字节SHA256 |
-| 合同与背景原件 | `project-materials/`保存S1至S8；S9/S10继续位于`source/firmware/`，原件SHA256见证据清单 |
+| 合同与背景原件 | `project-materials/`保存S1至S10原始字节，S9/S10的代码副本另位于`source/firmware/`；避免Git换行转换影响原件SHA256 |
 
 七个历史同路径差异为网页、导航、控制启动脚本、`floor1.npz`、FAST-LIVO2主YAML、雷达主YAML和control服务。`comparison.json`逐项记录当前与历史哈希。旧`verify.sh`在所查实机根中未观察到；两份固件源来自用户资料，实际刷入版本尚未确认。
 

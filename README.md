@@ -467,8 +467,8 @@ python -B tools/reproduce.py audit
 [src-s6]: <docs/project-materials/消防.pptx>
 [src-s7]: <docs/project-materials/9dfc062e5ef651741d9ef5f5e4818d29.png>
 [src-s8]: <docs/project-materials/calib_board(1).pdf>
-[src-s9]: <docs/source/firmware/control_1.ino>
-[src-s10]: <docs/source/firmware/ReadRC.ino>
+[src-s9]: <docs/project-materials/control_1.ino>
+[src-s10]: <docs/project-materials/ReadRC.ino>
 
 - **K12**：S1是整个科研项目的目标依据，S2是外包软件服务范围，S3至S6是历史汇报或方案。报告数字、图片和设计图均不替代当前源码、运行记录及验收测试。
 - **K13**：S1第22至23页的中电投与S2第1页的北京科躯智能是不同主体；后续说“公司”必须明确对象，不能把服务器开发与导航外包混为同一份合同。
@@ -717,7 +717,7 @@ tailscale ip -4
 | 看原机实际怎么运行 | [实机核查](docs/live-audit-20261023.md) | 包含环境、设备、服务、数据链、参数及风险 |
 | 监督合同交付 | [C01至C15预检](docs/acceptance-precheck-20261023.md) | 明确不满足、未证明与未测试；正式运动验收0次 |
 | 查原始证据 | `docs/evidence/2026-10-23/` | 系统、文件清单、源码对应、ROS图/参数/日志、消息摘要、依赖 |
-| 查项目原件 | `docs/project-materials/`及N节 | S1至S8已复制入仓库；固件S9/S10仍在source中 |
+| 查项目原件 | `docs/project-materials/`及N节 | S1至S10保留原始字节；固件运行源码另在source中 |
 | 校验当前文件 | `deploy/live-manifest-20261023.json` | 独立新快照，不覆盖233项历史清单 |
 | 查额外参考 | `docs/source-support/` | 64项小文件，含厂商许可、udev和串口驱动部分参考，不是自动安装内容 |
 
