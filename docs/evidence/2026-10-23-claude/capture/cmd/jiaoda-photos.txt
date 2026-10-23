@@ -1,0 +1,18 @@
+$ ls -la /home/sjytt/jiaoda/photos 2>&1 | head -50; ls -la /home/sjytt/jiaoda/maps /home/sjytt/jiaoda/routes 2>&1
+total 8
+drwxr-xr-x 2 sjytt sjytt 4096 10月 21 13:27 .
+drwxrwxr-x 7 sjytt sjytt 4096 10月 23 23:41 ..
+/home/sjytt/jiaoda/maps:
+total 88
+drwxrwxr-x 2 sjytt sjytt  4096 10月 21 15:53 .
+drwxrwxr-x 7 sjytt sjytt  4096 10月 23 23:41 ..
+-rw-r--r-- 1 sjytt sjytt 56991 10月 21 15:53 floor1.npz
+-rw-r--r-- 1 sjytt sjytt 22780 10月 21 13:53 walkthrough.npz
+
+/home/sjytt/jiaoda/routes:
+total 12
+drwxrwxr-x 2 sjytt sjytt 4096 10月 21 15:54 .
+drwxrwxr-x 7 sjytt sjytt 4096 10月 23 23:41 ..
+-rw-rw-r-- 1 sjytt sjytt    0 10月 21 14:53 corridor1.json
+-rw-r--r-- 1 sjytt sjytt  102 10月 21 15:56 default.json
+[exit=0]

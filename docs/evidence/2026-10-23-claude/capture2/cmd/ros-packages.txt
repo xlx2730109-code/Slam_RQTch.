@@ -1,0 +1,21 @@
+$ source /opt/ros/noetic/setup.bash; rospack list-names | wc -l; rospack list-names | grep -E 'fast_livo|vikit|unitree|cv_bridge|pcl|tf2|navigation|move_base|amcl|map_server|twist_mux|robot_localization' 
+207
+amcl
+cv_bridge
+map_server
+move_base
+move_base_msgs
+pcl_conversions
+pcl_msgs
+pcl_ros
+robot_localization
+tf2
+tf2_eigen
+tf2_geometry_msgs
+tf2_kdl
+tf2_msgs
+tf2_py
+tf2_ros
+tf2_tools
+turtle_tf2
+[exit=0]

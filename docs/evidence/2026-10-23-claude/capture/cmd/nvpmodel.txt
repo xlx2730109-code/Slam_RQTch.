@@ -1,0 +1,4 @@
+$ nvpmodel -q
+NV Power Mode: MODE_30W
+2
+[exit=0]

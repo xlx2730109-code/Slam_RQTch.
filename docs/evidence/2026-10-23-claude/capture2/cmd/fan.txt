@@ -1,0 +1,6 @@
+$ cat /sys/devices/pwm-fan/cur_pwm /sys/devices/pwm-fan/target_pwm 2>&1; ls /sys/class/hwmon/*/pwm1 2>&1; systemctl is-active nvfancontrol
+cat: /sys/devices/pwm-fan/cur_pwm: No such file or directory
+cat: /sys/devices/pwm-fan/target_pwm: No such file or directory
+/sys/class/hwmon/hwmon2/pwm1
+active
+[exit=0]

@@ -1,0 +1,6 @@
+## Sophus_src
+a621ff2e56c56c839a6c40418d42c3c254424b5c 2012-08-25 07:32:18 -0700 Merge pull request #3 from obiou/master
+origin	https://github.com/strasdat/Sophus.git (fetch)
+origin	https://github.com/strasdat/Sophus.git (push)
+ M sophus/so2.cpp
+?? build/

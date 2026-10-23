@@ -1,0 +1,42 @@
+$ v4l2-ctl -d /dev/video4 --all 2>&1 | head -40
+Driver Info:
+	Driver name      : uvcvideo
+	Card type        : USB 2.0 Camera: USB Camera
+	Bus info         : usb-3610000.xhci-4.2.4
+	Driver version   : 5.10.120
+	Capabilities     : 0x84a00001
+		Video Capture
+		Metadata Capture
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04200001
+		Video Capture
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : uvcvideo
+	Model            : USB 2.0 Camera: USB Camera
+	Serial           : SN0001
+	Bus info         : usb-3610000.xhci-4.2.4
+	Media version    : 5.10.120
+	Hardware revision: 0x00000100 (256)
+	Driver version   : 5.10.120
+Interface Info:
+	ID               : 0x03000002
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000001 (1)
+	Name             : USB 2.0 Camera: USB Camera
+	Function         : V4L2 I/O
+	Flags         : default
+	Pad 0x01000007   : 0: Sink
+	  Link 0x02000010: from remote pad 0x100000a of entity 'Extension 3': Data, Enabled, Immutable
+Priority: 2
+Video input : 0 (Camera 1: ok)
+Format Video Capture:
+	Width/Height      : 2592/1944
+	Pixel Format      : 'MJPG' (Motion-JPEG)
+	Field             : None
+	Bytes per Line    : 0
+[exit=0]

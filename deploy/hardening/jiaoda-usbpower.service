@@ -1,0 +1,11 @@
+[Unit]
+Description=Disable USB autosuspend (cameras, hubs, serial adapters)
+After=local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'echo -1 > /sys/module/usbcore/parameters/autosuspend; for f in /sys/bus/usb/devices/*/power/control; do echo on > "$f" 2>/dev/null; done; exit 0'
+
+[Install]
+WantedBy=multi-user.target

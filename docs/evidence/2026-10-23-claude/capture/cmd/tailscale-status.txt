@@ -1,0 +1,5 @@
+$ tailscale status 2>&1 | sed -E 's/[a-zA-Z0-9._-]+@/<account>@/'
+100.81.12.112  sjytt-desktop    <account>@  linux    -                                         
+100.65.145.51  desktop-9sfp5b2  <account>@  windows  active; relay "tok", tx 423136 rx 133528  
+100.94.15.14   desktop-elnlaiq  <account>@  windows  -                                         
+[exit=0]

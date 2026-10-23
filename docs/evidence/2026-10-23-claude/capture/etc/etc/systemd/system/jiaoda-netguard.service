@@ -1,0 +1,14 @@
+[Unit]
+Description=Network self-healing guard (Wi-Fi and Tailscale)
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/jiaoda-netguard.sh
+Restart=always
+RestartSec=5
+Nice=-5
+OOMScoreAdjust=-900
+
+[Install]
+WantedBy=multi-user.target

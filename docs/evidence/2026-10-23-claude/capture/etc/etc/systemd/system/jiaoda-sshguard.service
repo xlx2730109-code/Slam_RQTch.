@@ -1,0 +1,12 @@
+[Unit]
+Description=Restart sshd when it stops answering
+After=ssh.service
+
+[Service]
+Type=simple
+ExecStart=/home/sjytt/jiaoda/ssh_guard.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

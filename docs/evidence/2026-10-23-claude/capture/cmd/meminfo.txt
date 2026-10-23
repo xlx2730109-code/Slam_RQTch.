@@ -1,0 +1,8 @@
+$ head -n 6 /proc/meminfo
+MemTotal:       64309276 kB
+MemFree:        60488936 kB
+MemAvailable:   60834624 kB
+Buffers:           46196 kB
+Cached:          1252192 kB
+SwapCached:            0 kB
+[exit=0]

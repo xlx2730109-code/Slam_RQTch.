@@ -1,0 +1,29 @@
+$ lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINT
+NAME           SIZE TYPE FSTYPE MOUNTPOINT
+loop1           16M loop vfat   
+mmcblk0       59.2G disk        
+├─mmcblk0p1   57.8G part ext4   /
+├─mmcblk0p2    128M part        
+├─mmcblk0p3    768K part        
+├─mmcblk0p4   31.6M part        
+├─mmcblk0p5    128M part        
+├─mmcblk0p6    768K part        
+├─mmcblk0p7   31.6M part        
+├─mmcblk0p8     80M part        
+├─mmcblk0p9    512K part        
+├─mmcblk0p10    64M part vfat   
+├─mmcblk0p11    80M part        
+├─mmcblk0p12   512K part        
+├─mmcblk0p13    64M part        
+├─mmcblk0p14   400M part        
+└─mmcblk0p15 479.5M part        
+zram0          3.9G disk        [SWAP]
+zram1          3.9G disk        [SWAP]
+zram2          3.9G disk        [SWAP]
+zram3          3.9G disk        [SWAP]
+zram4          3.9G disk        [SWAP]
+zram5          3.9G disk        [SWAP]
+zram6          3.9G disk        [SWAP]
+zram7          3.9G disk        [SWAP]
+nvme0n1      953.9G disk        
+[exit=0]

@@ -1,0 +1,10 @@
+$ bash -c dmesg | grep -i xhci | sed -E 's/^\[[^]]*\] //; s/[0-9]+/N/g' | sort | uniq -c | sort -rn | head -8
+      2 usb usbN: SerialNumber: N.xhci
+      2 usb usbN: Product: xHCI Host Controller
+      2 usb usbN: Manufacturer: Linux N.N.N-tegra xhci-hcd
+      2 tegra-xusb N.xhci: xHCI Host Controller
+      2 tegra-xusb N.xhci: new USB bus registered, assigned bus number N
+      2 input: USB N.N Camera: USB Camera as /devices/platform/N.xhci/usbN/N-N/N-N.N/N-N.N.N/N-N.N.N:N.N/input/inputN
+      1 tegra-xusb N.xhci: irq N, io mem NxN
+      1 tegra-xusb N.xhci: Host supports USB N.N Enhanced SuperSpeed
+[exit=0]

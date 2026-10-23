@@ -1,0 +1,23 @@
+$ ls -la /usr/local/bin /usr/local/sbin /opt 2>&1
+/opt:
+total 20
+drwxr-xr-x  5 root root 4096 6月  16 19:27 .
+drwxr-xr-x 19 root root 4096 10月 23 23:44 ..
+drwxr-xr-x  7 root root 4096 8月  16  2023 nvidia
+drwxr-xr-x  4 root root 4096 8月  16  2023 ota_package
+drwxr-xr-x  3 root root 4096 6月  16 19:27 ros
+
+/usr/local/bin:
+total 8
+drwxr-xr-x  2 root root 4096 8月   1  2020 .
+drwxr-xr-x 10 root root 4096 8月   1  2020 ..
+
+/usr/local/sbin:
+total 24
+drwxr-xr-x  2 root root 4096 10月 23 23:41 .
+drwxr-xr-x 10 root root 4096 8月   1  2020 ..
+-rwxr-xr-x  1 root root 2151 10月 23 23:41 jiaoda-blackbox.sh
+-rwxr-xr-x  1 root root 1413 10月 23 23:41 jiaoda-memguard.sh
+-rwxr-xr-x  1 root root 2736 10月 23 23:41 jiaoda-netguard.sh
+-rwxr-xr-x  1 root root 3395 8月   1  2020 unminimize
+[exit=0]

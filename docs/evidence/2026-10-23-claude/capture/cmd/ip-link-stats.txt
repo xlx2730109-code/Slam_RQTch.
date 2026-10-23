@@ -1,0 +1,57 @@
+$ ip -s link
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX: bytes  packets  errors  dropped overrun mcast   
+    31913362769 941713   0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    31913362769 941713   0       0       0       0       
+2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX: bytes  packets  errors  dropped overrun mcast   
+    0          0        0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    0          0        0       0       0       0       
+3: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX: bytes  packets  errors  dropped overrun mcast   
+    81006      1761     0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    13601      82       0       0       0       0       
+4: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX: bytes  packets  errors  dropped overrun mcast   
+    89303184   158481   0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    33212      406      0       0       0       0       
+5: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DORMANT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX: bytes  packets  errors  dropped overrun mcast   
+    3345602    28629    0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    95755841   70194    0       0       0       0       
+    altname wlP1p1s0
+6: l4tbr0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX: bytes  packets  errors  dropped overrun mcast   
+    0          0        0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    0          0        0       0       0       0       
+7: rndis0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast master l4tbr0 state DOWN mode DEFAULT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX: bytes  packets  errors  dropped overrun mcast   
+    0          0        0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    0          0        0       0       0       0       
+8: usb0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast master l4tbr0 state DOWN mode DEFAULT group default qlen 1000
+    link/ether xx:xx:xx:xx:xx:xx brd xx:xx:xx:xx:xx:xx
+    RX: bytes  packets  errors  dropped overrun mcast   
+    0          0        0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    0          0        0       0       0       0       
+9: tailscale0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1280 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 500
+    link/none 
+    RX: bytes  packets  errors  dropped overrun mcast   
+    1860       11       0       0       0       0       
+    TX: bytes  packets  errors  dropped carrier collsns 
+    3351       52       0       0       0       0       
+[exit=0]

@@ -1,0 +1,502 @@
+$ bash -c dmesg -T | grep -v -i xhci | head -n 500
+[五 10月 23 23:38:51 2026] Booting Linux on physical CPU 0x0000000000 [0x410fd421]
+[五 10月 23 23:38:51 2026] Linux version 5.10.120-tegra (buildbrain@mobile-u64-6422-d7000) (aarch64-buildroot-linux-gnu-gcc.br_real (Buildroot 2020.08) 9.3.0, GNU ld (GNU Binutils) 2.33.1) #1 SMP PREEMPT Tue Aug 1 12:32:50 PDT 2023
+[五 10月 23 23:38:51 2026] OF: fdt: memory scan node memory@80000000, reg size 16,
+[五 10月 23 23:38:51 2026] OF: fdt:  - 80000000 ,  c0000000
+[五 10月 23 23:38:51 2026] Machine model: Jetson AGX Orin Developer Kit
+[五 10月 23 23:38:51 2026] efi: EFI v2.70 by EDK II
+[五 10月 23 23:38:51 2026] efi: RTPROP=0x102531df98 SMBIOS=0xffff0000 SMBIOS 3.0=0x1006120000 MEMATTR=0x1006825018 ESRT=0x1006133c18 RNG=0x1006d2f398 MEMRESERVE=0x1006829f18 
+[五 10月 23 23:38:51 2026] efi: seeding entropy pool
+[五 10月 23 23:38:51 2026] esrt: Reserving ESRT space from 0x0000001006133c18 to 0x0000001006133c50.
+[五 10月 23 23:38:51 2026] Reserved memory: created CMA memory pool at 0x0000001008c00000, size 512 MiB
+[五 10月 23 23:38:51 2026] OF: reserved mem: initialized node linux,cma, compatible id shared-dma-pool
+[五 10月 23 23:38:51 2026] Zone ranges:
+[五 10月 23 23:38:51 2026]   DMA      [mem 0x0000000080000000-0x00000000ffffffff]
+[五 10月 23 23:38:51 2026]   DMA32    empty
+[五 10月 23 23:38:51 2026]   Normal   [mem 0x0000000100000000-0x0000001033ffffff]
+[五 10月 23 23:38:51 2026] Movable zone start for each node
+[五 10月 23 23:38:51 2026] Early memory node ranges
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000000080000000-0x00000000fffdffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x00000000fffe0000-0x00000000ffffffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000000100000000-0x00000010047d4fff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x00000010047d5000-0x0000001004a37fff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001004a38000-0x0000001004adffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001004ae0000-0x0000001004b2ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001004b30000-0x000000100607ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006080000-0x00000010060cffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x00000010060d0000-0x000000100610ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006110000-0x000000100612ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006130000-0x00000010066dffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x00000010066e0000-0x000000100677ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006780000-0x00000010067fffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006800000-0x000000100681ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006820000-0x000000100683ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006840000-0x000000100685ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006860000-0x000000100693ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006940000-0x000000100695ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006960000-0x000000100698ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006990000-0x0000001006b6ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006b70000-0x0000001006c3ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006c40000-0x0000001006cdffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006ce0000-0x0000001006d1ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006d20000-0x0000001006faffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001006fb0000-0x00000010070affff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x00000010070b0000-0x000000100714ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001007150000-0x000000100719ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x00000010071a0000-0x000000100723ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001007240000-0x000000100775ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001007760000-0x000000100793ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001007940000-0x0000001028faffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001028fb0000-0x0000001028ffffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001029000000-0x000000102d1fffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x000000102d210000-0x000000102d21ffff]
+[五 10月 23 23:38:51 2026]   node   0: [mem 0x0000001032000000-0x0000001033ffffff]
+[五 10月 23 23:38:51 2026] Initmem setup node 0 [mem 0x0000000080000000-0x0000001033ffffff]
+[五 10月 23 23:38:51 2026] On node 0 totalpages: 16445968
+[五 10月 23 23:38:51 2026]   DMA zone: 8192 pages used for memmap
+[五 10月 23 23:38:51 2026]   DMA zone: 0 pages reserved
+[五 10月 23 23:38:51 2026]   DMA zone: 524288 pages, LIFO batch:63
+[五 10月 23 23:38:51 2026]   Normal zone: 249088 pages used for memmap
+[五 10月 23 23:38:51 2026]   Normal zone: 15921680 pages, LIFO batch:63
+[五 10月 23 23:38:51 2026] psci: probing for conduit method from DT.
+[五 10月 23 23:38:51 2026] psci: PSCIv1.1 detected in firmware.
+[五 10月 23 23:38:51 2026] psci: Using standard PSCI v0.2 function IDs
+[五 10月 23 23:38:51 2026] psci: Trusted OS migration not required
+[五 10月 23 23:38:51 2026] psci: SMC Calling Convention v1.2
+[五 10月 23 23:38:51 2026] percpu: Embedded 32 pages/cpu s90328 r8192 d32552 u131072
+[五 10月 23 23:38:51 2026] pcpu-alloc: s90328 r8192 d32552 u131072 alloc=32*4096
+[五 10月 23 23:38:51 2026] pcpu-alloc: [0] 00 [0] 01 [0] 02 [0] 03 [0] 04 [0] 05 [0] 06 [0] 07 
+[五 10月 23 23:38:51 2026] pcpu-alloc: [0] 08 [0] 09 [0] 10 [0] 11 
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU0
+[五 10月 23 23:38:51 2026] CPU features: detected: GIC system register CPU interface
+[五 10月 23 23:38:51 2026] CPU features: detected: Virtualization Host Extensions
+[五 10月 23 23:38:51 2026] CPU features: kernel page table isolation forced ON by KASLR
+[五 10月 23 23:38:51 2026] CPU features: detected: Kernel page table isolation (KPTI)
+[五 10月 23 23:38:51 2026] CPU features: detected: Spectre-v4
+[五 10月 23 23:38:51 2026] CPU features: detected: Spectre-BHB
+[五 10月 23 23:38:51 2026] alternatives: patching kernel code
+[五 10月 23 23:38:51 2026] Built 1 zonelists, mobility grouping on.  Total pages: 16188688
+[五 10月 23 23:38:51 2026] Kernel command line: root=/dev/mmcblk0p1 rw rootwait rootfstype=ext4 mminit_loglevel=4 console=ttyTCU0,115200 console=ttyAMA0,115200 console=tty0 firmware_class.path=/etc/firmware fbcon=map:0 net.ifnames=0 nospectre_bhb 
+[五 10月 23 23:38:51 2026] Dentry cache hash table entries: 8388608 (order: 14, 67108864 bytes, linear)
+[五 10月 23 23:38:51 2026] Inode-cache hash table entries: 4194304 (order: 13, 33554432 bytes, linear)
+[五 10月 23 23:38:51 2026] mem auto-init: stack:off, heap alloc:off, heap free:off
+[五 10月 23 23:38:51 2026] software IO TLB: mapped [mem 0x00000000effe0000-0x00000000fffe0000] (256MB)
+[五 10月 23 23:38:51 2026] Memory: 63771468K/65783872K available (18560K kernel code, 3166K rwdata, 7196K rodata, 3968K init, 1416K bss, 1488116K reserved, 524288K cma-reserved)
+[五 10月 23 23:38:51 2026] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=12, Nodes=1
+[五 10月 23 23:38:51 2026] rcu: Preemptible hierarchical RCU implementation.
+[五 10月 23 23:38:51 2026] rcu: 	RCU event tracing is enabled.
+[五 10月 23 23:38:51 2026] rcu: 	RCU restricting CPUs from NR_CPUS=256 to nr_cpu_ids=12.
+[五 10月 23 23:38:51 2026] 	Trampoline variant of Tasks RCU enabled.
+[五 10月 23 23:38:51 2026] 	Rude variant of Tasks RCU enabled.
+[五 10月 23 23:38:51 2026] 	Tracing variant of Tasks RCU enabled.
+[五 10月 23 23:38:51 2026] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[五 10月 23 23:38:51 2026] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=12
+[五 10月 23 23:38:51 2026] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[五 10月 23 23:38:51 2026] GICv3: GIC: Using split EOI/Deactivate mode
+[五 10月 23 23:38:51 2026] GICv3: 960 SPIs implemented
+[五 10月 23 23:38:51 2026] GICv3: 0 Extended SPIs implemented
+[五 10月 23 23:38:51 2026] GICv3: Distributor has no Range Selector support
+[五 10月 23 23:38:51 2026] GICv3: 16 PPIs implemented
+[五 10月 23 23:38:51 2026] GICv3: CPU0: found redistributor 0 region 0:0x000000000f440000
+[五 10月 23 23:38:51 2026] GICv2m: DT overriding V2M MSI_TYPER (base:608, num:70)
+[五 10月 23 23:38:51 2026] GICv2m: range[mem 0x0f410000-0x0f41ffff], SPI[608:677]
+[五 10月 23 23:38:51 2026] arch_timer: cp15 timer(s) running at 31.25MHz (phys).
+[五 10月 23 23:38:51 2026] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0xe6a171046, max_idle_ns: 881590405314 ns
+[五 10月 23 23:38:51 2026] sched_clock: 56 bits at 31MHz, resolution 32ns, wraps every 4398046511088ns
+[五 10月 23 23:38:51 2026] Console: colour dummy device 80x25
+[五 10月 23 23:38:51 2026] printk: console [tty0] enabled
+[五 10月 23 23:38:51 2026] Calibrating delay loop (skipped), value calculated using timer frequency.. 62.50 BogoMIPS (lpj=125000)
+[五 10月 23 23:38:51 2026] pid_max: default: 32768 minimum: 301
+[五 10月 23 23:38:51 2026] LSM: Security Framework initializing
+[五 10月 23 23:38:51 2026] Yama: becoming mindful.
+[五 10月 23 23:38:51 2026] SELinux:  Initializing.
+[五 10月 23 23:38:51 2026] Mount-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[五 10月 23 23:38:51 2026] Mountpoint-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[五 10月 23 23:38:51 2026] rcu: Hierarchical SRCU implementation.
+[五 10月 23 23:38:51 2026] dyndbg: Ignore empty _ddebug table in a CONFIG_DYNAMIC_DEBUG_CORE build
+[五 10月 23 23:38:51 2026] DTS File Name: /dvs/git/dirty/git-master_linux/kernel/kernel-5.10/arch/arm64/boot/dts/../../../../../../hardware/nvidia/platform/t23x/concord/kernel-dts/tegra234-p3701-0005-p3737-0000.dts
+[五 10月 23 23:38:51 2026] DTB Build time: Aug  1 2023 12:44:17
+[五 10月 23 23:38:51 2026] Tegra Revision: A01 SKU: 0xd0 CPU Process: 0 SoC Process: 0
+[五 10月 23 23:38:51 2026] Remapping and enabling EFI services.
+[五 10月 23 23:38:51 2026] smp: Bringing up secondary CPUs ...
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU1
+[五 10月 23 23:38:51 2026] GICv3: CPU1: found redistributor 100 region 0:0x000000000f460000
+[五 10月 23 23:38:51 2026] CPU1: Booted secondary processor 0x0000000100 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU2
+[五 10月 23 23:38:51 2026] GICv3: CPU2: found redistributor 200 region 0:0x000000000f480000
+[五 10月 23 23:38:51 2026] CPU2: Booted secondary processor 0x0000000200 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU3
+[五 10月 23 23:38:51 2026] GICv3: CPU3: found redistributor 300 region 0:0x000000000f4a0000
+[五 10月 23 23:38:51 2026] CPU3: Booted secondary processor 0x0000000300 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU4
+[五 10月 23 23:38:51 2026] GICv3: CPU4: found redistributor 10000 region 0:0x000000000f4c0000
+[五 10月 23 23:38:51 2026] CPU4: Booted secondary processor 0x0000010000 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU5
+[五 10月 23 23:38:51 2026] GICv3: CPU5: found redistributor 10100 region 0:0x000000000f4e0000
+[五 10月 23 23:38:51 2026] CPU5: Booted secondary processor 0x0000010100 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU6
+[五 10月 23 23:38:51 2026] GICv3: CPU6: found redistributor 10200 region 0:0x000000000f500000
+[五 10月 23 23:38:51 2026] CPU6: Booted secondary processor 0x0000010200 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU7
+[五 10月 23 23:38:51 2026] GICv3: CPU7: found redistributor 10300 region 0:0x000000000f520000
+[五 10月 23 23:38:51 2026] CPU7: Booted secondary processor 0x0000010300 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU8
+[五 10月 23 23:38:51 2026] GICv3: CPU8: found redistributor 20000 region 0:0x000000000f540000
+[五 10月 23 23:38:51 2026] CPU8: Booted secondary processor 0x0000020000 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU9
+[五 10月 23 23:38:51 2026] GICv3: CPU9: found redistributor 20100 region 0:0x000000000f560000
+[五 10月 23 23:38:51 2026] CPU9: Booted secondary processor 0x0000020100 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU10
+[五 10月 23 23:38:51 2026] GICv3: CPU10: found redistributor 20200 region 0:0x000000000f580000
+[五 10月 23 23:38:51 2026] CPU10: Booted secondary processor 0x0000020200 [0x410fd421]
+[五 10月 23 23:38:51 2026] Detected PIPT I-cache on CPU11
+[五 10月 23 23:38:51 2026] GICv3: CPU11: found redistributor 20300 region 0:0x000000000f5a0000
+[五 10月 23 23:38:51 2026] CPU11: Booted secondary processor 0x0000020300 [0x410fd421]
+[五 10月 23 23:38:51 2026] smp: Brought up 1 node, 12 CPUs
+[五 10月 23 23:38:51 2026] SMP: Total of 12 processors activated.
+[五 10月 23 23:38:51 2026] CPU features: detected: Privileged Access Never
+[五 10月 23 23:38:51 2026] CPU features: detected: LSE atomic instructions
+[五 10月 23 23:38:51 2026] CPU features: detected: User Access Override
+[五 10月 23 23:38:51 2026] CPU features: detected: 32-bit EL0 Support
+[五 10月 23 23:38:51 2026] CPU features: detected: Common not Private translations
+[五 10月 23 23:38:51 2026] CPU features: detected: RAS Extension Support
+[五 10月 23 23:38:51 2026] CPU features: detected: Data cache clean to the PoU not required for I/D coherence
+[五 10月 23 23:38:51 2026] CPU features: detected: CRC32 instructions
+[五 10月 23 23:38:51 2026] CPU features: detected: Speculative Store Bypassing Safe (SSBS)
+[五 10月 23 23:38:51 2026] spectre-bhb mitigation disabled by command line option
+[五 10月 23 23:38:51 2026] spectre-bhb mitigation disabled by command line option
+[五 10月 23 23:38:51 2026] spectre-bhb mitigation disabled by command line option
+[五 10月 23 23:38:51 2026] spectre-bhb mitigation disabled by command line option
+[五 10月 23 23:38:51 2026] CPU: All CPU(s) started at EL2
+[五 10月 23 23:38:51 2026] devtmpfs: initialized
+[五 10月 23 23:38:51 2026] Registered cp15_barrier emulation handler
+[五 10月 23 23:38:51 2026] Registered setend emulation handler
+[五 10月 23 23:38:51 2026] KASLR enabled
+[五 10月 23 23:38:51 2026] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[五 10月 23 23:38:51 2026] futex hash table entries: 4096 (order: 6, 262144 bytes, linear)
+[五 10月 23 23:38:51 2026] pinctrl core: initialized pinctrl subsystem
+[五 10月 23 23:38:51 2026] SMBIOS 3.0.0 present.
+[五 10月 23 23:38:51 2026] DMI: Unknown Jetson AGX Orin Developer Kit/Jetson AGX Orin Developer Kit, BIOS 4.1-33958178 08/01/2023
+[五 10月 23 23:38:51 2026] NET: Registered protocol family 16
+[五 10月 23 23:38:51 2026] DMA: preallocated 4096 KiB GFP_KERNEL pool for atomic allocations
+[五 10月 23 23:38:51 2026] DMA: preallocated 4096 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[五 10月 23 23:38:51 2026] DMA: preallocated 4096 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[五 10月 23 23:38:51 2026] audit: initializing netlink subsys (disabled)
+[五 10月 23 23:38:51 2026] audit: type=2000 audit(0.396:1): state=initialized audit_enabled=0 res=1
+[五 10月 23 23:38:51 2026] thermal_sys: Registered thermal governor 'step_wise'
+[五 10月 23 23:38:51 2026] thermal_sys: Registered thermal governor 'power_allocator'
+[五 10月 23 23:38:51 2026] thermal_sys: Registered thermal governor 'pid_thermal_gov'
+[五 10月 23 23:38:51 2026] cpuidle: using governor menu
+[五 10月 23 23:38:51 2026] hw-breakpoint: found 6 breakpoint and 4 watchpoint registers.
+[五 10月 23 23:38:51 2026] ASID allocator initialised with 32768 entries
+[五 10月 23 23:38:51 2026] Serial: AMBA PL011 UART driver
+[五 10月 23 23:38:51 2026] tegra234_mc_sid_probe(): tegra234 mc-sid probe successful
+[五 10月 23 23:38:51 2026] Tegra reboot handler registered.
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff8000111f0000 -> 0x2c10000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011210000 -> 0x2c20000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011230000 -> 0x2c30000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011250000 -> 0x2c40000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011270000 -> 0x2c50000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011290000 -> 0x2b80000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff8000112b0000 -> 0x2b90000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff8000112d0000 -> 0x2ba0000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff8000112f0000 -> 0x2bb0000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011310000 -> 0x1700000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011330000 -> 0x1710000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011350000 -> 0x1720000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011370000 -> 0x1730000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff800011390000 -> 0x1740000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff8000113b0000 -> 0x1750000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff8000113d0000 -> 0x1760000
+[五 10月 23 23:38:51 2026] mc: mapped MMIO address: 0xffff8000113f0000 -> 0x1770000
+[五 10月 23 23:38:51 2026] nv-tegra-mc 2c10000.mc: No mssnvlink node
+[五 10月 23 23:38:51 2026] mc-err: mcerr ops are set to t23x
+[五 10月 23 23:38:51 2026] 31d0000.serial: ttyAMA0 at MMIO 0x31d0000 (irq = 80, base_baud = 0) is a SBSA
+[五 10月 23 23:38:52 2026] printk: console [ttyAMA0] enabled
+[五 10月 23 23:38:52 2026] HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+[五 10月 23 23:38:52 2026] HugeTLB registered 32.0 MiB page size, pre-allocated 0 pages
+[五 10月 23 23:38:52 2026] HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+[五 10月 23 23:38:52 2026] HugeTLB registered 64.0 KiB page size, pre-allocated 0 pages
+[五 10月 23 23:38:52 2026] ACPI: Interpreter disabled.
+[五 10月 23 23:38:52 2026] vdd-av1v1-hub: supplied by vdd-5v-sys
+[五 10月 23 23:38:52 2026] vbusA-cvb: supplied by vdd-5v-sys
+[五 10月 23 23:38:52 2026] vbusB-cvb: supplied by vdd-5v-sys
+[五 10月 23 23:38:52 2026] vdd-usbc1-vbus: supplied by vdd-5v-sys
+[五 10月 23 23:38:52 2026] vdd-usbc2-vbus: supplied by vdd-5v-sys
+[五 10月 23 23:38:52 2026] iommu: Default domain type: Translated 
+[五 10月 23 23:38:52 2026] eventlib_kernel: keventlib is initialized, test id: 0
+[五 10月 23 23:38:52 2026] SCSI subsystem initialized
+[五 10月 23 23:38:52 2026] usbcore: registered new interface driver usbfs
+[五 10月 23 23:38:52 2026] usbcore: registered new interface driver hub
+[五 10月 23 23:38:52 2026] usbcore: registered new device driver usb
+[五 10月 23 23:38:52 2026] mc: Linux media interface: v0.10
+[五 10月 23 23:38:52 2026] videodev: Linux video capture interface: v2.00
+[五 10月 23 23:38:52 2026] pps_core: LinuxPPS API ver. 1 registered
+[五 10月 23 23:38:52 2026] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[五 10月 23 23:38:52 2026] PTP clock support registered
+[五 10月 23 23:38:52 2026] tegra_wdt_t18x 2190000.watchdog: Tegra WDT init timeout = 120 sec
+[五 10月 23 23:38:52 2026] tegra_wdt_t18x 2190000.watchdog: Registered successfully
+[五 10月 23 23:38:52 2026] Registered efivars operations
+[五 10月 23 23:38:52 2026] FPGA manager framework
+[五 10月 23 23:38:52 2026] Advanced Linux Sound Architecture Driver Initialized.
+[五 10月 23 23:38:52 2026] Bluetooth: Core ver 2.22
+[五 10月 23 23:38:52 2026] NET: Registered protocol family 31
+[五 10月 23 23:38:52 2026] Bluetooth: HCI device and connection manager initialized
+[五 10月 23 23:38:52 2026] Bluetooth: HCI socket layer initialized
+[五 10月 23 23:38:52 2026] Bluetooth: L2CAP socket layer initialized
+[五 10月 23 23:38:52 2026] Bluetooth: SCO socket layer initialized
+[五 10月 23 23:38:52 2026] camchar: rtcpu character device driver loaded
+[五 10月 23 23:38:52 2026] clocksource: Switched to clocksource arch_sys_counter
+[五 10月 23 23:38:53 2026] VFS: Disk quotas dquot_6.6.0
+[五 10月 23 23:38:53 2026] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[五 10月 23 23:38:53 2026] pnp: PnP ACPI: disabled
+[五 10月 23 23:38:53 2026] la/ptsa driver initialized.
+[五 10月 23 23:38:53 2026] NET: Registered protocol family 2
+[五 10月 23 23:38:53 2026] IP idents hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[五 10月 23 23:38:53 2026] tcp_listen_portaddr_hash hash table entries: 32768 (order: 7, 524288 bytes, linear)
+[五 10月 23 23:38:53 2026] TCP established hash table entries: 524288 (order: 10, 4194304 bytes, linear)
+[五 10月 23 23:38:53 2026] TCP bind hash table entries: 65536 (order: 8, 1048576 bytes, linear)
+[五 10月 23 23:38:53 2026] TCP: Hash tables configured (established 524288 bind 65536)
+[五 10月 23 23:38:53 2026] UDP hash table entries: 32768 (order: 8, 1048576 bytes, linear)
+[五 10月 23 23:38:53 2026] UDP-Lite hash table entries: 32768 (order: 8, 1048576 bytes, linear)
+[五 10月 23 23:38:53 2026] NET: Registered protocol family 1
+[五 10月 23 23:38:53 2026] RPC: Registered named UNIX socket transport module.
+[五 10月 23 23:38:53 2026] RPC: Registered udp transport module.
+[五 10月 23 23:38:53 2026] RPC: Registered tcp transport module.
+[五 10月 23 23:38:53 2026] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[五 10月 23 23:38:53 2026] PCI: CLS 0 bytes, default 64
+[五 10月 23 23:38:53 2026] Trying to unpack rootfs image as initramfs...
+[五 10月 23 23:38:53 2026] Freeing initrd memory: 9552K
+[五 10月 23 23:38:53 2026] hw perfevents: enabled with armv8_pmuv3 PMU driver, 7 counters available
+[五 10月 23 23:38:53 2026] kvm [1]: IPA Size Limit: 48 bits
+[五 10月 23 23:38:53 2026] kvm [1]: GICv3: no GICV resource entry
+[五 10月 23 23:38:53 2026] kvm [1]: disabling GICv2 emulation
+[五 10月 23 23:38:53 2026] kvm [1]: GIC system register CPU interface enabled
+[五 10月 23 23:38:53 2026] kvm [1]: vgic interrupt IRQ9
+[五 10月 23 23:38:53 2026] kvm [1]: VHE mode initialized successfully
+[五 10月 23 23:38:53 2026] Initialise system trusted keyrings
+[五 10月 23 23:38:53 2026] workingset: timestamp_bits=46 max_order=24 bucket_order=0
+[五 10月 23 23:38:53 2026] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[五 10月 23 23:38:53 2026] NFS: Registering the id_resolver key type
+[五 10月 23 23:38:53 2026] Key type id_resolver registered
+[五 10月 23 23:38:53 2026] Key type id_legacy registered
+[五 10月 23 23:38:53 2026] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[五 10月 23 23:38:53 2026] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+[五 10月 23 23:38:53 2026] ntfs: driver 2.1.32 [Flags: R/W].
+[五 10月 23 23:38:53 2026] NET: Registered protocol family 38
+[五 10月 23 23:38:53 2026] Key type asymmetric registered
+[五 10月 23 23:38:53 2026] Asymmetric key parser 'x509' registered
+[五 10月 23 23:38:53 2026] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 239)
+[五 10月 23 23:38:53 2026] io scheduler mq-deadline registered
+[五 10月 23 23:38:53 2026] io scheduler kyber registered
+[五 10月 23 23:38:53 2026] tegra-pwm 3280000.pwm: PWM clk can sleep in ops
+[五 10月 23 23:38:53 2026] tegra-pwm 32a0000.pwm: PWM clk can sleep in ops
+[五 10月 23 23:38:53 2026] tegra-pwm 32c0000.pwm: PWM clk can sleep in ops
+[五 10月 23 23:38:53 2026] tegra-pwm 32f0000.pwm: PWM clk can sleep in ops
+[五 10月 23 23:38:53 2026] tegra_dc_assign_hw_data: no matching compatible node
+[五 10月 23 23:38:53 2026] tegradccommon module_init failed
+[五 10月 23 23:38:53 2026] tegradc module_init failed
+[五 10月 23 23:38:53 2026] EINJ: ACPI disabled.
+[五 10月 23 23:38:53 2026] tegra-pmc c360000.pmc: scratch reg offset dts data not present
+[五 10月 23 23:38:53 2026] tegra-pmc: ### PMC reset source: SYS_RESET_N
+[五 10月 23 23:38:53 2026] tegra-pmc: ### PMC reset level: L0
+[五 10月 23 23:38:53 2026] tegra-pmc: ### PMC reset status reg: 0x0
+[五 10月 23 23:38:53 2026] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[五 10月 23 23:38:55 2026] printk: console [ttyTCU0] enabled
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: probing hardware configuration...
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: SMMUv2 with:
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: 	stage 1 translation
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: 	stage 2 translation
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: 	nested translation
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: 	stream matching with 128 register groups
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: 	128 context banks (0 stage-2 only)
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: 	Supported page sizes: 0x00001000
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[五 10月 23 23:38:55 2026] arm-smmu 12000000.iommu: 	Stage-2: 48-bit IPA -> 48-bit PA
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: probing hardware configuration...
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: SMMUv2 with:
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: 	stage 1 translation
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: 	stage 2 translation
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: 	nested translation
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: 	stream matching with 128 register groups
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: 	128 context banks (0 stage-2 only)
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: 	Supported page sizes: 0x00001000
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[五 10月 23 23:38:55 2026] arm-smmu 10000000.iommu: 	Stage-2: 48-bit IPA -> 48-bit PA
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: probing hardware configuration...
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: SMMUv2 with:
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: 	stage 1 translation
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: 	stage 2 translation
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: 	nested translation
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: 	stream matching with 128 register groups
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: 	128 context banks (0 stage-2 only)
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: 	Supported page sizes: 0x00001000
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[五 10月 23 23:38:55 2026] arm-smmu 8000000.iommu: 	Stage-2: 48-bit IPA -> 48-bit PA
+[五 10月 23 23:38:55 2026] arm-smmu-suspend 12000000.smmu_suspend: arm_smmu_suspend probe successful
+[五 10月 23 23:38:55 2026] tegra_profiler: version: 1.151, samples/io: 51/30
+[五 10月 23 23:38:55 2026] tegra_profiler: auth: init
+[五 10月 23 23:38:55 2026] nvsciipc: loaded module
+[五 10月 23 23:38:55 2026] tun: Universal TUN/TAP device driver, 1.6
+[五 10月 23 23:38:55 2026] hns3: Hisilicon Ethernet Network Driver for Hip08 Family - version
+[五 10月 23 23:38:55 2026] hns3: Copyright (c) 2017 Huawei Corporation.
+[五 10月 23 23:38:55 2026] e1000e: Intel(R) PRO/1000 Network Driver
+[五 10月 23 23:38:55 2026] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[五 10月 23 23:38:55 2026] igb: Intel(R) Gigabit Ethernet Network Driver
+[五 10月 23 23:38:55 2026] igb: Copyright (c) 2007-2014 Intel Corporation.
+[五 10月 23 23:38:55 2026] PPP generic driver version 2.4.2
+[五 10月 23 23:38:55 2026] PPP BSD Compression module registered
+[五 10月 23 23:38:55 2026] PPP Deflate Compression module registered
+[五 10月 23 23:38:55 2026] PPP MPPE Compression module registered
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver r8152
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver asix
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver ax88179_178a
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver cdc_ether
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver net1080
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver cdc_subset
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver zaurus
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver cdc_ncm
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver aqc111
+[五 10月 23 23:38:55 2026] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[五 10月 23 23:38:55 2026] ohci-pci: OHCI PCI platform driver
+[五 10月 23 23:38:55 2026] ohci-platform: OHCI generic platform driver
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver uas
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver usb-storage
+[五 10月 23 23:38:55 2026] tegra-xudc 3550000.xudc: Adding to iommu group 1
+[五 10月 23 23:38:55 2026] mousedev: PS/2 mouse device common for all mice
+[五 10月 23 23:38:55 2026] usbcore: registered new interface driver xpad
+[五 10月 23 23:38:55 2026] tegra_rtc c2a0000.rtc: registered as rtc1
+[五 10月 23 23:38:55 2026] tegra_rtc c2a0000.rtc: setting system clock to 1970-01-01T00:00:31 UTC (31)
+[五 10月 23 23:38:55 2026] tegra_rtc c2a0000.rtc: Tegra internal Real Time Clock
+[五 10月 23 23:38:55 2026] i2c /dev entries driver
+[五 10月 23 23:38:55 2026] tegra-i2c 3160000.i2c: Adding to iommu group 2
+[五 10月 23 23:38:55 2026] tegra-i2c c240000.i2c: Adding to iommu group 2
+[五 10月 23 23:38:55 2026] tegra-i2c 3180000.i2c: Adding to iommu group 2
+[五 10月 23 23:38:55 2026] tegra-i2c 3190000.i2c: Adding to iommu group 2
+[五 10月 23 23:38:55 2026] tegra-i2c 31c0000.i2c: Adding to iommu group 2
+[五 10月 23 23:38:55 2026] tegra-i2c c250000.i2c: Adding to iommu group 2
+[五 10月 23 23:38:55 2026] tegra-i2c 31e0000.i2c: Adding to iommu group 2
+[五 10月 23 23:38:55 2026] tegra-i2c 31b0000.i2c: Adding to iommu group 2
+[五 10月 23 23:38:55 2026] tegra-camrtc-capture-vi tegra-capture-vi: ep of_device is not enabled endpoint.
+[五 10月 23 23:38:55 2026] tegra-camrtc-capture-vi tegra-capture-vi: ep of_device is not enabled endpoint.
+[五 10月 23 23:38:55 2026] device-mapper: uevent: version 1.0.3
+[五 10月 23 23:38:55 2026] device-mapper: ioctl: 4.43.0-ioctl (2020-10-01) initialised: dm-devel@redhat.com
+[五 10月 23 23:38:55 2026] sdhci: Secure Digital Host Controller Interface driver
+[五 10月 23 23:38:55 2026] sdhci: Copyright(c) Pierre Ossman
+[五 10月 23 23:38:55 2026] Synopsys Designware Multimedia Card Interface Driver
+[五 10月 23 23:38:55 2026] sdhci-pltfm: SDHCI platform and OF driver helper
+[五 10月 23 23:38:55 2026] sdhci-tegra 3460000.sdhci: Adding to iommu group 3
+[五 10月 23 23:38:55 2026] SMCCC: SOC_ID: ID = jep106:036b:0023 Revision = 0x00000401
+[五 10月 23 23:38:55 2026] sdhci-tegra 3400000.sdhci: Adding to iommu group 4
+[五 10月 23 23:38:55 2026] tegra-bpmp bpmp: firmware: 6969245516d6bf7e0f23-925eece486b
+[五 10月 23 23:38:55 2026] nvvrs_pseq 4-003c: NVVRS Vendor ID: 0x9 
+[五 10月 23 23:38:55 2026] nvvrs_pseq 4-003c: NVVRS Model Rev: 0x81
+[五 10月 23 23:38:55 2026] nvvrs-pseq-rtc nvvrs-pseq-rtc: registered as rtc0
+[五 10月 23 23:38:55 2026] nvvrs_pseq 4-003c: NVVRS PSEQ probe successful
+[五 10月 23 23:38:56 2026] hid: raw HID events driver (C) Jiri Kosina
+[五 10月 23 23:38:56 2026] usbcore: registered new interface driver usbhid
+[五 10月 23 23:38:57 2026] usbhid: USB HID core driver
+[五 10月 23 23:38:57 2026] tegra-dce d800000.dce: Adding to iommu group 5
+[五 10月 23 23:38:57 2026] dce: dce_ipc_channel_init:319  Invalid Channel State [0x0] for ch_type [2]
+[五 10月 23 23:38:57 2026] tegra234-aon c000000.aon: Adding to iommu group 6
+[五 10月 23 23:38:57 2026] dce: dce_mailbox_set_full_interrupt:165  Intr bit set multiple times for MB : [0x5]
+[五 10月 23 23:38:57 2026]  c000000.aon:hsp: probed
+[五 10月 23 23:38:57 2026] dce: dce_admin_ipc_handle_signal:90   Spurious signal on channel: [0]. Ignored...
+[五 10月 23 23:38:57 2026] tegra234-aon c000000.aon: init done
+[五 10月 23 23:38:57 2026] tegra23x-psc e860000.psc: Adding to iommu group 7
+[五 10月 23 23:38:57 2026] dce: dce_admin_send_cmd_ver:424  version : [0x2] err : [0x0]
+[五 10月 23 23:38:57 2026] tegra23x-psc e860000.psc: ext_cfg base:(____ptrval____)
+[五 10月 23 23:38:57 2026] dce: dce_mailbox_set_full_interrupt:165  Intr bit set multiple times for MB : [0x1]
+[五 10月 23 23:38:57 2026] tegra23x-psc e860000.psc: init done
+[五 10月 23 23:38:57 2026] tegra186-cam-rtcpu bc00000.rtcpu: Adding to iommu group 8
+[五 10月 23 23:38:57 2026] dce: dce_admin_setup_clients_ipc:553  Channel Reset Complete for Type [1] ...
+[五 10月 23 23:38:57 2026] dce: dce_admin_ipc_handle_signal:90   Spurious signal on channel: [1]. Ignored...
+[五 10月 23 23:38:57 2026] dce: dce_admin_ipc_handle_signal:90   Spurious signal on channel: [1]. Ignored...
+[五 10月 23 23:38:57 2026] tegra186-cam-rtcpu bc00000.rtcpu: Trace buffer configured at IOVA=0xbff00000
+[五 10月 23 23:38:57 2026] dce: dce_admin_setup_clients_ipc:529  Get queue info failed for [2]
+[五 10月 23 23:38:57 2026] dce: dce_mailbox_set_full_interrupt:165  Intr bit set multiple times for MB : [0x2]
+[五 10月 23 23:38:57 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus: region 0: iova=0xbfec0000-0xbfee01ff size=131584
+[五 10月 23 23:38:57 2026] dce: dce_admin_setup_clients_ipc:553  Channel Reset Complete for Type [3] ...
+[五 10月 23 23:38:57 2026] dce: dce_admin_ipc_handle_signal:90   Spurious signal on channel: [3]. Ignored...
+[五 10月 23 23:38:57 2026] dce: dce_admin_ipc_handle_signal:90   Spurious signal on channel: [3]. Ignored...
+[五 10月 23 23:38:57 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:echo@0: echo: ver=0 grp=1 RX[16x64]=0x1000-0x1480 TX[16x64]=0x1480-0x1900
+[五 10月 23 23:38:57 2026] dce: dce_start_boot_flow:173  DCE_BOOT_DONE
+[五 10月 23 23:38:57 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:dbg@1: dbg: ver=0 grp=1 RX[1x448]=0x1900-0x1b40 TX[1x448]=0x1b40-0x1d80
+[五 10月 23 23:38:57 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:dbg@2: dbg: ver=0 grp=1 RX[1x8192]=0x1d80-0x3e00 TX[1x8192]=0x3e00-0x5e80
+[五 10月 23 23:38:57 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:ivccontrol@3: ivccontrol: ver=0 grp=1 RX[64x320]=0x5e80-0xaf00 TX[64x320]=0xaf00-0xff80
+[五 10月 23 23:38:57 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:ivccapture@4: ivccapture: ver=0 grp=1 RX[512x64]=0xff80-0x18000 TX[512x64]=0x18000-0x20080
+[五 10月 23 23:38:57 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:diag@5: diag: ver=0 grp=1 RX[1x64]=0x20080-0x20140 TX[1x64]=0x20140-0x20200
+[五 10月 23 23:38:57 2026] tegra186-cam-rtcpu bc00000.rtcpu: using cam RTCPU IRQ (119)
+[五 10月 23 23:38:57 2026] tegra186-cam-rtcpu bc00000.rtcpu: tegra_camrtc_mon_create is successful
+[五 10月 23 23:38:57 2026] tegra186-cam-rtcpu bc00000.rtcpu: firmware version cpu=rce cmd=6 sha1=8676d22a01443bdbc66581b7dde3b6d6828cc925
+[五 10月 23 23:38:57 2026] t19x_cache tegra-cache: probed
+[五 10月 23 23:38:57 2026] scf-pmu-drv scf-pmu: Registered T23x SCF Uncore PMU
+[五 10月 23 23:38:57 2026] optee: probing for conduit method.
+[五 10月 23 23:38:57 2026] optee: revision 3.21 (d8269f24)
+[五 10月 23 23:38:57 2026] optee: dynamic shared memory is enabled
+[五 10月 23 23:38:57 2026] optee: initialized driver
+[五 10月 23 23:38:57 2026] nvpmodel: initialized successfully
+[五 10月 23 23:38:57 2026] tegra_hv: get_hvd: not initialized yet
+[五 10月 23 23:38:57 2026] user_ivc_mempool: hypervisor not present
+[五 10月 23 23:38:57 2026] usbcore: registered new interface driver snd-usb-audio
+[五 10月 23 23:38:57 2026] u32 classifier
+[五 10月 23 23:38:57 2026]     input device check on
+[五 10月 23 23:38:57 2026]     Actions configured
+[五 10月 23 23:38:57 2026] Initializing XFRM netlink socket
+[五 10月 23 23:38:57 2026] NET: Registered protocol family 10
+[五 10月 23 23:38:57 2026] Segment Routing with IPv6
+[五 10月 23 23:38:57 2026] NET: Registered protocol family 17
+[五 10月 23 23:38:57 2026] NET: Registered protocol family 15
+[五 10月 23 23:38:57 2026] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[五 10月 23 23:38:57 2026] Bluetooth: RFCOMM socket layer initialized
+[五 10月 23 23:38:57 2026] Bluetooth: RFCOMM ver 1.11
+[五 10月 23 23:38:57 2026] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+[五 10月 23 23:38:57 2026] Bluetooth: HIDP socket layer initialized
+[五 10月 23 23:38:57 2026] 9pnet: Installing 9P2000 support
+[五 10月 23 23:38:57 2026] Key type dns_resolver registered
+[五 10月 23 23:38:57 2026] registered taskstats version 1
+[五 10月 23 23:38:57 2026] Loading compiled-in X.509 certificates
+[五 10月 23 23:38:57 2026] Loaded X.509 cert 'Build time autogenerated kernel key: d94b64a20d69a5a32183bad4f211c4cae67041a9'
+[五 10月 23 23:38:57 2026] tegra194-pcie 14100000.pcie: Adding to iommu group 9
+[五 10月 23 23:38:57 2026] tegra194-pcie 14100000.pcie: Using GICv2m MSI allocator
+[五 10月 23 23:38:57 2026] tegra194-pcie 14160000.pcie: Adding to iommu group 10
+[五 10月 23 23:38:57 2026] tegra194-pcie 14160000.pcie: Using GICv2m MSI allocator
+[五 10月 23 23:38:57 2026] tegra194-pcie 141a0000.pcie: Adding to iommu group 11
+[五 10月 23 23:38:57 2026] tegra194-pcie 141a0000.pcie: Using GICv2m MSI allocator
+[五 10月 23 23:38:57 2026] tegra194-pcie 141a0000.pcie: Failed to get slot regulators: -517
+[五 10月 23 23:38:57 2026] tegra-soc-hwpm f100000.tegra_soc_hwpm: Adding to iommu group 12
+[五 10月 23 23:38:57 2026] host1x 13e40000.host1x: Adding to iommu group 13
+[五 10月 23 23:38:57 2026] host1x 13e40000.host1x: initialized
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx0: Adding to iommu group 14
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx0: initialized (streamid=53, iommu=smmu.0x0000000012000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx1: Adding to iommu group 15
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx1: initialized (streamid=54, iommu=smmu.0x0000000012000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx2: Adding to iommu group 16
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx2: initialized (streamid=55, iommu=smmu.0x0000000012000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx3: Adding to iommu group 17
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx3: initialized (streamid=56, iommu=smmu.0x0000000012000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx4: Adding to iommu group 18
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx4: initialized (streamid=57, iommu=smmu.0x0000000012000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx5: Adding to iommu group 19
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx5: initialized (streamid=58, iommu=smmu.0x0000000012000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx6: Adding to iommu group 20
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx6: initialized (streamid=59, iommu=smmu.0x0000000012000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx7: Adding to iommu group 21
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso0_ctx7: initialized (streamid=60, iommu=smmu.0x0000000012000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx0: Adding to iommu group 22
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx0: initialized (streamid=53, iommu=smmu.0x0000000008000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx1: Adding to iommu group 23
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx1: initialized (streamid=54, iommu=smmu.0x0000000008000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx2: Adding to iommu group 24
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx2: initialized (streamid=55, iommu=smmu.0x0000000008000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx3: Adding to iommu group 25
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx3: initialized (streamid=56, iommu=smmu.0x0000000008000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx4: Adding to iommu group 26
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx4: initialized (streamid=57, iommu=smmu.0x0000000008000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx5: Adding to iommu group 27
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx5: initialized (streamid=58, iommu=smmu.0x0000000008000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx6: Adding to iommu group 28
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx6: initialized (streamid=59, iommu=smmu.0x0000000008000000)
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx7: Adding to iommu group 29
+[五 10月 23 23:38:57 2026] iommu_context_dev 13e40000.host1x:niso1_ctx7: initialized (streamid=60, iommu=smmu.0x0000000008000000)
+[exit=0]

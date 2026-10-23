@@ -1,0 +1,6 @@
+$ ping -c 3 -W 2 192.168.1.62 2>&1 | tail -4
+
+--- 192.168.1.62 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2037ms
+rtt min/avg/max/mdev = 0.114/0.451/0.624/0.238 ms
+[exit=0]

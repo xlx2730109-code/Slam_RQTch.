@@ -1,0 +1,7 @@
+$ tailscale version
+1.104.2
+  tailscale commit: c3430f0d2b8a1d646ad3ae867e3470bac07f1fe0
+  long version: 1.104.2-tc3430f0d2-g598b63867
+  other commit: 598b63867959ac210c6a32b7961bb33eb57314db
+  go version: go1.27.3 (tailscale/go 7ef7b40364)
+[exit=0]

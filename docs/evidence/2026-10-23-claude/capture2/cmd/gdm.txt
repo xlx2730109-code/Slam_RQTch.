@@ -1,0 +1,13 @@
+$ cat /etc/gdm3/custom.conf 2>&1 | grep -v '^#' | grep -v '^$'; loginctl list-sessions --no-legend 2>&1
+[daemon]
+WaylandEnable = false
+AutomaticLoginEnable = true
+AutomaticLogin = sjytt
+TimedLoginEnable = false
+[security]
+[xdmcp]
+[chooser]
+[debug]
+  1 1000 sjytt seat0 tty2
+c13 1000 sjytt           
+[exit=0]

@@ -1,0 +1,11 @@
+$ ls -la /home/sjytt/wheeltec* 2>&1 | head; tar -tzf /home/sjytt/wheeltec.tar.gz 2>&1 | head -20
+-r--r--r-- 1 sjytt sjytt 26562 6月  16 17:52 /home/sjytt/wheeltec.tar.gz
+nav_gui.py
+slam_grid_ros1.py
+gps_to_odom.py
+nav_simple.py
+start_all.sh
+start_nav.sh
+set_goal.py
+nav.rviz
+[exit=0]

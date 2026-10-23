@@ -1,0 +1,7 @@
+$ ls /sys/class/gpio 2>&1 | head; gpioinfo 2>&1 | head -5
+export
+gpiochip316
+gpiochip348
+unexport
+bash: gpioinfo: command not found
+[exit=0]

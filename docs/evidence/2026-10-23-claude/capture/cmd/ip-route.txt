@@ -1,0 +1,7 @@
+$ ip route
+default via 172.20.10.1 dev wlan0 proto dhcp metric 600 
+169.254.0.0/16 dev tailscale0 scope link metric 1000 
+172.20.10.0/28 dev wlan0 proto kernel scope link src 172.20.10.14 metric 600 
+172.20.10.0/28 dev wlan0 proto kernel scope link src 172.20.10.8 metric 600 
+192.168.1.0/24 dev eth1 proto kernel scope link src 192.168.1.2 metric 101 
+[exit=0]

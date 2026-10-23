@@ -1,0 +1,14 @@
+[Unit]
+Description=Black box recorder (load, I/O pressure and top processes, 1 Hz)
+After=local-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/jiaoda-blackbox.sh
+Restart=always
+RestartSec=2
+Nice=-5
+OOMScoreAdjust=-900
+
+[Install]
+WantedBy=multi-user.target

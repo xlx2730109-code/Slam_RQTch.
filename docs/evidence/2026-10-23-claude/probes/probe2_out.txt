@@ -1,0 +1,55 @@
+=== now
+2026年 10月 23日 星期五 23:26:53 CST
+ 23:26:53 up 9 min,  1 user,  load average: 4.15, 3.23, 1.69
+=== root fs
+/dev/mmcblk0p1 ext4   rw,relatime
+=== tune2fs 错误相关字段
+Last mounted on:          /mnt
+Filesystem features:      has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum
+Filesystem state:         clean
+Errors behavior:          Continue
+Mount count:              35
+Maximum mount count:      -1
+Last checked:             Wed Aug 16 08:04:03 2023
+Lifetime writes:          11 GB
+=== 当前开机 dmesg 存储/I-O 报错
+=== I/O 调度与队列
+[mq-deadline] kyber none
+=== journal 目录(只看大小，不读内容)
+total 2007192
+drwxr-sr-x+ 2 root systemd-journal     12288 10月 23 23:03 .
+drwxr-sr-x+ 3 root systemd-journal      4096 10月 21 14:23 ..
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85ce699-eb531a9e2e06c205.journal~
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85cf65f-45225defaf4426e6.journal~
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85d0a34-01ab09afe5292f7a.journal~
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85d1190-3bf003e546d0480a.journal~
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85d1d5f-f0788a740064291a.journal~
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85d1ef5-23381e11a59c4fac.journal~
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85d3b89-df03399074b745d1.journal~
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85d3f22-ef7ec8224587e964.journal~
+-rw-r-----+ 1 root systemd-journal   8388608 3月  15  2023 system@0005f6f1a85d9cf7-38992ae52eaaa295.journal~
+Archived and active journals take up 1.9G in the file system.
+=== 近 5 秒 journal 来源计数
+415 kernel
+13 tailscaled.service
+4 systemd-logind.service
+3 init.scope
+2 session-c16.scope
+1 ssh.service
+1 sshd-2222.service
+=== 桌面索引服务 tracker
+   1810  1.8 30196     547 /usr/libexec/tracker-miner-fs
+   3254 23.6 51476     542 /usr/libexec/tracker-store
+   4168  2.0 45848     526 /usr/libexec/tracker-extract
+tracker-extract.service
+tracker-miner-fs.service
+tracker-store.service
+tracker-writeback.service
+tracker-extract.desktop
+tracker-miner-fs.desktop
+=== 体积(仅少数目录)
+1.1G  /home/sjytt/.cache/tracker
+22M  /home/sjytt/.local/share/tracker
+137M  /home/sjytt/.ros/log
+4.2M  /home/sjytt/backup
+/dev/mmcblk0p1   57G   14G   40G  26% /

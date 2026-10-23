@@ -1,0 +1,4 @@
+$ ls -l /dev/watchdog /dev/watchdog0
+crw------- 1 root root  10, 130 10月 23 23:36 /dev/watchdog
+crw------- 1 root root 241,   0 10月 23 23:36 /dev/watchdog0
+[exit=0]

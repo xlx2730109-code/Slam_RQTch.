@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>相机-雷达标定</title>
+<style>
+:root{--bg:#eef2f8;--card:#fff;--ink:#1a2233;--sub:#6b7691;--line:#e2e8f2;--blue:#2f6bff;--ok:#22b07d;--warn:#f0a020;--bad:#e5484d;--r:14px;--shadow:0 6px 20px rgba(30,50,90,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,"Segoe UI",Roboto,"Microsoft YaHei",sans-serif;-webkit-user-select:none;user-select:none}
+.app{max-width:1200px;margin:0 auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.hdr{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:var(--r);padding:12px 18px;box-shadow:var(--shadow)}
+.hdr .t{font-size:20px;font-weight:800}.pill{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.tag{background:#f4f7fc;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--sub)}.tag b{color:var(--ink)}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:12px}@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}.card h3{margin:0 0 10px;font-size:15px}
+.view{position:relative;background:#0f1524;border-radius:10px;overflow:hidden;aspect-ratio:16/9}.view img{width:100%;height:100%;object-fit:contain;display:block}
+.seg{display:flex;background:#2b3452;border-radius:10px;overflow:hidden;margin-bottom:10px}.seg div{flex:1;text-align:center;padding:10px;color:#aab6d6;font-weight:700;cursor:pointer;font-size:13px}.seg div.on{background:var(--blue);color:#fff}
+.btn{border:none;border-radius:10px;padding:13px 14px;font-size:15px;font-weight:700;cursor:pointer;color:#fff;background:#2b3452;width:100%}
+.btn.blue{background:var(--blue)}.btn.green{background:var(--ok)}.btn.ghost{background:#f4f7fc;color:#2b3452;border:1px solid var(--line)}.btn:active{transform:translateY(1px)}
+.row{display:flex;gap:8px;margin-top:8px}.cams{display:flex;gap:6px;margin-bottom:10px}.cams div{flex:1;text-align:center;padding:8px;border:1px solid var(--line);border-radius:8px;cursor:pointer;font-weight:700;color:var(--sub)}.cams div.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.big{font-size:34px;font-weight:800;text-align:center;margin:6px 0}.k{color:var(--sub);font-size:12px;text-align:center}
+.hint{font-size:13px;color:var(--sub);background:#f4f7fc;border:1px dashed var(--line);border-radius:8px;padding:10px;line-height:1.7}
+.res{font:13px/1.7 ui-monospace,Consolas,monospace;background:#0f1524;color:#9fe6c0;border-radius:8px;padding:12px;white-space:pre-wrap;min-height:40px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--bad);margin-right:5px}.dot.on{background:var(--ok)}
+.sld{display:flex;align-items:center;gap:8px;margin:7px 0}.sld label{width:74px;color:var(--sub);font-size:13px}.sld input{flex:1}.sld .v{width:58px;text-align:right;font-weight:700;font-size:13px}
+input[type=range]{-webkit-appearance:none;height:6px;border-radius:3px;background:#d8e0ef}input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--blue)}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hdr">
+    <div class="t">📐 相机-雷达标定</div>
+    <div class="pill">
+      <span class="tag"><span id="camdot" class="dot"></span>相机 <b id="camst">—</b></span>
+      <span class="tag">AprilTag <b id="tags">0</b></span>
+      <span class="tag">点云 <b id="pts">0</b></span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="cams" id="cams"></div>
+      <div class="view"><img id="cam" src="/stream.mjpg" alt="camera"></div>
+      <div class="hint" style="margin-top:10px" id="hint"></div>
+    </div>
+
+    <div class="card">
+      <div class="seg" id="mode">
+        <div data-m="intr" class="on">① 内参</div>
+        <div data-m="extr">② 外参采集</div>
+        <div data-m="align">③ 外参对齐</div>
+      </div>
+
+      <div id="panCap">
+        <div class="big"><span id="count">0</span> <span style="font-size:16px;color:var(--sub)">张</span></div>
+        <div class="k">已采集</div>
+        <button class="btn blue" style="margin-top:10px" onclick="cap()">● 采集当前这张</button>
+        <div class="row">
+          <button class="btn ghost" onclick="clr()">清空</button>
+          <button class="btn green" id="runbtn" onclick="run()">算内参</button>
+        </div>
+        <h3 style="margin-top:16px">结果</h3>
+        <div class="res" id="res">尚未计算</div>
+      </div>
+
+      <div id="panAlign" class="hide">
+        <div class="sld"><label>翻滚 rx</label><input type="range" id="rx" min="-30" max="30" step="0.5" value="0"><span class="v" id="vrx">0</span></div>
+        <div class="sld"><label>俯仰 ry</label><input type="range" id="ry" min="-30" max="30" step="0.5" value="0"><span class="v" id="vry">0</span></div>
+        <div class="sld"><label>偏航 rz</label><input type="range" id="rz" min="-30" max="30" step="0.5" value="0"><span class="v" id="vrz">0</span></div>
+        <div class="sld"><label>X (m)</label><input type="range" id="tx" min="-0.5" max="0.5" step="0.005" value="0"><span class="v" id="vtx">0</span></div>
+        <div class="sld"><label>Y (m)</label><input type="range" id="ty" min="-0.5" max="0.5" step="0.005" value="0"><span class="v" id="vty">0</span></div>
+        <div class="sld"><label>Z (m)</label><input type="range" id="tz" min="-0.5" max="0.5" step="0.005" value="0"><span class="v" id="vtz">0</span></div>
+        <div class="row"><button class="btn green" onclick="saveExtr()">✓ 保存外参到 Fast-LIVO2</button></div>
+        <div class="res" id="ares" style="margin-top:10px">拖滑块让彩色点云叠合到图像里的物体边缘。绿=近 红=远。对齐后点保存。</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const $=s=>document.querySelector(s);let mode="intr";const CAMS=[0,2,4,6];
+function cams(){const w=$('#cams');w.innerHTML='';CAMS.forEach(i=>{const d=document.createElement('div');d.textContent='相机'+i;d.onclick=()=>setcam(i);w.appendChild(d);});}
+async function post(u,b){try{const r=await fetch(u,{method:'POST',body:JSON.stringify(b||{})});return await r.json();}catch(e){return{ok:false}}}
+async function setcam(i){await post('/setcam',{i});reload();}
+function reload(){$('#cam').src=(mode==='align'?'/project.mjpg':'/stream.mjpg')+'?t='+Date.now();}
+function hint(){$('#hint').innerHTML = mode==="intr"
+  ? "<b>①内参</b>:举 AprilGrid 板,换角度远近采≥20张(<b>拍时静止别糊</b>),点「算内参」。"
+  : mode==="extr" ? "<b>②外参采集</b>:车停稳,相机+雷达同时看清有边缘的场景,采几组(存图+点云)。"
+  : "<b>③外参对齐</b>:让车对着有明显边缘的物体(墙角/箱子/门框),拖右边滑块,让<b>彩色雷达点</b>叠合到图像里物体的边缘;对齐后点「保存外参」。";}
+$('#mode').querySelectorAll('div').forEach(d=>d.onclick=()=>{
+  $('#mode').querySelectorAll('div').forEach(x=>x.classList.remove('on'));d.classList.add('on');mode=d.dataset.m;
+  $('#panCap').classList.toggle('hide',mode==='align');$('#panAlign').classList.toggle('hide',mode!=='align');
+  $('#runbtn').style.display=mode==='intr'?'':'none';hint();reload();refresh();});
+async function cap(){const r=await post('/capture',{mode});if(r.ok){$('#count').textContent=r.count;const v=$('#cam');v.style.outline='4px solid #22b07d';setTimeout(()=>v.style.outline='',180);}}
+async function clr(){if(!confirm('清空?'))return;await post('/clear',{mode});refresh();}
+async function run(){$('#res').textContent='计算中…';const r=await post('/intrinsics',{});
+  $('#res').textContent=r.ok?`✓ ${r.used}张 RMS=${r.rms}px\nfx=${r.fx} fy=${r.fy}\ncx=${r.cx} cy=${r.cy}\n畸变=${r.dist.join(', ')}`:'✗ '+(r.err||'失败');}
+const EK=['rx','ry','rz','tx','ty','tz'];
+function pushExtr(){const o={};EK.forEach(k=>{o[k]=parseFloat($('#'+k).value);$('#v'+k).textContent=$('#'+k).value;});post('/setextr',o);}
+EK.forEach(k=>{const e=$('#'+k);if(e)e.addEventListener('input',pushExtr);});
+async function loadExtr(){const e=await (await fetch('/extr')).json();EK.forEach(k=>{if($('#'+k)){$('#'+k).value=e[k];$('#v'+k).textContent=e[k];}});}
+async function saveExtr(){const r=await post('/saveextr',{});$('#ares').textContent=r.ok?'✓ 外参已写入 Fast-LIVO2 配置。重启 fastlivo 生效。':'✗ 保存失败';}
+async function refresh(){const s=await (await fetch('/status')).json();
+  $('#camst').textContent=s.cam+(s.cam_ok?'':'(打不开)');$('#camdot').classList.toggle('on',s.cam_ok);
+  $('#tags').textContent=s.tags;$('#pts').textContent=s.cloud_pts;
+  if(mode!=='align')$('#count').textContent=mode==='intr'?s.intr:s.extr;
+  $('#cams').querySelectorAll('div').forEach((d,k)=>d.classList.toggle('on',CAMS[k]===s.cam));}
+cams();hint();loadExtr();refresh();setInterval(refresh,1000);
+</script>
+</body>
+</html>

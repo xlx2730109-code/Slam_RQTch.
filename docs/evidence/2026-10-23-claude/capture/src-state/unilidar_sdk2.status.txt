@@ -1,0 +1,13 @@
+## unilidar_sdk2
+0e3c51f512e6b8ff60b8c32f160b412cb48445c2 2025-03-10 12:14:49 +0800 update to v2.0.10
+origin	https://github.com/unitreerobotics/unilidar_sdk2.git (fetch)
+origin	https://github.com/unitreerobotics/unilidar_sdk2.git (push)
+ M unitree_lidar_ros/src/unitree_lidar_ros/config/config.yaml
+?? unitree_lidar_ros/build/
+?? unitree_lidar_ros/devel/
+?? unitree_lidar_ros/src/CMakeLists.txt
+?? unitree_lidar_ros/src/unitree_lidar_ros/config/config.yaml.bak_ts
+?? unitree_lidar_ros/src/unitree_lidar_ros/config/config2.yaml
+?? unitree_lidar_ros/src/unitree_lidar_ros/launch/run_lidar2.launch
+?? unitree_lidar_sdk/bin/
+?? unitree_lidar_sdk/build/

@@ -1,0 +1,8 @@
+$ iw dev wlan0 link; iw dev wlan0 get power_save
+Connected to xx:xx:xx:xx:xx:xx (on wlan0)
+	SSID: xlx
+	freq: 2437
+	signal: -37 dBm
+	tx bitrate: 144.4 MBit/s
+Power save: off
+[exit=0]

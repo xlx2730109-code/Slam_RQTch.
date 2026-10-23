@@ -1,0 +1,63 @@
+[roslaunch][INFO] 2026-10-23 23:37:01,803: Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+[roslaunch][INFO] 2026-10-23 23:37:01,810: Done checking log file disk usage. Usage is <1GB.
+[roslaunch][INFO] 2026-10-23 23:37:01,811: roslaunch starting with args ['/opt/ros/noetic/bin/roslaunch', 'fast_livo', 'mapping_unitree_l2.launch', 'rviz:=false']
+[roslaunch][INFO] 2026-10-23 23:37:01,811: roslaunch env is environ({'SHELL': '/bin/bash', 'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/sjytt/livo2_ws/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'LANGUAGE': 'zh_CN:zh', 'ROS_PACKAGE_PATH': '/home/sjytt/livo2_ws/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/sjytt/livo2_ws/devel/share/common-lisp', 'PWD': '/', 'LOGNAME': 'sjytt', 'HOME': '/home/sjytt', 'LANG': 'zh_CN.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/sjytt/livo2_ws/devel:/opt/ros/noetic', 'INVOCATION_ID': 'af9af26ba6eb4175af912ab48306bf8c', 'PYTHONPATH': '/home/sjytt/livo2_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages', 'USER': 'sjytt', 'SHLVL': '0', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/sjytt/livo2_ws/devel/lib:/opt/ros/noetic/lib', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'ROS_LOG_FILENAME': '/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/roslaunch-sjytt-desktop-1224.log'})
+[roslaunch][INFO] 2026-10-23 23:37:01,811: starting in server mode
+[roslaunch.parent][INFO] 2026-10-23 23:37:01,811: starting roslaunch parent run
+[roslaunch][INFO] 2026-10-23 23:37:01,812: loading roscore config file /opt/ros/noetic/etc/ros/roscore.xml
+[roslaunch][INFO] 2026-10-23 23:37:02,096: Added core node of type [rosout/rosout] in namespace [/]
+[roslaunch.config][INFO] 2026-10-23 23:37:02,096: loading config file /home/sjytt/livo2_ws/src/FAST-LIVO2/launch/mapping_unitree_l2.launch
+[roslaunch][INFO] 2026-10-23 23:37:02,165: Added node of type [fast_livo/fastlivo_mapping] in namespace [/]
+[roslaunch][INFO] 2026-10-23 23:37:02,165: ... selected machine [] for node of type [fast_livo/fastlivo_mapping]
+[roslaunch.pmon][INFO] 2026-10-23 23:37:02,168: start_process_monitor: creating ProcessMonitor
+[roslaunch.pmon][INFO] 2026-10-23 23:37:02,168: created process monitor <ProcessMonitor(ProcessMonitor-1, initial daemon)>
+[roslaunch.pmon][INFO] 2026-10-23 23:37:02,169: start_process_monitor: ProcessMonitor started
+[roslaunch.parent][INFO] 2026-10-23 23:37:02,169: starting parent XML-RPC server
+[roslaunch.server][INFO] 2026-10-23 23:37:02,169: starting roslaunch XML-RPC server
+[roslaunch.server][INFO] 2026-10-23 23:37:02,169: waiting for roslaunch XML-RPC server to initialize
+[xmlrpc][INFO] 2026-10-23 23:37:02,169: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-10-23 23:37:02,170: Started XML-RPC server [http://sjytt-desktop:46083/]
+[xmlrpc][INFO] 2026-10-23 23:37:02,170: xml rpc node: starting XML-RPC server
+[roslaunch][INFO] 2026-10-23 23:37:02,182: started roslaunch server http://sjytt-desktop:46083/
+[roslaunch.parent][INFO] 2026-10-23 23:37:02,183: ... parent XML-RPC server started
+[roslaunch][INFO] 2026-10-23 23:37:02,183: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:37:02,186: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:37:02,188: ROS_MASTER_URI=http://localhost:11311
+[roslaunch][INFO] 2026-10-23 23:37:02,192: setting /roslaunch/uris/host_sjytt_desktop__46083' to http://sjytt-desktop:46083/
+[roslaunch][INFO] 2026-10-23 23:37:02,195: load_parameters starting ...
+[roslaunch][INFO] 2026-10-23 23:37:02,218: ... load_parameters complete
+[roslaunch][INFO] 2026-10-23 23:37:02,219: launch_nodes: launching local nodes ...
+[roslaunch][INFO] 2026-10-23 23:37:02,219: ... preparing to launch node of type [fast_livo/fastlivo_mapping]
+[roslaunch][INFO] 2026-10-23 23:37:02,219: create_node_process: package[fast_livo] type[fastlivo_mapping] machine[Machine(name[] env_loader[None] address[localhost] ssh_port[22] user[None] assignable[True] timeout[10.0])] master_uri[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:37:02,219: process[laserMapping-1]: env[{'SHELL': '/bin/bash', 'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/sjytt/livo2_ws/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'LANGUAGE': 'zh_CN:zh', 'ROS_PACKAGE_PATH': '/home/sjytt/livo2_ws/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/sjytt/livo2_ws/devel/share/common-lisp', 'PWD': '/', 'LOGNAME': 'sjytt', 'HOME': '/home/sjytt', 'LANG': 'zh_CN.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/sjytt/livo2_ws/devel:/opt/ros/noetic', 'INVOCATION_ID': 'af9af26ba6eb4175af912ab48306bf8c', 'PYTHONPATH': '/home/sjytt/livo2_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages', 'USER': 'sjytt', 'SHLVL': '0', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/sjytt/livo2_ws/devel/lib:/opt/ros/noetic/lib', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'ROS_LOG_FILENAME': '/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/roslaunch-sjytt-desktop-1224.log'}]
+[roslaunch][INFO] 2026-10-23 23:37:02,261: process[laserMapping-1]: args[['/home/sjytt/livo2_ws/devel/lib/fast_livo/fastlivo_mapping', '__name:=laserMapping']]
+[roslaunch][INFO] 2026-10-23 23:37:02,261: ... created process [laserMapping-1]
+[roslaunch.pmon][INFO] 2026-10-23 23:37:02,262: ProcessMonitor.register[laserMapping-1]
+[roslaunch.pmon][INFO] 2026-10-23 23:37:02,262: ProcessMonitor.register[laserMapping-1] complete
+[roslaunch][INFO] 2026-10-23 23:37:02,262: ... registered process [laserMapping-1]
+[roslaunch][INFO] 2026-10-23 23:37:02,262: process[laserMapping-1]: starting os process
+[roslaunch][INFO] 2026-10-23 23:37:02,262: process[laserMapping-1]: start w/ args [['/home/sjytt/livo2_ws/devel/lib/fast_livo/fastlivo_mapping', '__name:=laserMapping', '__log:=/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/laserMapping-1.log']]
+[roslaunch][INFO] 2026-10-23 23:37:02,262: process[laserMapping-1]: cwd will be [/home/sjytt/.ros]
+[roslaunch][INFO] 2026-10-23 23:37:02,276: process[laserMapping-1]: started with pid [4328]
+[roslaunch][INFO] 2026-10-23 23:37:02,276: ... successfully launched [laserMapping-1]
+[roslaunch][INFO] 2026-10-23 23:37:02,276: ... launch_nodes complete
+[roslaunch.pmon][INFO] 2026-10-23 23:37:02,276: registrations completed <ProcessMonitor(ProcessMonitor-1, started daemon 281473066639840)>
+[roslaunch.parent][INFO] 2026-10-23 23:37:02,277: ... roslaunch parent running, waiting for process exit
+[roslaunch][INFO] 2026-10-23 23:37:02,277: spin
+[roslaunch.pmon][INFO] 2026-10-23 23:39:34,548: ProcessMonitor.shutdown <ProcessMonitor(ProcessMonitor-1, started daemon 281473066639840)>
+[roslaunch.pmon][INFO] 2026-10-23 23:39:34,577: ProcessMonitor._post_run <ProcessMonitor(ProcessMonitor-1, started daemon 281473066639840)>
+[roslaunch.pmon][INFO] 2026-10-23 23:39:34,578: ProcessMonitor._post_run <ProcessMonitor(ProcessMonitor-1, started daemon 281473066639840)>: remaining procs are [<roslaunch.nodeprocess.LocalProcess object at 0xffff8e2f7460>]
+[roslaunch.pmon][INFO] 2026-10-23 23:39:34,578: ProcessMonitor exit: killing laserMapping-1
+[roslaunch][INFO] 2026-10-23 23:39:34,579: [laserMapping-1] killing on exit
+[roslaunch.pmon][INFO] 2026-10-23 23:39:34,580: ProcessMonitor exit: cleaning up data structures and signals
+[roslaunch.pmon][INFO] 2026-10-23 23:39:34,580: ProcessMonitor exit: pmon has shutdown
+[roslaunch][INFO] 2026-10-23 23:39:34,580: process monitor is done spinning, initiating full shutdown
+[roslaunch][INFO] 2026-10-23 23:39:34,580: runner.stop()
+[roslaunch][INFO] 2026-10-23 23:39:34,580: shutting down processing monitor...
+[roslaunch][INFO] 2026-10-23 23:39:34,580: shutting down processing monitor <ProcessMonitor(ProcessMonitor-1, stopped daemon 281473066639840)>
+[roslaunch.pmon][INFO] 2026-10-23 23:39:34,581: ProcessMonitor.shutdown <ProcessMonitor(ProcessMonitor-1, stopped daemon 281473066639840)>
+[roslaunch][INFO] 2026-10-23 23:39:34,581: ... shutting down processing monitor complete
+[roslaunch][INFO] 2026-10-23 23:39:34,581: done
+[roslaunch.pmon][INFO] 2026-10-23 23:39:34,581: ProcessMonitor.shutdown <ProcessMonitor(ProcessMonitor-1, stopped daemon 281473066639840)>
+[rospy.core][INFO] 2026-10-23 23:39:34,581: signal_shutdown [atexit]

@@ -1,0 +1,14 @@
+$ cd /home/sjytt/unilidar_sdk2/unitree_lidar_ros/src && find . -type f -not -path '*/.git/*' -exec sha256sum {} + | sort -k2
+d4a252c1471ca7ad14aa4cd3c3666f31a790573881de4ce1ab9126633548eef6  ./unitree_lidar_ros/CMakeLists.txt
+315a9525edba33342c1e31086610950847250ac9d636e5ae19399fe89902c109  ./unitree_lidar_ros/config/config2.yaml
+f713bcc47477e79cb1be87d61dc2c918ac4be49573e14bb79d9155f0e1e30dd7  ./unitree_lidar_ros/config/config.yaml
+6364b05a5cff0cf76a072e8e143a0fa5f5695ccbf980df7af4e7f58255cb2bdd  ./unitree_lidar_ros/config/config.yaml.bak_ts
+23a6856376439548ae8146e2e3ddc87989c162efe6b2283744a3bd09cc123bce  ./unitree_lidar_ros/include/unitree_lidar_ros.h
+12cdb6f5141932012d6967a13fcf847b840f10db2b9f5a9ea213bc1bca43c2dd  ./unitree_lidar_ros/launch/run.launch
+201413bd9b2c278415bd5721a244d5f7d78c90181ac3825e481e2c7abaff3b0f  ./unitree_lidar_ros/launch/run_lidar2.launch
+3c2eaba2c95162e57c4615a941f9f9cdcb3191ae3ab1eb1a0b09b7e781859b79  ./unitree_lidar_ros/launch/run_without_rviz.launch
+c0a2dfe326a827467e2424b191dfc8477e97c2571f56dba027dc1c2501e61d5f  ./unitree_lidar_ros/package.xml
+af314093b3e809cedb70c7ca6fd608e61f8e675bd184140d04ea9645dd02f726  ./unitree_lidar_ros/README.md
+dea8d1e124c6bcaa9db15788b19e9f361f2d0b44cfb44a4cca820e424ca45fa3  ./unitree_lidar_ros/rviz/view.rviz
+1d0d30ef0d381d1b38c76d65ea94bf77a9b0b32a36044782a57096243cb04794  ./unitree_lidar_ros/src/unitree_lidar_ros_node.cpp
+[exit=0]

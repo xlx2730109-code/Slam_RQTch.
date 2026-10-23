@@ -1,0 +1,11 @@
+[Unit]
+Description=jiaoda posebridge
+After=jiaoda-fastlivo.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_pose_bridge.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target

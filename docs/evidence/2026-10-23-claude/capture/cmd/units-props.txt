@@ -1,0 +1,181 @@
+$ for u in $(systemctl list-units 'jiaoda-*' --no-legend --all | awk '{print $1}' | grep service); do echo "##### $u"; systemctl show $u -p MainPID -p NRestarts -p Nice -p OOMScoreAdjust -p CPUQuotaPerSecUSec -p MemoryLimit -p Environment -p ExecStart --no-pager | cut -c1-300; done
+##### jiaoda-blackbox.service
+MainPID=16902
+NRestarts=0
+ExecStart={ path=/usr/local/sbin/jiaoda-blackbox.sh ; argv[]=/usr/local/sbin/jiaoda-blackbox.sh ; ignore_errors=no ; start_time=[Fri 2026-10-23 23:41:50 CST] ; stop_time=[n/a] ; pid=16902 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=-900
+Nice=-5
+##### jiaoda-campub.service
+MainPID=1179
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_campub.sh ; argv[]=/home/sjytt/jiaoda/run_campub.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=CAMPUB_FPS=5
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-console.service
+MainPID=16774
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run.sh ; argv[]=/home/sjytt/jiaoda/run.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-control.service
+MainPID=1182
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_control.sh ; argv[]=/home/sjytt/jiaoda/run_control.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-fastlivo.service
+MainPID=17008
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_fastlivo.sh ; argv[]=/home/sjytt/jiaoda/run_fastlivo.sh ; ignore_errors=no ; start_time=[Fri 2026-10-23 23:41:51 CST] ; stop_time=[n/a] ; pid=17008 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=4s
+MemoryLimit=12884901888
+Environment=
+OOMScoreAdjust=700
+Nice=5
+##### jiaoda-grid.service
+MainPID=17014
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_grid.sh ; argv[]=/home/sjytt/jiaoda/run_grid.sh ; ignore_errors=no ; start_time=[Fri 2026-10-23 23:41:51 CST] ; stop_time=[n/a] ; pid=17014 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=1.500000s
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=600
+Nice=10
+##### jiaoda-lidar.service
+MainPID=1174
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_lidar.sh ; argv[]=/home/sjytt/jiaoda/run_lidar.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-memguard.service
+MainPID=16903
+NRestarts=0
+ExecStart={ path=/usr/local/sbin/jiaoda-memguard.sh ; argv[]=/usr/local/sbin/jiaoda-memguard.sh ; ignore_errors=no ; start_time=[Fri 2026-10-23 23:41:50 CST] ; stop_time=[n/a] ; pid=16903 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=-900
+Nice=-5
+##### jiaoda-mission.service
+MainPID=1327
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_mission.sh ; argv[]=/home/sjytt/jiaoda/run_mission.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-nav.service
+MainPID=1326
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_nav_simple.sh ; argv[]=/home/sjytt/jiaoda/run_nav_simple.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=1.500000s
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=600
+Nice=10
+##### jiaoda-netguard.service
+MainPID=16905
+NRestarts=0
+ExecStart={ path=/usr/local/sbin/jiaoda-netguard.sh ; argv[]=/usr/local/sbin/jiaoda-netguard.sh ; ignore_errors=no ; start_time=[Fri 2026-10-23 23:41:50 CST] ; stop_time=[n/a] ; pid=16905 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=-900
+Nice=-5
+##### jiaoda-netwatch.service
+MainPID=0
+NRestarts=0
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-posebridge.service
+MainPID=1250
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_pose_bridge.sh ; argv[]=/home/sjytt/jiaoda/run_pose_bridge.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-powerlog.service
+MainPID=2347
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/power_log.sh ; argv[]=/home/sjytt/jiaoda/power_log.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-restamp.service
+MainPID=1186
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_restamp.sh ; argv[]=/home/sjytt/jiaoda/run_restamp.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-safe-stop.service
+MainPID=0
+NRestarts=0
+ExecStart={ path=/usr/bin/python3 ; argv[]=/usr/bin/python3 /home/sjytt/jiaoda/safe_stop.py ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-serialguard.service
+MainPID=1187
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_serialguard.sh ; argv[]=/home/sjytt/jiaoda/run_serialguard.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-slamguard.service
+MainPID=1258
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/run_slamguard.sh ; argv[]=/home/sjytt/jiaoda/run_slamguard.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-sshguard.service
+MainPID=1362
+NRestarts=0
+ExecStart={ path=/home/sjytt/jiaoda/ssh_guard.sh ; argv[]=/home/sjytt/jiaoda/ssh_guard.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+##### jiaoda-usbpower.service
+MainPID=0
+NRestarts=0
+ExecStart={ path=/bin/sh ; argv[]=/bin/sh -c echo -1 > /sys/module/usbcore/parameters/autosuspend; for f in /sys/bus/usb/devices/*/power/control; do echo on > "$f" 2>/dev/null; done; exit 0 ; ignore_errors=no ; start_time=[Fri 2026-10-23 23:41:50 CST] ; stop_time=[Fri 2026-10-23 23:41:51 CST] ; pid=
+CPUQuotaPerSecUSec=infinity
+MemoryLimit=infinity
+Environment=
+OOMScoreAdjust=0
+Nice=0
+[exit=0]

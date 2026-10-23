@@ -1,0 +1,79 @@
+[roslaunch][INFO] 2026-10-23 23:36:54,441: Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+[roslaunch][INFO] 2026-10-23 23:36:54,679: Done checking log file disk usage. Usage is <1GB.
+[roslaunch][INFO] 2026-10-23 23:36:54,680: roslaunch starting with args ['/opt/ros/noetic/bin/roslaunch', 'unitree_lidar_ros', 'run_without_rviz.launch']
+[roslaunch][INFO] 2026-10-23 23:36:54,680: roslaunch env is environ({'SHELL': '/bin/bash', 'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/pkgconfig:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'LANGUAGE': 'zh_CN:zh', 'ROS_PACKAGE_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/src:/home/sjytt/unilidar_sdk/unitree_lidar_ros/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/share/common-lisp:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/share/common-lisp', 'PWD': '/', 'LOGNAME': 'sjytt', 'HOME': '/home/sjytt', 'LANG': 'zh_CN.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel:/opt/ros/noetic', 'INVOCATION_ID': '2a49c397790345bb9c4ae9f0b312da81', 'PYTHONPATH': '/opt/ros/noetic/lib/python3/dist-packages', 'USER': 'sjytt', 'SHLVL': '0', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/lib:/opt/ros/noetic/lib', 'JOURNAL_STREAM': '8:51643', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'ROS_LOG_FILENAME': '/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/roslaunch-sjytt-desktop-1174.log'})
+[roslaunch][INFO] 2026-10-23 23:36:54,680: starting in server mode
+[roslaunch.parent][INFO] 2026-10-23 23:36:54,681: starting roslaunch parent run
+[roslaunch][INFO] 2026-10-23 23:36:54,681: loading roscore config file /opt/ros/noetic/etc/ros/roscore.xml
+[roslaunch][INFO] 2026-10-23 23:36:55,059: Added core node of type [rosout/rosout] in namespace [/]
+[roslaunch.config][INFO] 2026-10-23 23:36:55,060: loading config file /home/sjytt/unilidar_sdk2/unitree_lidar_ros/src/unitree_lidar_ros/launch/run_without_rviz.launch
+[roslaunch][INFO] 2026-10-23 23:36:55,189: Added node of type [unitree_lidar_ros/unitree_lidar_ros_node] in namespace [/]
+[roslaunch][INFO] 2026-10-23 23:36:55,190: ... selected machine [] for node of type [unitree_lidar_ros/unitree_lidar_ros_node]
+[roslaunch.pmon][INFO] 2026-10-23 23:36:55,237: start_process_monitor: creating ProcessMonitor
+[roslaunch.pmon][INFO] 2026-10-23 23:36:55,238: created process monitor <ProcessMonitor(ProcessMonitor-1, initial daemon)>
+[roslaunch.pmon][INFO] 2026-10-23 23:36:55,239: start_process_monitor: ProcessMonitor started
+[roslaunch.parent][INFO] 2026-10-23 23:36:55,240: starting parent XML-RPC server
+[roslaunch.server][INFO] 2026-10-23 23:36:55,240: starting roslaunch XML-RPC server
+[roslaunch.server][INFO] 2026-10-23 23:36:55,240: waiting for roslaunch XML-RPC server to initialize
+[xmlrpc][INFO] 2026-10-23 23:36:55,240: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2026-10-23 23:36:55,241: Started XML-RPC server [http://sjytt-desktop:42437/]
+[xmlrpc][INFO] 2026-10-23 23:36:55,241: xml rpc node: starting XML-RPC server
+[roslaunch][INFO] 2026-10-23 23:36:55,272: started roslaunch server http://sjytt-desktop:42437/
+[roslaunch.parent][INFO] 2026-10-23 23:36:55,272: ... parent XML-RPC server started
+[roslaunch][INFO] 2026-10-23 23:36:55,272: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:55,273: auto-starting new master
+[roslaunch][INFO] 2026-10-23 23:36:55,274: create_master_process: rosmaster, /opt/ros/noetic/share/ros, 11311, 3, None, False
+[roslaunch][INFO] 2026-10-23 23:36:55,274: process[master]: launching with args [['rosmaster', '--core', '-p', '11311', '-w', '3']]
+[roslaunch.pmon][INFO] 2026-10-23 23:36:55,274: ProcessMonitor.register[master]
+[roslaunch.pmon][INFO] 2026-10-23 23:36:55,274: ProcessMonitor.register[master] complete
+[roslaunch][INFO] 2026-10-23 23:36:55,274: process[master]: starting os process
+[roslaunch][INFO] 2026-10-23 23:36:55,275: process[master]: start w/ args [['rosmaster', '--core', '-p', '11311', '-w', '3', '__log:=/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/master.log']]
+[roslaunch][INFO] 2026-10-23 23:36:55,275: process[master]: cwd will be [/home/sjytt/.ros]
+[roslaunch][INFO] 2026-10-23 23:36:55,319: process[master]: started with pid [2840]
+[roslaunch][INFO] 2026-10-23 23:36:55,319: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:55,429: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:55,531: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:55,632: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:55,733: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:55,835: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:55,939: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:56,040: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:56,141: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:56,145: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:56,149: ROS_MASTER_URI=http://localhost:11311
+[roslaunch][INFO] 2026-10-23 23:36:56,152: setting /run_id to 92f42c92-cef7-11f1-957c-3c6d66b13904
+[roslaunch][INFO] 2026-10-23 23:36:56,154: setting /roslaunch/uris/host_sjytt_desktop__42437' to http://sjytt-desktop:42437/
+[roslaunch][INFO] 2026-10-23 23:36:56,159: ... preparing to launch node of type [rosout/rosout]
+[roslaunch][INFO] 2026-10-23 23:36:56,160: create_node_process: package[rosout] type[rosout] machine[Machine(name[] env_loader[None] address[localhost] ssh_port[22] user[None] assignable[True] timeout[10.0])] master_uri[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:56,160: process[rosout-1]: env[{'SHELL': '/bin/bash', 'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/pkgconfig:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'LANGUAGE': 'zh_CN:zh', 'ROS_PACKAGE_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/src:/home/sjytt/unilidar_sdk/unitree_lidar_ros/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/share/common-lisp:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/share/common-lisp', 'PWD': '/', 'LOGNAME': 'sjytt', 'HOME': '/home/sjytt', 'LANG': 'zh_CN.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel:/opt/ros/noetic', 'INVOCATION_ID': '2a49c397790345bb9c4ae9f0b312da81', 'PYTHONPATH': '/opt/ros/noetic/lib/python3/dist-packages', 'USER': 'sjytt', 'SHLVL': '0', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/lib:/opt/ros/noetic/lib', 'JOURNAL_STREAM': '8:51643', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'ROS_LOG_FILENAME': '/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/roslaunch-sjytt-desktop-1174.log'}]
+[roslaunch][INFO] 2026-10-23 23:36:56,216: process[rosout-1]: args[['/opt/ros/noetic/lib/rosout/rosout', '__name:=rosout']]
+[roslaunch][INFO] 2026-10-23 23:36:56,216: ... created process [rosout-1]
+[roslaunch.pmon][INFO] 2026-10-23 23:36:56,217: ProcessMonitor.register[rosout-1]
+[roslaunch.pmon][INFO] 2026-10-23 23:36:56,217: ProcessMonitor.register[rosout-1] complete
+[roslaunch][INFO] 2026-10-23 23:36:56,217: ... registered process [rosout-1]
+[roslaunch][INFO] 2026-10-23 23:36:56,217: process[rosout-1]: starting os process
+[roslaunch][INFO] 2026-10-23 23:36:56,218: process[rosout-1]: start w/ args [['/opt/ros/noetic/lib/rosout/rosout', '__name:=rosout', '__log:=/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/rosout-1.log']]
+[roslaunch][INFO] 2026-10-23 23:36:56,218: process[rosout-1]: cwd will be [/home/sjytt/.ros]
+[roslaunch][INFO] 2026-10-23 23:36:56,226: process[rosout-1]: started with pid [3084]
+[roslaunch][INFO] 2026-10-23 23:36:56,227: ... successfully launched [rosout-1]
+[roslaunch][INFO] 2026-10-23 23:36:56,227: load_parameters starting ...
+[roslaunch][INFO] 2026-10-23 23:36:56,256: ... load_parameters complete
+[roslaunch][INFO] 2026-10-23 23:36:56,257: launch_nodes: launching local nodes ...
+[roslaunch][INFO] 2026-10-23 23:36:56,257: ... preparing to launch node of type [unitree_lidar_ros/unitree_lidar_ros_node]
+[roslaunch][INFO] 2026-10-23 23:36:56,257: create_node_process: package[unitree_lidar_ros] type[unitree_lidar_ros_node] machine[Machine(name[] env_loader[None] address[localhost] ssh_port[22] user[None] assignable[True] timeout[10.0])] master_uri[http://localhost:11311]
+[roslaunch][INFO] 2026-10-23 23:36:56,257: process[unitree_lidar_ros_node-2]: env[{'SHELL': '/bin/bash', 'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/pkgconfig:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'LANGUAGE': 'zh_CN:zh', 'ROS_PACKAGE_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/src:/home/sjytt/unilidar_sdk/unitree_lidar_ros/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/share/common-lisp:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/share/common-lisp', 'PWD': '/', 'LOGNAME': 'sjytt', 'HOME': '/home/sjytt', 'LANG': 'zh_CN.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel:/opt/ros/noetic', 'INVOCATION_ID': '2a49c397790345bb9c4ae9f0b312da81', 'PYTHONPATH': '/opt/ros/noetic/lib/python3/dist-packages', 'USER': 'sjytt', 'SHLVL': '0', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib:/home/sjytt/unilidar_sdk/unitree_lidar_ros/devel/lib:/opt/ros/noetic/lib', 'JOURNAL_STREAM': '8:51643', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'ROS_LOG_FILENAME': '/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/roslaunch-sjytt-desktop-1174.log'}]
+[roslaunch][INFO] 2026-10-23 23:36:56,259: process[unitree_lidar_ros_node-2]: args[['/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/unitree_lidar_ros/unitree_lidar_ros_node', '__name:=unitree_lidar_ros_node']]
+[roslaunch][INFO] 2026-10-23 23:36:56,259: ... created process [unitree_lidar_ros_node-2]
+[roslaunch.pmon][INFO] 2026-10-23 23:36:56,259: ProcessMonitor.register[unitree_lidar_ros_node-2]
+[roslaunch.pmon][INFO] 2026-10-23 23:36:56,260: ProcessMonitor.register[unitree_lidar_ros_node-2] complete
+[roslaunch][INFO] 2026-10-23 23:36:56,260: ... registered process [unitree_lidar_ros_node-2]
+[roslaunch][INFO] 2026-10-23 23:36:56,260: process[unitree_lidar_ros_node-2]: starting os process
+[roslaunch][INFO] 2026-10-23 23:36:56,260: process[unitree_lidar_ros_node-2]: start w/ args [['/home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/unitree_lidar_ros/unitree_lidar_ros_node', '__name:=unitree_lidar_ros_node', '__log:=/home/sjytt/.ros/log/92f42c92-cef7-11f1-957c-3c6d66b13904/unitree_lidar_ros_node-2.log']]
+[roslaunch][INFO] 2026-10-23 23:36:56,260: process[unitree_lidar_ros_node-2]: cwd will be [/home/sjytt/.ros]
+[roslaunch][INFO] 2026-10-23 23:36:56,304: process[unitree_lidar_ros_node-2]: started with pid [3088]
+[roslaunch][INFO] 2026-10-23 23:36:56,304: ... successfully launched [unitree_lidar_ros_node-2]
+[roslaunch][INFO] 2026-10-23 23:36:56,305: ... launch_nodes complete
+[roslaunch.pmon][INFO] 2026-10-23 23:36:56,305: registrations completed <ProcessMonitor(ProcessMonitor-1, started daemon 281473015284192)>
+[roslaunch.parent][INFO] 2026-10-23 23:36:56,305: ... roslaunch parent running, waiting for process exit
+[roslaunch][INFO] 2026-10-23 23:36:56,305: spin

@@ -1,0 +1,32 @@
+$ ethtool eth1 2>&1 | head -20; ethtool -i eth1 2>&1
+Settings for eth1:
+	Supported ports: [ ]
+	Supported link modes:   100baseT/Half 100baseT/Full 
+	                        1000baseT/Full 
+	                        1000baseKX/Full 
+	                        10000baseT/Full 
+	                        10000baseKX4/Full 
+	                        10000baseKR/Full 
+	                        2500baseT/Full 
+	                        5000baseT/Full 
+	Supported pause frame use: Symmetric Receive-only
+	Supports auto-negotiation: Yes
+	Supported FEC modes: Not reported
+	Advertised link modes:  100baseT/Half 100baseT/Full 
+	                        1000baseT/Full 
+	                        1000baseKX/Full 
+	                        10000baseT/Full 
+	                        10000baseKX4/Full 
+	                        10000baseKR/Full 
+	                        2500baseT/Full 
+driver: nvethernet
+version: 5.10.120-tegra
+firmware-version: 
+expansion-rom-version: 
+bus-info: 6810000.ethernet
+supports-statistics: yes
+supports-test: yes
+supports-eeprom-access: no
+supports-register-dump: no
+supports-priv-flags: no
+[exit=0]

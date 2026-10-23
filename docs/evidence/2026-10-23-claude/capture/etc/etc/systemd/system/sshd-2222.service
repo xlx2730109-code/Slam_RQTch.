@@ -1,0 +1,12 @@
+[Unit]
+Description=Secondary sshd on port 2222
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/sshd -D -p 2222 -o PidFile=/run/sshd-2222.pid
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

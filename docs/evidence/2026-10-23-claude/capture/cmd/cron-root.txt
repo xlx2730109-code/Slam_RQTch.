@@ -1,0 +1,3 @@
+$ crontab -l
+no crontab for root
+[exit=1]

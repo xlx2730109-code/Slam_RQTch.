@@ -1,0 +1,52 @@
+$ ls /usr/local/ 2>&1; cat /usr/local/cuda/version.json 2>/dev/null | head -20; nvcc --version 2>&1 | tail -3; dpkg -l | grep -E 'nvidia-jetpack|nvidia-l4t-core|tensorrt|libcudnn|cuda-toolkit|vpi|opencv' | awk '{print $2, $3}' | head -40
+bin
+etc
+games
+include
+lib
+man
+sbin
+share
+src
+bash: nvcc: command not found
+libgstreamer-opencv1.0-0:arm64 1.16.3-0ubuntu1
+libopencv-calib3d-dev:arm64 4.2.0+dfsg-5
+libopencv-calib3d4.2:arm64 4.2.0+dfsg-5
+libopencv-contrib-dev:arm64 4.2.0+dfsg-5
+libopencv-contrib4.2:arm64 4.2.0+dfsg-5
+libopencv-core-dev:arm64 4.2.0+dfsg-5
+libopencv-core4.2:arm64 4.2.0+dfsg-5
+libopencv-dev 4.2.0+dfsg-5
+libopencv-dnn-dev:arm64 4.2.0+dfsg-5
+libopencv-dnn4.2:arm64 4.2.0+dfsg-5
+libopencv-features2d-dev:arm64 4.2.0+dfsg-5
+libopencv-features2d4.2:arm64 4.2.0+dfsg-5
+libopencv-flann-dev:arm64 4.2.0+dfsg-5
+libopencv-flann4.2:arm64 4.2.0+dfsg-5
+libopencv-highgui-dev:arm64 4.2.0+dfsg-5
+libopencv-highgui4.2:arm64 4.2.0+dfsg-5
+libopencv-imgcodecs-dev:arm64 4.2.0+dfsg-5
+libopencv-imgcodecs4.2:arm64 4.2.0+dfsg-5
+libopencv-imgproc-dev:arm64 4.2.0+dfsg-5
+libopencv-imgproc4.2:arm64 4.2.0+dfsg-5
+libopencv-ml-dev:arm64 4.2.0+dfsg-5
+libopencv-ml4.2:arm64 4.2.0+dfsg-5
+libopencv-objdetect-dev:arm64 4.2.0+dfsg-5
+libopencv-objdetect4.2:arm64 4.2.0+dfsg-5
+libopencv-photo-dev:arm64 4.2.0+dfsg-5
+libopencv-photo4.2:arm64 4.2.0+dfsg-5
+libopencv-shape-dev:arm64 4.2.0+dfsg-5
+libopencv-shape4.2:arm64 4.2.0+dfsg-5
+libopencv-stitching-dev:arm64 4.2.0+dfsg-5
+libopencv-stitching4.2:arm64 4.2.0+dfsg-5
+libopencv-superres-dev:arm64 4.2.0+dfsg-5
+libopencv-superres4.2:arm64 4.2.0+dfsg-5
+libopencv-ts-dev:arm64 4.2.0+dfsg-5
+libopencv-video-dev:arm64 4.2.0+dfsg-5
+libopencv-video4.2:arm64 4.2.0+dfsg-5
+libopencv-videoio-dev:arm64 4.2.0+dfsg-5
+libopencv-videoio4.2:arm64 4.2.0+dfsg-5
+libopencv-videostab-dev:arm64 4.2.0+dfsg-5
+libopencv-videostab4.2:arm64 4.2.0+dfsg-5
+libopencv-viz-dev:arm64 4.2.0+dfsg-5
+[exit=0]

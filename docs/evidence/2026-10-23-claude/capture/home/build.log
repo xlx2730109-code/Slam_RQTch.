@@ -1,0 +1,468 @@
++ P=<REDACTED-PASSWORD>
++ LOG STAGE1 apt deps
++ echo '===== STAGE1 apt deps ====='
+===== STAGE1 apt deps =====
++ echo <REDACTED-PASSWORD>
++ sudo -S apt-get install -y ros-noetic-image-transport ros-noetic-vision-opencv ros-noetic-cv-bridge
++ tail -5
+Selecting previously unselected package ros-noetic-vision-opencv.
+Preparing to unpack .../ros-noetic-vision-opencv_1.16.2-1focal.20250520.073617_arm64.deb ...
+Unpacking ros-noetic-vision-opencv (1.16.2-1focal.20250520.073617) ...
+Setting up ros-noetic-image-geometry (1.16.2-1focal.20250520.051610) ...
+Setting up ros-noetic-vision-opencv (1.16.2-1focal.20250520.073617) ...
++ LOG STAGE2 Sophus
++ echo '===== STAGE2 Sophus ====='
+===== STAGE2 Sophus =====
++ cd /home/sjytt
++ rm -rf Sophus_src
++ git clone https://github.com/strasdat/Sophus.git Sophus_src
++ tail -2
+Cloning into 'Sophus_src'...
++ cd /home/sjytt/Sophus_src
++ tail -2
++ git checkout a621ff2
+
+HEAD is now at a621ff2e Merge pull request #3 from obiou/master
++ mkdir -p build
++ cd build
++ cmake .. -DBUILD_SOPHUS_TESTS=OFF -DBUILD_SOPHUS_EXAMPLES=OFF
++ tail -5
+    BUILD_SOPHUS_EXAMPLES
+    BUILD_SOPHUS_TESTS
+
+
+-- Build files have been written to: /home/sjytt/Sophus_src/build
++ make -j4
++ tail -8
+   33 |   unit_complex_.imag() = 0.;
+      |                          ^~
+make[2]: *** [CMakeFiles/Sophus.dir/build.make:66: CMakeFiles/Sophus.dir/sophus/so2.cpp.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[2]: Leaving directory '/home/sjytt/Sophus_src/build'
+make[1]: *** [CMakeFiles/Makefile2:91: CMakeFiles/Sophus.dir/all] Error 2
+make[1]: Leaving directory '/home/sjytt/Sophus_src/build'
+make: *** [Makefile:144: all] Error 2
++ echo <REDACTED-PASSWORD>
++ tail -3
++ sudo -S make install
+make[1]: *** [CMakeFiles/Makefile2:91: CMakeFiles/Sophus.dir/all] Error 2
+make[1]: Leaving directory '/home/sjytt/Sophus_src/build'
+make: *** [Makefile:144: all] Error 2
++ LOG STAGE3 vikit
++ echo '===== STAGE3 vikit ====='
+===== STAGE3 vikit =====
++ cd /home/sjytt/livo2_ws/src
++ rm -rf rpg_vikit
++ git clone https://github.com/xuankuzcr/rpg_vikit.git
++ tail -2
+Cloning into 'rpg_vikit'...
++ LOG STAGE4 catkin_make
++ echo '===== STAGE4 catkin_make ====='
+===== STAGE4 catkin_make =====
++ source /opt/ros/noetic/setup.bash
+++ CATKIN_SHELL=bash
+++++ dirname /opt/ros/noetic/setup.bash
++++ builtin cd /opt/ros/noetic
++++ pwd
+++ _CATKIN_SETUP_DIR=/opt/ros/noetic
+++ . /opt/ros/noetic/setup.sh
++++ : /opt/ros/noetic
++++ _SETUP_UTIL=/opt/ros/noetic/_setup_util.py
++++ unset _CATKIN_SETUP_DIR
++++ '[' '!' -f /opt/ros/noetic/_setup_util.py ']'
+++++ uname -s
++++ _UNAME=Linux
++++ _IS_DARWIN=0
++++ '[' Linux = Darwin ']'
++++ unset _UNAME
++++ export CMAKE_PREFIX_PATH
++++ '[' 0 -eq 0 ']'
++++ export LD_LIBRARY_PATH
++++ unset _IS_DARWIN
++++ export PATH
++++ export PKG_CONFIG_PATH
++++ export PYTHONPATH
++++ '[' -z bash ']'
++++ '[' -d '' ']'
++++ _TMPDIR=/tmp
+++++ mktemp /tmp/setup.sh.XXXXXXXXXX
++++ _SETUP_TMP=/tmp/setup.sh.PoeHPP5eut
++++ unset _TMPDIR
++++ '[' 0 -ne 0 -o '!' -f /tmp/setup.sh.PoeHPP5eut ']'
++++ CATKIN_SHELL=bash
++++ /opt/ros/noetic/_setup_util.py
++++ _RC=0
++++ '[' 0 -ne 0 ']'
++++ unset _RC
++++ unset _SETUP_UTIL
++++ . /tmp/setup.sh.PoeHPP5eut
+++++ export CMAKE_PREFIX_PATH=/opt/ros/noetic
+++++ CMAKE_PREFIX_PATH=/opt/ros/noetic
+++++ export LD_LIBRARY_PATH=/opt/ros/noetic/lib
+++++ LD_LIBRARY_PATH=/opt/ros/noetic/lib
+++++ export PATH=/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+++++ PATH=/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+++++ export PKG_CONFIG_PATH=/opt/ros/noetic/lib/pkgconfig
+++++ PKG_CONFIG_PATH=/opt/ros/noetic/lib/pkgconfig
+++++ export PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages
+++++ PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages
+++++ export _CATKIN_ENVIRONMENT_HOOKS_COUNT=12
+++++ _CATKIN_ENVIRONMENT_HOOKS_COUNT=12
+++++ export _CATKIN_ENVIRONMENT_HOOKS_0=/opt/ros/noetic/etc/catkin/profile.d/1.ros_distro.sh
+++++ _CATKIN_ENVIRONMENT_HOOKS_0=/opt/ros/noetic/etc/catkin/profile.d/1.ros_distro.sh
+++++ export _CATKIN_ENVIRONMENT_HOOKS_0_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_0_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_1=/opt/ros/noetic/etc/catkin/profile.d/1.ros_etc_dir.sh
+++++ _CATKIN_ENVIRONMENT_HOOKS_1=/opt/ros/noetic/etc/catkin/profile.d/1.ros_etc_dir.sh
+++++ export _CATKIN_ENVIRONMENT_HOOKS_1_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_1_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_2=/opt/ros/noetic/etc/catkin/profile.d/1.ros_package_path.sh
+++++ _CATKIN_ENVIRONMENT_HOOKS_2=/opt/ros/noetic/etc/catkin/profile.d/1.ros_package_path.sh
+++++ export _CATKIN_ENVIRONMENT_HOOKS_2_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_2_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_3=/opt/ros/noetic/etc/catkin/profile.d/1.ros_python_version.sh
+++++ _CATKIN_ENVIRONMENT_HOOKS_3=/opt/ros/noetic/etc/catkin/profile.d/1.ros_python_version.sh
+++++ export _CATKIN_ENVIRONMENT_HOOKS_3_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_3_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_4=/opt/ros/noetic/etc/catkin/profile.d/1.ros_version.sh
+++++ _CATKIN_ENVIRONMENT_HOOKS_4=/opt/ros/noetic/etc/catkin/profile.d/1.ros_version.sh
+++++ export _CATKIN_ENVIRONMENT_HOOKS_4_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_4_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_5=/opt/ros/noetic/etc/catkin/profile.d/10.rosbuild.sh
+++++ _CATKIN_ENVIRONMENT_HOOKS_5=/opt/ros/noetic/etc/catkin/profile.d/10.rosbuild.sh
+++++ export _CATKIN_ENVIRONMENT_HOOKS_5_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_5_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_6=/opt/ros/noetic/etc/catkin/profile.d/10.roslaunch.sh
+++++ _CATKIN_ENVIRONMENT_HOOKS_6=/opt/ros/noetic/etc/catkin/profile.d/10.roslaunch.sh
+++++ export _CATKIN_ENVIRONMENT_HOOKS_6_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_6_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_7=/opt/ros/noetic/etc/catkin/profile.d/99.roslisp.sh
+++++ _CATKIN_ENVIRONMENT_HOOKS_7=/opt/ros/noetic/etc/catkin/profile.d/99.roslisp.sh
+++++ export _CATKIN_ENVIRONMENT_HOOKS_7_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_7_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_8=/opt/ros/noetic/etc/catkin/profile.d/05.catkin_make.bash
+++++ _CATKIN_ENVIRONMENT_HOOKS_8=/opt/ros/noetic/etc/catkin/profile.d/05.catkin_make.bash
+++++ export _CATKIN_ENVIRONMENT_HOOKS_8_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_8_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_9=/opt/ros/noetic/etc/catkin/profile.d/05.catkin_make_isolated.bash
+++++ _CATKIN_ENVIRONMENT_HOOKS_9=/opt/ros/noetic/etc/catkin/profile.d/05.catkin_make_isolated.bash
+++++ export _CATKIN_ENVIRONMENT_HOOKS_9_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_9_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_10=/opt/ros/noetic/etc/catkin/profile.d/15.rosbash.bash
+++++ _CATKIN_ENVIRONMENT_HOOKS_10=/opt/ros/noetic/etc/catkin/profile.d/15.rosbash.bash
+++++ export _CATKIN_ENVIRONMENT_HOOKS_10_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_10_WORKSPACE=/opt/ros/noetic
+++++ export _CATKIN_ENVIRONMENT_HOOKS_11=/opt/ros/noetic/etc/catkin/profile.d/20.transform.bash
+++++ _CATKIN_ENVIRONMENT_HOOKS_11=/opt/ros/noetic/etc/catkin/profile.d/20.transform.bash
+++++ export _CATKIN_ENVIRONMENT_HOOKS_11_WORKSPACE=/opt/ros/noetic
+++++ _CATKIN_ENVIRONMENT_HOOKS_11_WORKSPACE=/opt/ros/noetic
++++ rm -f /tmp/setup.sh.PoeHPP5eut
++++ unset _SETUP_TMP
++++ _i=0
++++ '[' 0 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_0'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/1.ros_distro.sh
++++ unset _CATKIN_ENVIRONMENT_HOOKS_0
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_0_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_0_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/1.ros_distro.sh
+++++ '[' -n '' -a '' '!=' noetic ']'
+++++ export ROS_DISTRO=noetic
+++++ ROS_DISTRO=noetic
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=1
++++ '[' 1 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_1'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/1.ros_etc_dir.sh
++++ unset _CATKIN_ENVIRONMENT_HOOKS_1
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_1_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_1_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/1.ros_etc_dir.sh
+++++ '[' -z /opt/ros/noetic ']'
+++++ export ROS_ETC_DIR=/opt/ros/noetic/etc/ros
+++++ ROS_ETC_DIR=/opt/ros/noetic/etc/ros
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=2
++++ '[' 2 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_2'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/1.ros_package_path.sh
++++ unset _CATKIN_ENVIRONMENT_HOOKS_2
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_2_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_2_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/1.ros_package_path.sh
++++++ cat
+++++ PYTHON_CODE_BUILD_ROS_PACKAGE_PATH='from __future__ import print_function
+import os
+env_name = '\''CMAKE_PREFIX_PATH'\''
+paths = [path for path in os.environ[env_name].split(os.pathsep)] if env_name in os.environ and os.environ[env_name] != '\'''\'' else []
+workspaces = [path for path in paths if os.path.exists(os.path.join(path, '\''.catkin'\''))]
+paths = []
+for workspace in workspaces:
+    filename = os.path.join(workspace, '\''.catkin'\'')
+    data = '\'''\''
+    with open(filename) as f:
+        data = f.read()
+    if data == '\'''\'':
+        paths.append(os.path.join(workspace, '\''share'\''))
+        if os.path.isdir(os.path.join(workspace, '\''stacks'\'')):
+            paths.append(os.path.join(workspace, '\''stacks'\''))
+    else:
+        for source_path in data.split('\'';'\''):
+            paths.append(source_path)
+print(os.pathsep.join(paths))'
++++++ /usr/bin/python3 -c 'from __future__ import print_function
+import os
+env_name = '\''CMAKE_PREFIX_PATH'\''
+paths = [path for path in os.environ[env_name].split(os.pathsep)] if env_name in os.environ and os.environ[env_name] != '\'''\'' else []
+workspaces = [path for path in paths if os.path.exists(os.path.join(path, '\''.catkin'\''))]
+paths = []
+for workspace in workspaces:
+    filename = os.path.join(workspace, '\''.catkin'\'')
+    data = '\'''\''
+    with open(filename) as f:
+        data = f.read()
+    if data == '\'''\'':
+        paths.append(os.path.join(workspace, '\''share'\''))
+        if os.path.isdir(os.path.join(workspace, '\''stacks'\'')):
+            paths.append(os.path.join(workspace, '\''stacks'\''))
+    else:
+        for source_path in data.split('\'';'\''):
+            paths.append(source_path)
+print(os.pathsep.join(paths))'
+++++ export ROS_PACKAGE_PATH=/opt/ros/noetic/share
+++++ ROS_PACKAGE_PATH=/opt/ros/noetic/share
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=3
++++ '[' 3 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_3'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/1.ros_python_version.sh
++++ unset _CATKIN_ENVIRONMENT_HOOKS_3
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_3_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_3_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/1.ros_python_version.sh
+++++ export ROS_PYTHON_VERSION=3
+++++ ROS_PYTHON_VERSION=3
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=4
++++ '[' 4 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_4'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/1.ros_version.sh
++++ unset _CATKIN_ENVIRONMENT_HOOKS_4
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_4_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_4_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/1.ros_version.sh
+++++ export ROS_VERSION=1
+++++ ROS_VERSION=1
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=5
++++ '[' 5 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_5'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/10.rosbuild.sh
++++ unset _CATKIN_ENVIRONMENT_HOOKS_5
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_5_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_5_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/10.rosbuild.sh
+++++ '[' -z /opt/ros/noetic ']'
+++++ export ROS_ROOT=/opt/ros/noetic/share/ros
+++++ ROS_ROOT=/opt/ros/noetic/share/ros
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=6
++++ '[' 6 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_6'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/10.roslaunch.sh
++++ unset _CATKIN_ENVIRONMENT_HOOKS_6
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_6_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_6_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/10.roslaunch.sh
+++++ '[' '!' '' ']'
+++++ export ROS_MASTER_URI=http://localhost:11311
+++++ ROS_MASTER_URI=http://localhost:11311
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=7
++++ '[' 7 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_7'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/99.roslisp.sh
++++ unset _CATKIN_ENVIRONMENT_HOOKS_7
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_7_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_7_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/99.roslisp.sh
++++++ cat
+++++ PYTHON_CODE_BUILD_ROSLISP_PACKAGE_DIRECTORIES='from __future__ import print_function
+import os
+env_name = '\''CMAKE_PREFIX_PATH'\''
+paths = [path for path in os.environ[env_name].split(os.pathsep)] if env_name in os.environ and os.environ[env_name] != '\'''\'' else []
+workspaces = [path for path in paths if os.path.exists(os.path.join(path, '\''.catkin'\''))]
+paths = []
+for workspace in workspaces:
+    filename = os.path.join(workspace, '\''.catkin'\'')
+    data = '\'''\''
+    with open(filename) as f:
+        data = f.read()
+    if data:
+        paths.append(os.path.join(workspace, '\''share'\'', '\''common-lisp'\''))
+print(os.pathsep.join(paths))'
++++++ /usr/bin/python3 -c 'from __future__ import print_function
+import os
+env_name = '\''CMAKE_PREFIX_PATH'\''
+paths = [path for path in os.environ[env_name].split(os.pathsep)] if env_name in os.environ and os.environ[env_name] != '\'''\'' else []
+workspaces = [path for path in paths if os.path.exists(os.path.join(path, '\''.catkin'\''))]
+paths = []
+for workspace in workspaces:
+    filename = os.path.join(workspace, '\''.catkin'\'')
+    data = '\'''\''
+    with open(filename) as f:
+        data = f.read()
+    if data:
+        paths.append(os.path.join(workspace, '\''share'\'', '\''common-lisp'\''))
+print(os.pathsep.join(paths))'
+++++ export ROSLISP_PACKAGE_DIRECTORIES=
+++++ ROSLISP_PACKAGE_DIRECTORIES=
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=8
++++ '[' 8 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_8'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/05.catkin_make.bash
++++ unset _CATKIN_ENVIRONMENT_HOOKS_8
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_8_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_8_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/05.catkin_make.bash
+++++ complete -F _catkin_make catkin_make
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=9
++++ '[' 9 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_9'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/05.catkin_make_isolated.bash
++++ unset _CATKIN_ENVIRONMENT_HOOKS_9
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_9_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_9_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/05.catkin_make_isolated.bash
+++++ complete -F _catkin_make_isolated catkin_make_isolated
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=10
++++ '[' 10 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_10'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/15.rosbash.bash
++++ unset _CATKIN_ENVIRONMENT_HOOKS_10
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_10_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_10_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/15.rosbash.bash
+++++ '[' -z /opt/ros/noetic ']'
+++++ . /opt/ros/noetic/share/rosbash/rosbash
++++++ complete -F _roscomplete_sub_dir -o nospace roscd
++++++ complete -F _roscomplete_sub_dir -o nospace rospd
++++++ complete -F _roscomplete_sub_dir -o nospace rosls
++++++ complete -F _roscomplete_rosmake rosmake
++++++ complete -F _roscomplete_rosclean rosclean
++++++ complete -F _roscomplete_exe rosrun
++++++ complete -F _roscomplete_file rosed
++++++ complete -F _roscomplete_file roscp
++++++ complete -F _roscomplete_file roscat
++++++ complete -F _roscomplete_launch -o filenames roslaunch
++++++ complete -F _roscomplete_test -o filenames rostest
++++++ complete -F _roscomplete_rospack rospack
++++++ complete -F _roscomplete_rosbag -o default rosbag
++++++ complete -F _roscomplete_rosnode rosnode
++++++ complete -F _roscomplete_rosparam rosparam
++++++ complete -F _roscomplete_rostopic rostopic
++++++ complete -F _roscomplete_rosservice rosservice
++++++ complete -F _roscomplete_rosmsg rosmsg
++++++ complete -F _roscomplete_rossrv rossrv
++++++ complete -F _roscomplete_roscreate_pkg roscreate-pkg
++++++ complete -F _roscomplete_roswtf -o filenames roswtf
++++++ complete -F _roscomplete_rosconsole rosconsole
++++++ complete -F _roscomplete_filemv rosmv
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=11
++++ '[' 11 -lt 12 ']'
++++ eval '_envfile=$_CATKIN_ENVIRONMENT_HOOKS_11'
+++++ _envfile=/opt/ros/noetic/etc/catkin/profile.d/20.transform.bash
++++ unset _CATKIN_ENVIRONMENT_HOOKS_11
++++ eval '_envfile_workspace=$_CATKIN_ENVIRONMENT_HOOKS_11_WORKSPACE'
+++++ _envfile_workspace=/opt/ros/noetic
++++ unset _CATKIN_ENVIRONMENT_HOOKS_11_WORKSPACE
++++ CATKIN_ENV_HOOK_WORKSPACE=/opt/ros/noetic
++++ . /opt/ros/noetic/etc/catkin/profile.d/20.transform.bash
++++++ complete
++++++ grep -w rosrun
++++++ awk '{print $3}'
+++++ _sav_transform_roscomplete_rosrun=_roscomplete_exe
+++++ complete -F _roscomplete_rosrun_transform rosrun
++++ unset CATKIN_ENV_HOOK_WORKSPACE
++++ _i=12
++++ '[' 12 -lt 12 ']'
++++ unset _i
++++ unset _CATKIN_ENVIRONMENT_HOOKS_COUNT
++ cd /home/sjytt/livo2_ws
++ catkin_make -j4
++ tail -40
+[ 28%] Linking CXX shared library /home/sjytt/livo2_ws/devel/lib/libimu_proc.so
+[ 28%] Built target imu_proc
+Scanning dependencies of target vio
+[ 31%] Building CXX object FAST-LIVO2/CMakeFiles/vio.dir/src/vio.cpp.o
+[ 34%] Building CXX object rpg_vikit/vikit_common/CMakeFiles/vikit_common.dir/src/user_input_thread.cpp.o
+[ 37%] Building CXX object rpg_vikit/vikit_common/CMakeFiles/vikit_common.dir/src/pinhole_camera.cpp.o
+[ 40%] Building CXX object rpg_vikit/vikit_common/CMakeFiles/vikit_common.dir/src/equidistant_camera.cpp.o
+[ 42%] Building CXX object rpg_vikit/vikit_common/CMakeFiles/vikit_common.dir/src/polynomial_camera.cpp.o
+[ 45%] Building CXX object rpg_vikit/vikit_common/CMakeFiles/vikit_common.dir/src/homography.cpp.o
+[ 48%] Linking CXX shared library /home/sjytt/livo2_ws/devel/lib/liblaser_mapping.so
+[ 48%] Built target laser_mapping
+Scanning dependencies of target pre
+[ 51%] Linking CXX shared library /home/sjytt/livo2_ws/devel/lib/liblio.so
+[ 54%] Building CXX object FAST-LIVO2/CMakeFiles/pre.dir/src/preprocess.cpp.o
+[ 54%] Built target lio
+make[2]: *** No rule to make target '/home/sjytt/Sophus_src/build/libSophus.so', needed by '/home/sjytt/livo2_ws/devel/lib/libvikit_common.so'.  Stop.
+make[2]: *** Waiting for unfinished jobs....
+[ 57%] Building CXX object rpg_vikit/vikit_common/CMakeFiles/vikit_common.dir/src/img_align.cpp.o
+[ 60%] Building CXX object FAST-LIVO2/CMakeFiles/vio.dir/src/frame.cpp.o
+[ 62%] Building CXX object FAST-LIVO2/CMakeFiles/vio.dir/src/visual_point.cpp.o
+make[1]: *** [CMakeFiles/Makefile2:651: rpg_vikit/vikit_common/CMakeFiles/vikit_common.dir/all] Error 2
+make[1]: *** Waiting for unfinished jobs....
+[ 65%] Linking CXX shared library /home/sjytt/livo2_ws/devel/lib/libpre.so
+[ 65%] Built target pre
+[ 68%] Linking CXX shared library /home/sjytt/livo2_ws/devel/lib/libvio.so
+[ 68%] Built target vio
+make: *** [Makefile:141: all] Error 2
+Base path: /home/sjytt/livo2_ws
+Source space: /home/sjytt/livo2_ws/src
+Build space: /home/sjytt/livo2_ws/build
+Devel space: /home/sjytt/livo2_ws/devel
+Install space: /home/sjytt/livo2_ws/install
+Creating symlink "/home/sjytt/livo2_ws/src/CMakeLists.txt" pointing to "/opt/ros/noetic/share/catkin/cmake/toplevel.cmake"
+####
+#### Running command: "cmake /home/sjytt/livo2_ws/src -DCATKIN_DEVEL_PREFIX=/home/sjytt/livo2_ws/devel -DCMAKE_INSTALL_PREFIX=/home/sjytt/livo2_ws/install -G Unix Makefiles" in "/home/sjytt/livo2_ws/build"
+####
+####
+#### Running command: "make -j4" in "/home/sjytt/livo2_ws/build"
+####
+Invoking "make -j4" failed
++ LOG BUILD_RESULT
++ echo '===== BUILD_RESULT ====='
+===== BUILD_RESULT =====
++ ls /home/sjytt/livo2_ws/devel/lib/fast_livo/
++ echo FASTLIVO_BUILT_OK
+FASTLIVO_BUILT_OK
++ LOG ALL_DONE
++ echo '===== ALL_DONE ====='
+===== ALL_DONE =====

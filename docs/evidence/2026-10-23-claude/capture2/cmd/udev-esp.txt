@@ -1,0 +1,25 @@
+$ udevadm info -q property -n /dev/ttyACM0 2>&1 | grep -E 'ID_VENDOR|ID_MODEL|ID_SERIAL|ID_PATH|ID_USB_DRIVER'; udevadm info -q property -n /dev/ttyACM1 2>&1 | grep -E 'ID_VENDOR|ID_MODEL|ID_SERIAL|ID_PATH|ID_USB_DRIVER'
+ID_VENDOR=1a86
+ID_VENDOR_ENC=1a86
+ID_VENDOR_ID=1a86
+ID_MODEL=USB_Single_Serial
+ID_MODEL_ENC=USB\x20Single\x20Serial
+ID_MODEL_ID=55d3
+ID_SERIAL=1a86_USB_Single_Serial_5B14050145
+ID_SERIAL_SHORT=5B14050145
+ID_USB_DRIVER=cdc_acm
+ID_VENDOR_FROM_DATABASE=QinHeng Electronics
+ID_PATH=platform-3610000.xhci-usb-0:4.3:1.0
+ID_PATH_TAG=platform-3610000_xhci-usb-0_4_3_1_0
+ID_VENDOR=Espressif
+ID_VENDOR_ENC=Espressif
+ID_VENDOR_ID=303a
+ID_MODEL=USB_JTAG_serial_debug_unit
+ID_MODEL_ENC=USB\x20JTAG\x2fserial\x20debug\x20unit
+ID_MODEL_ID=1001
+ID_SERIAL=Espressif_USB_JTAG_serial_debug_unit_xx:xx:xx:xx:xx:xx
+ID_SERIAL_SHORT=xx:xx:xx:xx:xx:xx
+ID_USB_DRIVER=cdc_acm
+ID_PATH=platform-3610000.xhci-usb-0:4.4:1.0
+ID_PATH_TAG=platform-3610000_xhci-usb-0_4_4_1_0
+[exit=0]

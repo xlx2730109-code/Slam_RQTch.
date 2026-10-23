@@ -1,0 +1,2 @@
+$ ls -la /home/sjytt | grep '^d' | awk '{print $9}' | tr '\n' ' '
+. .. backup .cache capture_20261023 capture2_20261023 ch343ser_linux .cmake .config Desktop Documents dog_backup Downloads .gnupg hardening jiaoda livo2_ws .local Music Pictures Public .ros rslidar_ws Sophus_src .ssh Templates unilidar_sdk unilidar_sdk2 Videos [exit=0]

@@ -1,0 +1,7 @@
+$ nmcli -t -f NAME,TYPE,DEVICE,AUTOCONNECT con show
+xlx:802-11-wireless:wlan0:yes
+tailscale0:tun:tailscale0:no
+lidar-eth:802-3-ethernet:eth1:yes
+asd:802-11-wireless::yes
+Wired connection 1:802-3-ethernet::yes
+[exit=0]

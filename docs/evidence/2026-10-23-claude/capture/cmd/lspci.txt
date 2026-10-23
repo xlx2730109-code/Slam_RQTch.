@@ -1,0 +1,6 @@
+$ lspci
+0001:00:00.0 PCI bridge: NVIDIA Corporation Device 229e (rev a1)
+0001:01:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8822CE 802.11ac PCIe Wireless Network Adapter
+0004:00:00.0 PCI bridge: NVIDIA Corporation Device 229c (rev a1)
+0004:01:00.0 Non-Volatile memory controller: Realtek Semiconductor Co., Ltd. Device 5765 (rev 01)
+[exit=0]

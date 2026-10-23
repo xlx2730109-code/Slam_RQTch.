@@ -1,0 +1,11 @@
+$ ls -l /dev/serial/by-id /dev/serial/by-path
+/dev/serial/by-id:
+total 0
+lrwxrwxrwx 1 root root 13 10月 23 23:36 usb-1a86_USB_Single_Serial_5B14050145-if00 -> ../../ttyACM0
+lrwxrwxrwx 1 root root 13 10月 23 23:37 usb-Espressif_USB_JTAG_serial_debug_unit_xx:xx:xx:xx:xx:xx-if00 -> ../../ttyACM1
+
+/dev/serial/by-path:
+total 0
+lrwxrwxrwx 1 root root 13 10月 23 23:36 platform-3610000.xhci-usb-0:4.3:1.0 -> ../../ttyACM0
+lrwxrwxrwx 1 root root 13 10月 23 23:37 platform-3610000.xhci-usb-0:4.4:1.0 -> ../../ttyACM1
+[exit=0]

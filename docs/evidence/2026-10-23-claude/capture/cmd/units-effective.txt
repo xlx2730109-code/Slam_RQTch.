@@ -1,0 +1,336 @@
+$ for u in $(systemctl list-unit-files 'jiaoda-*' --no-legend | awk '{print $1}'); do echo "##### $u"; systemctl cat $u --no-pager; done
+##### jiaoda-blackbox.service
+# /etc/systemd/system/jiaoda-blackbox.service
+[Unit]
+Description=Black box recorder (load, I/O pressure and top processes, 1 Hz)
+After=local-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/jiaoda-blackbox.sh
+Restart=always
+RestartSec=2
+Nice=-5
+OOMScoreAdjust=-900
+
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-calib.service
+# /etc/systemd/system/jiaoda-calib.service
+[Unit]
+Description=Camera-Lidar calibration web
+After=jiaoda-fastlivo.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_calib.sh
+Restart=always
+RestartSec=4
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-campub.service
+# /etc/systemd/system/jiaoda-campub.service
+[Unit]
+Description=Camera to ROS image publisher
+After=jiaoda-lidar.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_campub.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/jiaoda-campub.service.d/90-hardening.conf
+[Service]
+Environment=CAMPUB_FPS=5
+##### jiaoda-chassis.service
+# /etc/systemd/system/jiaoda-chassis.service
+[Unit]
+Description=Chassis drive (cmd_vel to PWM via ttyACM0)
+After=jiaoda-lidar.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_chassis.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-console.service
+# /etc/systemd/system/jiaoda-console.service
+[Unit]
+Description=Jiaoda inspection console backend
+After=network.target
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-control.service
+# /etc/systemd/system/jiaoda-control.service
+[Unit]
+Description=Chassis+Gimbal serial control bridge
+After=jiaoda-lidar.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_control.sh
+ExecStop=/usr/bin/python3 /home/sjytt/jiaoda/safe_stop.py
+TimeoutStopSec=6
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-fastlivo.service
+# /etc/systemd/system/jiaoda-fastlivo.service
+[Unit]
+Description=Fast-LIVO2 SLAM
+After=jiaoda-restamp.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_fastlivo.sh
+Restart=always
+RestartSec=5
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/jiaoda-fastlivo.service.d/90-hardening.conf
+[Service]
+Nice=5
+OOMScoreAdjust=700
+CPUQuota=400%
+MemoryLimit=12G
+CPUShares=256
+StandardOutput=null
+ExecStartPost=-+/bin/sh -c 'echo 0 > /sys/fs/cgroup/memory/system.slice/jiaoda-fastlivo.service/memory.swappiness'
+##### jiaoda-grid.service
+# /etc/systemd/system/jiaoda-grid.service
+[Unit]
+Description=2D occupancy grid bridge
+After=jiaoda-fastlivo.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_grid.sh
+Restart=always
+RestartSec=4
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/jiaoda-grid.service.d/90-hardening.conf
+[Service]
+Nice=10
+OOMScoreAdjust=600
+CPUQuota=150%
+##### jiaoda-lidar.service
+# /etc/systemd/system/jiaoda-lidar.service
+[Unit]
+Description=Unitree L2 lidar driver
+After=network.target
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_lidar.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-memguard.service
+# /etc/systemd/system/jiaoda-memguard.service
+[Unit]
+Description=Low-memory guard for the SLAM stack
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/jiaoda-memguard.sh
+Restart=always
+RestartSec=2
+Nice=-5
+OOMScoreAdjust=-900
+
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-mission.service
+# /etc/systemd/system/jiaoda-mission.service
+[Unit]
+Description=jiaoda inspection mission
+After=jiaoda-nav.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_mission.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-nav.service
+# /etc/systemd/system/jiaoda-nav.service
+[Unit]
+Description=jiaoda nav
+After=jiaoda-fastlivo.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_nav_simple.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/jiaoda-nav.service.d/90-hardening.conf
+[Service]
+Nice=10
+OOMScoreAdjust=600
+CPUQuota=150%
+##### jiaoda-netguard.service
+# /etc/systemd/system/jiaoda-netguard.service
+[Unit]
+Description=Network self-healing guard (Wi-Fi and Tailscale)
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/jiaoda-netguard.sh
+Restart=always
+RestartSec=5
+Nice=-5
+OOMScoreAdjust=-900
+
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-netwatch.service
+# Unit jiaoda-netwatch.service is masked.
+##### jiaoda-posebridge.service
+# /etc/systemd/system/jiaoda-posebridge.service
+[Unit]
+Description=jiaoda posebridge
+After=jiaoda-fastlivo.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_pose_bridge.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-powerlog.service
+# /etc/systemd/system/jiaoda-powerlog.service
+[Unit]
+Description=Log Jetson input rails (power cut forensics)
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/home/sjytt/jiaoda/power_log.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-restamp.service
+# /etc/systemd/system/jiaoda-restamp.service
+[Unit]
+Description=Cloud restamp relay
+After=jiaoda-lidar.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_restamp.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-safe-stop.service
+# /etc/systemd/system/jiaoda-safe-stop.service
+[Unit]
+Description=Send neutral PWM before power off
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+After=jiaoda-control.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /home/sjytt/jiaoda/safe_stop.py
+TimeoutStartSec=8
+RemainAfterExit=yes
+
+[Install]
+WantedBy=shutdown.target reboot.target halt.target
+##### jiaoda-serialguard.service
+# /etc/systemd/system/jiaoda-serialguard.service
+[Unit]
+Description=Restart chassis bridge / re-enumerate USB when telemetry stops
+After=jiaoda-control.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/sjytt/jiaoda/run_serialguard.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-slamguard.service
+# /etc/systemd/system/jiaoda-slamguard.service
+[Unit]
+Description=Restart SLAM when pose diverges
+After=jiaoda-fastlivo.service
+Wants=jiaoda-fastlivo.service
+
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_slamguard.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-sshguard.service
+# /etc/systemd/system/jiaoda-sshguard.service
+[Unit]
+Description=Restart sshd when it stops answering
+After=ssh.service
+
+[Service]
+Type=simple
+ExecStart=/home/sjytt/jiaoda/ssh_guard.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-usbpower.service
+# /etc/systemd/system/jiaoda-usbpower.service
+[Unit]
+Description=Disable USB autosuspend (cameras, hubs, serial adapters)
+After=local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'echo -1 > /sys/module/usbcore/parameters/autosuspend; for f in /sys/bus/usb/devices/*/power/control; do echo on > "$f" 2>/dev/null; done; exit 0'
+
+[Install]
+WantedBy=multi-user.target
+##### jiaoda-netwatch.timer
+# /etc/systemd/system/jiaoda-netwatch.timer
+[Unit]
+Description=Periodic wlan0 IP check
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=120s
+Unit=jiaoda-netwatch.service
+
+[Install]
+WantedBy=timers.target
+[exit=0]

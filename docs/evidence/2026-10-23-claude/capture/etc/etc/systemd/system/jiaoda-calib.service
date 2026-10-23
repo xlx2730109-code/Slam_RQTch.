@@ -1,0 +1,11 @@
+[Unit]
+Description=Camera-Lidar calibration web
+After=jiaoda-fastlivo.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_calib.sh
+Restart=always
+RestartSec=4
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,53 @@
+$ ls -la /home/sjytt/.ros/log/ | head -40; ls -la /home/sjytt/.ros/log/latest/ 2>&1 | head -40
+total 4088
+drwxrwxr-x 33 sjytt sjytt  36864 10月 23 23:41 .
+drwxrwxr-x  3 sjytt sjytt   4096 10月 23 23:41 ..
+drwxrwxr-x  2 sjytt sjytt   4096 10月 21 14:35 1c57b2f0-cd19-11f1-83e9-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 6月  18 17:09 1c669e84-6ad9-11f1-8938-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 10月 23 21:10 2206fec4-cee3-11f1-89a8-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 10月 23 22:53 29de020c-cef0-11f1-bfca-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 10月 21 15:58 2f6987d6-cd25-11f1-9d5b-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 10月 23 23:36 4be7e0f0-cef7-11f1-a649-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 6月  17 11:54 4c10f780-6a00-11f1-9792-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 9月  10 13:47 4c192e6c-acd8-11f1-8aec-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 10月 23 22:43 4fec9d7e-ceef-11f1-9d86-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 10月 21 14:12 70ec989c-cd16-11f1-bb69-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 10月 23 23:41 92f42c92-cef7-11f1-957c-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 6月  17 11:42 932ed076-69fe-11f1-a6d3-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 10月 23 23:02 9ae13220-cef1-11f1-a2e1-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 6月  17 15:17 9c132bc4-6a1c-11f1-a52c-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 6月  17 19:58 b3a954dc-6a28-11f1-8b2a-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 10月 21 14:21 b5b64c4c-cd17-11f1-8f30-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 10月 21 14:21 b5d0b03c-cd17-11f1-a2b9-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 10月 21 15:48 bcf7bc96-cd23-11f1-a94c-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 10月 23 22:18 bde5a510-cee9-11f1-a95d-3c6d66b13904
+-rw-rw-r--  1 sjytt sjytt      0 10月 21 14:23 bench2_4893_1792563807228.log
+drwxrwxr-x  2 sjytt sjytt   4096 10月 23 22:36 c2b5e0ec-ceed-11f1-a4f4-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 9月  10 13:52 c6fb7308-acdb-11f1-9c8d-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 10月 21 15:33 c7d44f62-cd1e-11f1-83b9-3c6d66b13904
+drwxrwxr-x  2 sjytt sjytt   4096 9月  10 16:46 c90328e6-acde-11f1-9f4d-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 9月  10 13:23 c95ac4ea-acd7-11f1-b783-f83dc656c36d
+drwxrwxr-x  2 sjytt sjytt   4096 10月 21 13:28 ca933c96-acf7-11f1-89b0-3c6d66b13904
+-rw-rw-r--  1 sjytt sjytt   2038 10月 21 14:42 cal_check_7468_1792564943535.log
+-rw-r--r--  1 sjytt sjytt   1482 9月  10 15:09 calib_web_56290_1789024140944.log
+-rw-r--r--  1 sjytt sjytt   1220 9月  10 15:35 calib_web_60529_1789025751243.log
+-rw-r--r--  1 sjytt sjytt   1220 9月  10 16:13 calib_web_63539_1789028003633.log
+-rw-r--r--  1 sjytt sjytt  64838 10月 23 23:41 cam_publisher.log
+drwxrwxr-x  2 sjytt sjytt   4096 9月  10 17:12 cbb18f7e-acf7-11f1-a20b-3c6d66b13904
+-rw-r--r--  1 sjytt sjytt 737586 10月 23 23:41 chassis_gimbal_bridge.log
+-rw-rw-r--  1 sjytt sjytt   1482 10月 21 15:14 clear2_26038_1792566886789.log
+-rw-rw-r--  1 sjytt sjytt   1485 10月 21 15:08 clear_chk_11695_1792566485349.log
+-rw-rw-r--  1 sjytt sjytt 104537 9月  10 13:45 cloud_restamp_26472_1789019012247.log
+-rw-rw-r--  1 sjytt sjytt 168878 9月  10 13:50 cloud_restamp_28852_1789019141232.log
+total 228
+drwxrwxr-x  2 sjytt sjytt  4096 10月 23 23:41 .
+drwxrwxr-x 33 sjytt sjytt 36864 10月 23 23:41 ..
+-rw-r--r--  1 sjytt sjytt 97032 10月 23 23:41 master.log
+-rw-r--r--  1 sjytt sjytt 12688 10月 23 23:36 roslaunch-sjytt-desktop-1174.log
+-rw-r--r--  1 sjytt sjytt  8675 10月 23 23:39 roslaunch-sjytt-desktop-1224.log
+-rw-r--r--  1 sjytt sjytt  6945 10月 23 23:41 roslaunch-sjytt-desktop-17008.log
+-rw-r--r--  1 sjytt sjytt  8675 10月 23 23:41 roslaunch-sjytt-desktop-5679.log
+-rw-r--r--  1 sjytt sjytt   151 10月 23 23:36 rosout-1-stdout.log
+-rw-r--r--  1 sjytt sjytt 25591 10月 23 23:41 rosout.log
+-rw-r--r--  1 sjytt sjytt    36 10月 23 23:36 unitree_lidar_ros_node-2-stdout.log
+[exit=0]

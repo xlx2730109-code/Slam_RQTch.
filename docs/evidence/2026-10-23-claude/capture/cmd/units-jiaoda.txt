@@ -1,0 +1,31 @@
+$ systemctl list-units 'jiaoda-*' --all --no-pager
+  UNIT                       LOAD   ACTIVE   SUB     DESCRIPTION                                                    
+  jiaoda-blackbox.service    loaded active   running Black box recorder (load, I/O pressure and top processes, 1 Hz)
+  jiaoda-campub.service      loaded active   running Camera to ROS image publisher                                  
+  jiaoda-console.service     loaded active   running Jiaoda inspection console backend                              
+  jiaoda-control.service     loaded active   running Chassis+Gimbal serial control bridge                           
+  jiaoda-fastlivo.service    loaded active   running Fast-LIVO2 SLAM                                                
+  jiaoda-grid.service        loaded active   running 2D occupancy grid bridge                                       
+  jiaoda-lidar.service       loaded active   running Unitree L2 lidar driver                                        
+  jiaoda-memguard.service    loaded active   running Low-memory guard for the SLAM stack                            
+  jiaoda-mission.service     loaded active   running jiaoda inspection mission                                      
+  jiaoda-nav.service         loaded active   running jiaoda nav                                                     
+  jiaoda-netguard.service    loaded active   running Network self-healing guard (Wi-Fi and Tailscale)               
+● jiaoda-netwatch.service    masked inactive dead    jiaoda-netwatch.service                                        
+  jiaoda-posebridge.service  loaded active   running jiaoda posebridge                                              
+  jiaoda-powerlog.service    loaded active   running Log Jetson input rails (power cut forensics)                   
+  jiaoda-restamp.service     loaded active   running Cloud restamp relay                                            
+  jiaoda-safe-stop.service   loaded inactive dead    Send neutral PWM before power off                              
+  jiaoda-serialguard.service loaded active   running Restart chassis bridge / re-enumerate USB when telemetry stops 
+  jiaoda-slamguard.service   loaded active   running Restart SLAM when pose diverges                                
+  jiaoda-sshguard.service    loaded active   running Restart sshd when it stops answering                           
+  jiaoda-usbpower.service    loaded active   exited  Disable USB autosuspend (cameras, hubs, serial adapters)       
+  jiaoda-netwatch.timer      loaded inactive dead    Periodic wlan0 IP check                                        
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+
+21 loaded units listed.
+To show all installed unit files use 'systemctl list-unit-files'.
+[exit=0]

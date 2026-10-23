@@ -1,0 +1,11 @@
+[Unit]
+Description=jiaoda inspection mission
+After=jiaoda-nav.service
+[Service]
+Type=simple
+User=sjytt
+ExecStart=/home/sjytt/jiaoda/run_mission.sh
+Restart=always
+RestartSec=3
+[Install]
+WantedBy=multi-user.target

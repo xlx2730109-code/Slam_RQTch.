@@ -1,0 +1,18 @@
+$ ls -la /home/sjytt/rslidar_ws /home/sjytt/rslidar_ws/src 2>&1 | head -30; find /home/sjytt/rslidar_ws/src -maxdepth 2 -name package.xml 2>/dev/null | head
+/home/sjytt/rslidar_ws:
+total 24
+drwxrwxr-x  5 sjytt sjytt 4096 6月  17 14:32 .
+drwxr-xr-x 29 sjytt sjytt 4096 10月 23 23:51 ..
+drwxrwxr-x 10 sjytt sjytt 4096 6月  17 14:32 build
+-rw-rw-r--  1 sjytt sjytt   98 6月  17 14:32 .catkin_workspace
+drwxrwxr-x  4 sjytt sjytt 4096 6月  17 14:32 devel
+drwxrwxr-x  3 sjytt sjytt 4096 6月  17 14:32 src
+
+/home/sjytt/rslidar_ws/src:
+total 12
+drwxrwxr-x  3 sjytt sjytt 4096 6月  17 14:32 .
+drwxrwxr-x  5 sjytt sjytt 4096 6月  17 14:32 ..
+lrwxrwxrwx  1 sjytt sjytt   49 6月  17 14:32 CMakeLists.txt -> /opt/ros/noetic/share/catkin/cmake/toplevel.cmake
+drwxrwxr-x 10 sjytt sjytt 4096 6月  17 14:29 rslidar_sdk
+/home/sjytt/rslidar_ws/src/rslidar_sdk/package.xml
+[exit=0]

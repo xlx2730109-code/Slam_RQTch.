@@ -1,0 +1,5 @@
+$ which arduino-cli platformio pio esptool.py esptool 2>&1; ls -d /home/sjytt/.arduino15 /home/sjytt/Arduino /home/sjytt/.platformio 2>&1
+ls: cannot access '/home/sjytt/.arduino15': No such file or directory
+ls: cannot access '/home/sjytt/Arduino': No such file or directory
+ls: cannot access '/home/sjytt/.platformio': No such file or directory
+[exit=2]

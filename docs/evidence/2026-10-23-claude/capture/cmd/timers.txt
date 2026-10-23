@@ -1,0 +1,17 @@
+$ systemctl list-timers --all --no-pager
+NEXT                        LEFT          LAST                        PASSED       UNIT                         ACTIVATES                     
+Fri 2026-10-23 23:53:51 CST 8min left     n/a                         n/a          systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service
+Fri 2026-10-23 23:58:51 CST 13min left    Fri 2026-10-23 21:47:02 CST 1h 57min ago apt-daily-upgrade.timer      apt-daily-upgrade.service     
+Sat 2026-10-24 00:00:00 CST 14min left    Fri 2026-10-23 21:09:54 CST 2h 35min ago man-db.timer                 man-db.service                
+Sat 2026-10-24 00:04:56 CST 19min left    Fri 2026-10-23 21:55:15 CST 1h 49min ago apt-daily.timer              apt-daily.service             
+Sat 2026-10-24 00:29:55 CST 44min left    n/a                         n/a          ua-timer.timer               ua-timer.service              
+Sat 2026-10-24 03:27:43 CST 3h 42min left Fri 2026-10-23 21:09:54 CST 2h 35min ago motd-news.timer              motd-news.service             
+Sat 2026-10-24 07:31:10 CST 7h left       Fri 2026-10-23 23:30:14 CST 14min ago    anacron.timer                anacron.service               
+Sat 2026-10-24 17:59:27 CST 18h left      Fri 2026-10-23 21:09:54 CST 2h 35min ago fwupd-refresh.timer          fwupd-refresh.service         
+Sun 2026-10-25 03:10:35 CST 1 day 3h left Wed 2026-10-21 11:32:46 CST 2 days ago   e2scrub_all.timer            e2scrub_all.service           
+Mon 2026-10-26 00:00:00 CST 2 days left   Wed 2026-10-21 11:32:46 CST 2 days ago   fstrim.timer                 fstrim.service                
+n/a                         n/a           n/a                         n/a          jiaoda-netwatch.timer        jiaoda-netwatch.service       
+n/a                         n/a           n/a                         n/a          snapd.snap-repair.timer      snapd.snap-repair.service     
+
+12 timers listed.
+[exit=0]

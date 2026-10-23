@@ -1,0 +1,4 @@
+## livo2_ws/src/rpg_vikit
+6c886c8e5d83997806e00294826d528cea3581dd 2025-03-24 17:08:39 +0800 [Update] update repo introduction.
+origin	https://github.com/xuankuzcr/rpg_vikit.git (fetch)
+origin	https://github.com/xuankuzcr/rpg_vikit.git (push)

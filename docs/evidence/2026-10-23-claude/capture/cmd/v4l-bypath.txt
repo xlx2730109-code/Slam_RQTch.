@@ -1,0 +1,15 @@
+$ ls -l /dev/v4l/by-path /dev/v4l/by-id
+/dev/v4l/by-id:
+total 0
+lrwxrwxrwx 1 root root 12 10月 23 23:36 usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index0 -> ../../video4
+lrwxrwxrwx 1 root root 12 10月 23 23:36 usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index1 -> ../../video3
+
+/dev/v4l/by-path:
+total 0
+lrwxrwxrwx 1 root root 12 10月 23 23:36 platform-3610000.xhci-usb-0:4.2.1.3:1.0-video-index0 -> ../../video2
+lrwxrwxrwx 1 root root 12 10月 23 23:36 platform-3610000.xhci-usb-0:4.2.1.3:1.0-video-index1 -> ../../video3
+lrwxrwxrwx 1 root root 12 10月 23 23:36 platform-3610000.xhci-usb-0:4.2.2:1.0-video-index0 -> ../../video0
+lrwxrwxrwx 1 root root 12 10月 23 23:36 platform-3610000.xhci-usb-0:4.2.2:1.0-video-index1 -> ../../video1
+lrwxrwxrwx 1 root root 12 10月 23 23:36 platform-3610000.xhci-usb-0:4.2.4:1.0-video-index0 -> ../../video4
+lrwxrwxrwx 1 root root 12 10月 23 23:36 platform-3610000.xhci-usb-0:4.2.4:1.0-video-index1 -> ../../video5
+[exit=0]

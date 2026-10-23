@@ -1,0 +1,25 @@
+$ sha256sum /home/sjytt/livo2_ws/devel/lib/fast_livo/fastlivo_mapping /home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/unitree_lidar_ros/unitree_lidar_ros_node 2>&1; ls -la /home/sjytt/livo2_ws/devel/lib/ /home/sjytt/livo2_ws/devel/lib/fast_livo 2>&1 | head -30
+9c4248ee4a71bf62aa87d5cfa5a823c8d349ed952e89ee5a82d667d193c5f9f5  /home/sjytt/livo2_ws/devel/lib/fast_livo/fastlivo_mapping
+d448d1fabe4cd80576a07de9e67e27eb5f48f620e84c20762ac332e10cc2d98e  /home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/unitree_lidar_ros/unitree_lidar_ros_node
+/home/sjytt/livo2_ws/devel/lib/:
+total 2188
+drwxrwxr-x 6 sjytt sjytt   4096 9月  10 12:22 .
+drwxrwxr-x 4 sjytt sjytt   4096 9月  10 12:18 ..
+drwxrwxr-x 2 sjytt sjytt   4096 9月  10 12:22 fast_livo
+-rwxrwxr-x 1 sjytt sjytt 164640 9月  10 12:19 libimu_proc.so
+-rwxrwxr-x 1 sjytt sjytt 650864 9月  10 12:19 liblaser_mapping.so
+-rwxrwxr-x 1 sjytt sjytt 282144 9月  10 12:19 liblio.so
+-rwxrwxr-x 1 sjytt sjytt 196672 9月  10 12:20 libpre.so
+-rwxrwxr-x 1 sjytt sjytt 549608 9月  10 12:22 libvikit_common.so
+-rwxrwxr-x 1 sjytt sjytt  70664 9月  10 12:22 libvikit_ros.so
+-rwxrwxr-x 1 sjytt sjytt 286184 9月  10 12:20 libvio.so
+drwxrwxr-x 2 sjytt sjytt   4096 9月  10 12:18 pkgconfig
+drwxrwxr-x 3 sjytt sjytt   4096 9月  10 12:18 python3
+drwxrwxr-x 2 sjytt sjytt   4096 9月  10 12:22 vikit_common
+
+/home/sjytt/livo2_ws/devel/lib/fast_livo:
+total 160
+drwxrwxr-x 2 sjytt sjytt   4096 9月  10 12:22 .
+drwxrwxr-x 6 sjytt sjytt   4096 9月  10 12:22 ..
+-rwxrwxr-x 1 sjytt sjytt 154416 9月  10 12:22 fastlivo_mapping
+[exit=0]

@@ -1,0 +1,15 @@
+$ rfkill list 2>&1; lsmod | grep -E 'rtl|bt|cfg80211|brcm' | head
+0: phy0: Wireless LAN
+	Soft blocked: no
+	Hard blocked: no
+1: hci0: Bluetooth
+	Soft blocked: no
+	Hard blocked: no
+rtk_btusb              65536  0
+btusb                  57344  0
+btrtl                  24576  1 btusb
+btbcm                  24576  1 btusb
+btintel                32768  1 btusb
+rtl8822ce            2994176  0
+cfg80211              724992  1 rtl8822ce
+[exit=0]

@@ -1,0 +1,23 @@
+$ ls -la /home/sjytt/unilidar_sdk 2>&1 | head -20; ls /home/sjytt/unilidar_sdk/unitree_lidar_ros/src/unitree_lidar_ros/launch /home/sjytt/unilidar_sdk/unitree_lidar_ros/src/unitree_lidar_ros/config 2>&1
+total 40
+drwxrwxr-x  7 sjytt sjytt 4096 6月  17 18:59 .
+drwxr-xr-x 29 sjytt sjytt 4096 10月 23 23:51 ..
+drwxrwxr-x  2 sjytt sjytt 4096 6月  17 18:59 docs
+drwxrwxr-x  8 sjytt sjytt 4096 10月 23 23:45 .git
+-rwxrwxr-x  1 sjytt sjytt  244 6月  17 18:59 .gitignore
+-rw-rw-r--  1 sjytt sjytt 1567 6月  17 18:59 LICENSE
+-rw-rw-r--  1 sjytt sjytt 1670 6月  17 18:59 README.md
+drwxrwxr-x  5 sjytt sjytt 4096 6月  17 19:00 unitree_lidar_ros
+drwxrwxr-x  3 sjytt sjytt 4096 6月  17 18:59 unitree_lidar_ros2
+drwxrwxr-x  6 sjytt sjytt 4096 6月  17 18:59 unitree_lidar_sdk
+/home/sjytt/unilidar_sdk/unitree_lidar_ros/src/unitree_lidar_ros/config:
+config_radar0.yaml
+config_radar1.yaml
+config.yaml
+config.yaml.bak
+
+/home/sjytt/unilidar_sdk/unitree_lidar_ros/src/unitree_lidar_ros/launch:
+run.launch
+run_radar0_radar1.launch
+run_without_rviz.launch
+[exit=0]

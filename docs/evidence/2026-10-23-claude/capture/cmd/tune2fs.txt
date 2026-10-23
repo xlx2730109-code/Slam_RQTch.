@@ -1,0 +1,50 @@
+$ tune2fs -l /dev/mmcblk0p1 | head -60
+tune2fs 1.45.5 (07-Jan-2020)
+Filesystem volume name:   <none>
+Last mounted on:          /mnt
+Filesystem UUID:          52c16ffe-3342-444a-82ed-9d8ef37a757c
+Filesystem magic number:  0xEF53
+Filesystem revision #:    1 (dynamic)
+Filesystem features:      has_journal ext_attr resize_inode dir_index filetype needs_recovery extent 64bit flex_bg sparse_super large_file huge_file dir_nlink extra_isize metadata_csum
+Filesystem flags:         signed_directory_hash 
+Default mount options:    user_xattr acl
+Filesystem state:         clean
+Errors behavior:          Continue
+Filesystem OS type:       Linux
+Inode count:              3792896
+Block count:              15142400
+Reserved block count:     752496
+Free blocks:              10905185
+Free inodes:              3560006
+First block:              0
+Block size:               4096
+Fragment size:            4096
+Group descriptor size:    64
+Reserved GDT blocks:      1023
+Blocks per group:         32768
+Fragments per group:      32768
+Inodes per group:         8192
+Inode blocks per group:   512
+Flex block group size:    16
+Filesystem created:       Wed Aug 16 08:04:03 2023
+Last mount time:          Thu Jan  1 08:00:38 1970
+Last write time:          Thu Jan  1 08:00:38 1970
+Mount count:              37
+Maximum mount count:      -1
+Last checked:             Wed Aug 16 08:04:03 2023
+Check interval:           0 (<none>)
+Lifetime writes:          11 GB
+Reserved blocks uid:      0 (user root)
+Reserved blocks gid:      0 (group root)
+First inode:              11
+Inode size:	          256
+Required extra isize:     32
+Desired extra isize:      32
+Journal inode:            8
+First orphan inode:       655421
+Default directory hash:   half_md4
+Directory Hash Seed:      7ea342fc-c273-474a-8ad1-da74e739fb4a
+Journal backup:           inode blocks
+Checksum type:            crc32c
+Checksum:                 0x963fee95
+[exit=0]

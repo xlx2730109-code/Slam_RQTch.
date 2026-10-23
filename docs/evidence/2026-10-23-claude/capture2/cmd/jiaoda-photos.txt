@@ -1,0 +1,5 @@
+$ ls -la /home/sjytt/jiaoda/photos 2>&1 | head -40
+total 8
+drwxr-xr-x 2 sjytt sjytt 4096 10月 21 13:27 .
+drwxrwxr-x 7 sjytt sjytt 4096 10月 23 23:41 ..
+[exit=0]

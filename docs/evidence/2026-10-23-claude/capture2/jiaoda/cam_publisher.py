@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+"""Camera -> ROS Image，带自动重连（修 2026-10-21 的 NoneType 崩溃）。
+
+设备用 CAMPUB_DEV（稳定 by-path）或 CAMPUB_INDEX；打不开每 2 s 重试，
+连续 10 帧读失败自动重开。手动填 Image，去掉 cv_bridge 依赖。
+"""
+import os, time
+import rospy
+import cv2
+from sensor_msgs.msg import Image
+
+TOPIC = os.environ.get("CAMPUB_TOPIC", "/left_camera/image")
+DEV   = os.environ.get("CAMPUB_DEV", "")
+IDX   = int(os.environ.get("CAMPUB_INDEX", "0"))
+W     = int(os.environ.get("CAMPUB_W", "1280"))
+H     = int(os.environ.get("CAMPUB_H", "720"))
+FPS   = float(os.environ.get("CAMPUB_FPS", "15"))
+
+def open_cap():
+    src = DEV if DEV else IDX
+    cap = cv2.VideoCapture(src, cv2.CAP_V4L2)
+    if not cap.isOpened():
+        cap.release()
+        return None
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, W)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
+    cap.set(cv2.CAP_PROP_FPS, FPS)
+    return cap
+
+def main():
+    rospy.init_node("cam_publisher")
+    pub = rospy.Publisher(TOPIC, Image, queue_size=1)
+    cap = None
+    last_try = 0.0
+    fails = 0
+    rate = rospy.Rate(FPS)
+    while not rospy.is_shutdown():
+        if cap is None:
+            if time.time() - last_try < 2.0:
+                rospy.sleep(0.2)
+                continue
+            last_try = time.time()
+            cap = open_cap()
+            if cap is None:
+                rospy.logwarn_throttle(30, "open %s fail, retrying", DEV or IDX)
+                rospy.sleep(0.5)
+                continue
+            rospy.loginfo("camera opened: %s", DEV or IDX)
+            fails = 0
+        ok, fr = cap.read()
+        if not ok or fr is None:
+            fails += 1
+            if fails >= 10:
+                rospy.logwarn("read failed %d times, reopening", fails)
+                cap.release()
+                cap = None
+                fails = 0
+            time.sleep(0.1)
+            continue
+        fails = 0
+        m = Image()
+        m.header.stamp = rospy.Time.now()
+        m.header.frame_id = "camera"
+        m.height, m.width = fr.shape[:2]
+        m.encoding = "bgr8"
+        m.is_bigendian = 0
+        m.step = m.width * 3
+        m.data = fr.tobytes()
+        pub.publish(m)
+        rate.sleep()
+
+if __name__ == "__main__":
+    main()

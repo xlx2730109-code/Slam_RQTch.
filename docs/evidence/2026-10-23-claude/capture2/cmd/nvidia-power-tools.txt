@@ -1,0 +1,9 @@
+$ which nvpmodel jetson_clocks tegrastats i2cdetect v4l2-ctl ethtool iw gpioinfo 2>&1
+/usr/sbin/nvpmodel
+/usr/bin/jetson_clocks
+/usr/bin/tegrastats
+/usr/sbin/i2cdetect
+/usr/bin/v4l2-ctl
+/usr/sbin/ethtool
+/usr/sbin/iw
+[exit=1]

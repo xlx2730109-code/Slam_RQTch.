@@ -1,0 +1,17 @@
+$ lsusb
+Bus 002 Device 004: ID 05e3:0626 Genesys Logic, Inc. 
+Bus 002 Device 003: ID 05e3:0626 Genesys Logic, Inc. 
+Bus 002 Device 002: ID 0bda:0420 Realtek Semiconductor Corp. 4-Port USB 3.0 Hub
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 012: ID 303a:1001 Generic 4-Port USB 2.0 Hub
+Bus 001 Device 006: ID 1a86:55d3 QinHeng Electronics Bluetooth Radio
+Bus 001 Device 011: ID 0c45:6366 Microdia 4-Port USB 2.0 Hub
+Bus 001 Device 009: ID 0c45:6366 Microdia 
+Bus 001 Device 010: ID 0c45:6366 Microdia Bluetooth Radio
+Bus 001 Device 007: ID 05e3:0610 Genesys Logic, Inc. 4-port hub
+Bus 001 Device 005: ID 05e3:0610 Genesys Logic, Inc. 4-port hub
+Bus 001 Device 004: ID 1a86:5397 QinHeng Electronics 
+Bus 001 Device 003: ID 0bda:5420 Realtek Semiconductor Corp. 4-Port USB 2.0 Hub
+Bus 001 Device 002: ID 13d3:3549 IMC Networks Bluetooth Radio
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+[exit=0]

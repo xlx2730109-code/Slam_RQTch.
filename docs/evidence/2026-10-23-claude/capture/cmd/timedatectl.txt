@@ -1,0 +1,9 @@
+$ timedatectl
+               Local time: 五 2026-10-23 23:44:57 CST
+           Universal time: 五 2026-10-23 15:44:57 UTC
+                 RTC time: 五 2026-10-23 15:44:58    
+                Time zone: Asia/Shanghai (CST, +0800)
+System clock synchronized: yes                       
+              NTP service: active                    
+          RTC in local TZ: no                        
+[exit=0]

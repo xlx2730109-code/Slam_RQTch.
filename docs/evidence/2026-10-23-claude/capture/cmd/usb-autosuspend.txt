@@ -1,0 +1,3 @@
+$ cat /sys/module/usbcore/parameters/autosuspend
+-1
+[exit=0]

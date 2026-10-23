@@ -1,0 +1,12 @@
+[Unit]
+Description=Log Jetson input rails (power cut forensics)
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/home/sjytt/jiaoda/power_log.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Restart chassis bridge / re-enumerate USB when telemetry stops
+After=jiaoda-control.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/sjytt/jiaoda/run_serialguard.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

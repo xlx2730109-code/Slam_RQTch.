@@ -1,0 +1,11 @@
+$ swapon --show
+NAME       TYPE      SIZE USED PRIO
+/dev/zram0 partition 3.9G   0B    5
+/dev/zram1 partition 3.9G   0B    5
+/dev/zram2 partition 3.9G   0B    5
+/dev/zram3 partition 3.9G   0B    5
+/dev/zram4 partition 3.9G   0B    5
+/dev/zram5 partition 3.9G   0B    5
+/dev/zram6 partition 3.9G   0B    5
+/dev/zram7 partition 3.9G   0B    5
+[exit=0]

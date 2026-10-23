@@ -1,0 +1,4 @@
+$ for c in /sys/class/drm/card*-*; do echo "$c: $(cat $c/status 2>/dev/null) $(cat $c/enabled 2>/dev/null)"; done; ls /sys/class/drm
+/sys/class/drm/card*-*:  
+version
+[exit=0]

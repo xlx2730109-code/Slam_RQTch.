@@ -1,0 +1,163 @@
+$ nmcli con show xlx | grep -v -i -E 'psk|password|secret'
+connection.id:                          xlx
+connection.uuid:                        6550f2e6-f040-4d79-b212-4a66f993aeba
+connection.stable-id:                   --
+connection.type:                        802-11-wireless
+connection.interface-name:              wlan0
+connection.autoconnect:                 yes
+connection.autoconnect-priority:        100
+connection.autoconnect-retries:         0 (forever)
+connection.multi-connect:               0 (default)
+connection.auth-retries:                -1
+connection.timestamp:                   1792770244
+connection.read-only:                   no
+connection.permissions:                 --
+connection.zone:                        --
+connection.master:                      --
+connection.slave-type:                  --
+connection.autoconnect-slaves:          -1 (default)
+connection.secondaries:                 --
+connection.gateway-ping-timeout:        0
+connection.metered:                     unknown
+connection.lldp:                        default
+connection.mdns:                        -1 (default)
+connection.llmnr:                       -1 (default)
+connection.wait-device-timeout:         -1
+802-11-wireless.ssid:                   xlx
+802-11-wireless.mode:                   infrastructure
+802-11-wireless.band:                   --
+802-11-wireless.channel:                0
+802-11-wireless.bssid:                  --
+802-11-wireless.rate:                   0
+802-11-wireless.tx-power:               0
+802-11-wireless.mac-address:            --
+802-11-wireless.cloned-mac-address:     --
+802-11-wireless.generate-mac-address-mask:--
+802-11-wireless.mac-address-blacklist:  --
+802-11-wireless.mac-address-randomization:default
+802-11-wireless.mtu:                    auto
+802-11-wireless.seen-bssids:            xx:xx:xx:xx:xx:xx,xx:xx:xx:xx:xx:xx
+802-11-wireless.hidden:                 no
+802-11-wireless.powersave:              2 (disable)
+802-11-wireless.wake-on-wlan:           0x1 (default)
+802-11-wireless-security.wep-tx-keyidx: 0
+802-11-wireless-security.auth-alg:      open
+802-11-wireless-security.proto:         --
+802-11-wireless-security.pairwise:      --
+802-11-wireless-security.group:         --
+802-11-wireless-security.pmf:           0 (default)
+802-11-wireless-security.leap-username: --
+802-11-wireless-security.wep-key0:      <hidden>
+802-11-wireless-security.wep-key1:      <hidden>
+802-11-wireless-security.wep-key2:      <hidden>
+802-11-wireless-security.wep-key3:      <hidden>
+802-11-wireless-security.wep-key-flags: 0 (none)
+802-11-wireless-security.wep-key-type:  unknown
+802-11-wireless-security.wps-method:    0x0 (default)
+802-11-wireless-security.fils:          0 (default)
+ipv4.method:                            auto
+ipv4.dns:                               --
+ipv4.dns-search:                        --
+ipv4.dns-options:                       --
+ipv4.dns-priority:                      0
+ipv4.addresses:                         172.20.10.14/28
+ipv4.gateway:                           --
+ipv4.routes:                            --
+ipv4.route-metric:                      -1
+ipv4.route-table:                       0 (unspec)
+ipv4.routing-rules:                     --
+ipv4.ignore-auto-routes:                no
+ipv4.ignore-auto-dns:                   no
+ipv4.dhcp-client-id:                    --
+ipv4.dhcp-iaid:                         --
+ipv4.dhcp-timeout:                      0 (default)
+ipv4.dhcp-send-hostname:                yes
+ipv4.dhcp-hostname:                     --
+ipv4.dhcp-fqdn:                         --
+ipv4.dhcp-hostname-flags:               0x0 (none)
+ipv4.never-default:                     no
+ipv4.may-fail:                          yes
+ipv4.dad-timeout:                       -1 (default)
+ipv6.method:                            auto
+ipv6.dns:                               --
+ipv6.dns-search:                        --
+ipv6.dns-options:                       --
+ipv6.dns-priority:                      0
+ipv6.addresses:                         --
+ipv6.gateway:                           --
+ipv6.routes:                            --
+ipv6.route-metric:                      -1
+ipv6.route-table:                       0 (unspec)
+ipv6.routing-rules:                     --
+ipv6.ignore-auto-routes:                no
+ipv6.ignore-auto-dns:                   no
+ipv6.never-default:                     no
+ipv6.may-fail:                          yes
+ipv6.ip6-privacy:                       -1 (unknown)
+ipv6.addr-gen-mode:                     stable-privacy
+ipv6.ra-timeout:                        0 (default)
+ipv6.dhcp-duid:                         --
+ipv6.dhcp-iaid:                         --
+ipv6.dhcp-timeout:                      0 (default)
+ipv6.dhcp-send-hostname:                yes
+ipv6.dhcp-hostname:                     --
+ipv6.dhcp-hostname-flags:               0x0 (none)
+ipv6.token:                             --
+proxy.method:                           none
+proxy.browser-only:                     no
+proxy.pac-url:                          --
+proxy.pac-script:                       --
+GENERAL.NAME:                           xlx
+GENERAL.UUID:                           6550f2e6-f040-4d79-b212-4a66f993aeba
+GENERAL.DEVICES:                        wlan0
+GENERAL.IP-IFACE:                       wlan0
+GENERAL.STATE:                          activated
+GENERAL.DEFAULT:                        yes
+GENERAL.DEFAULT6:                       yes
+GENERAL.SPEC-OBJECT:                    /org/freedesktop/NetworkManager/AccessPoint/27
+GENERAL.VPN:                            no
+GENERAL.DBUS-PATH:                      /org/freedesktop/NetworkManager/ActiveConnection/4
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/Settings/3
+GENERAL.ZONE:                           --
+GENERAL.MASTER-PATH:                    --
+IP4.ADDRESS[1]:                         172.20.10.14/28
+IP4.ADDRESS[2]:                         172.20.10.8/28
+IP4.GATEWAY:                            172.20.10.1
+IP4.ROUTE[1]:                           dst = 0.0.0.0/0, nh = 172.20.10.1, mt = 600
+IP4.ROUTE[2]:                           dst = 172.20.10.0/28, nh = 0.0.0.0, mt = 600
+IP4.ROUTE[3]:                           dst = 172.20.10.0/28, nh = 0.0.0.0, mt = 600
+IP4.DNS[1]:                             172.20.10.1
+DHCP4.OPTION[1]:                        dhcp_lease_time = 3600
+DHCP4.OPTION[2]:                        domain_name_servers = 172.20.10.1
+DHCP4.OPTION[3]:                        expiry = 1792773417
+DHCP4.OPTION[4]:                        ip_address = 172.20.10.8
+DHCP4.OPTION[5]:                        next_server = 172.20.10.1
+DHCP4.OPTION[6]:                        requested_broadcast_address = 1
+DHCP4.OPTION[7]:                        requested_domain_name = 1
+DHCP4.OPTION[8]:                        requested_domain_name_servers = 1
+DHCP4.OPTION[9]:                        requested_domain_search = 1
+DHCP4.OPTION[10]:                       requested_host_name = 1
+DHCP4.OPTION[11]:                       requested_interface_mtu = 1
+DHCP4.OPTION[12]:                       requested_ms_classless_static_routes = 1
+DHCP4.OPTION[13]:                       requested_nis_domain = 1
+DHCP4.OPTION[14]:                       requested_nis_servers = 1
+DHCP4.OPTION[15]:                       requested_ntp_servers = 1
+DHCP4.OPTION[16]:                       requested_rfc3442_classless_static_routes = 1
+DHCP4.OPTION[17]:                       requested_root_path = 1
+DHCP4.OPTION[18]:                       requested_routers = 1
+DHCP4.OPTION[19]:                       requested_static_routes = 1
+DHCP4.OPTION[20]:                       requested_subnet_mask = 1
+DHCP4.OPTION[21]:                       requested_time_offset = 1
+DHCP4.OPTION[22]:                       requested_wpad = 1
+DHCP4.OPTION[23]:                       routers = 172.20.10.1
+DHCP4.OPTION[24]:                       subnet_mask = 255.255.255.240
+IP6.ADDRESS[1]:                         <ipv6-global>/64
+IP6.ADDRESS[2]:                         <ipv6-global>/64
+IP6.ADDRESS[3]:                         fe80::cf04:1bdc:a1e7:7557/64
+IP6.GATEWAY:                            fe80::3410:beff:fe03:e564
+IP6.ROUTE[1]:                           dst = <ipv6-global>::/64, nh = ::, mt = 600
+IP6.ROUTE[2]:                           dst = ::/0, nh = fe80::3410:beff:fe03:e564, mt = 600
+IP6.ROUTE[3]:                           dst = fe80::/64, nh = ::, mt = 600
+IP6.DNS[1]:                             fe80::3410:beff:fe03:e564
+DHCP6.OPTION[1]:                        dhcp6_name_servers = fe80::3410:beff:fe03:e564
+[exit=0]

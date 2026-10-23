@@ -1,0 +1,41 @@
+$ ls -la /home/sjytt/livo2_ws /home/sjytt/livo2_ws/src /home/sjytt/unilidar_sdk2 /home/sjytt/unilidar_sdk2/unitree_lidar_ros 2>&1
+/home/sjytt/livo2_ws:
+total 24
+drwxrwxr-x  5 sjytt sjytt 4096 9月  10 12:18 .
+drwxr-xr-x 28 sjytt sjytt 4096 10月 23 23:44 ..
+drwxrwxr-x 11 sjytt sjytt 4096 9月  10 12:18 build
+-rw-rw-r--  1 sjytt sjytt   98 9月  10 12:18 .catkin_workspace
+drwxrwxr-x  4 sjytt sjytt 4096 9月  10 12:18 devel
+drwxrwxr-x  4 sjytt sjytt 4096 9月  10 12:18 src
+
+/home/sjytt/livo2_ws/src:
+total 16
+drwxrwxr-x  4 sjytt sjytt 4096 9月  10 12:18 .
+drwxrwxr-x  5 sjytt sjytt 4096 9月  10 12:18 ..
+lrwxrwxrwx  1 sjytt sjytt   49 9月  10 12:18 CMakeLists.txt -> /opt/ros/noetic/share/catkin/cmake/toplevel.cmake
+drwxrwxr-x 12 sjytt sjytt 4096 9月  10 12:16 FAST-LIVO2
+drwxrwxr-x  6 sjytt sjytt 4096 9月  10 12:18 rpg_vikit
+
+/home/sjytt/unilidar_sdk2:
+total 60
+drwxrwxr-x  7 sjytt sjytt  4096 6月  18 16:31 .
+drwxr-xr-x 28 sjytt sjytt  4096 10月 23 23:44 ..
+drwxrwxr-x  2 sjytt sjytt  4096 6月  18 16:31 docs
+drwxrwxr-x  8 sjytt sjytt  4096 10月 23 23:45 .git
+-rw-rw-r--  1 sjytt sjytt  1503 6月  18 16:31 LICENSE
+-rw-rw-r--  1 sjytt sjytt 10895 6月  18 16:31 README_CN.md
+-rw-rw-r--  1 sjytt sjytt 12265 6月  18 16:31 README.md
+drwxrwxr-x  5 sjytt sjytt  4096 6月  18 16:47 unitree_lidar_ros
+drwxrwxr-x  3 sjytt sjytt  4096 6月  18 16:31 unitree_lidar_ros2
+drwxrwxr-x  7 sjytt sjytt  4096 6月  18 16:37 unitree_lidar_sdk
+-rw-rw-r--  1 sjytt sjytt  1272 6月  18 16:31 VERSION.md
+
+/home/sjytt/unilidar_sdk2/unitree_lidar_ros:
+total 24
+drwxrwxr-x  5 sjytt sjytt 4096 6月  18 16:47 .
+drwxrwxr-x  7 sjytt sjytt 4096 6月  18 16:31 ..
+drwxrwxr-x 10 sjytt sjytt 4096 6月  18 16:47 build
+-rw-rw-r--  1 sjytt sjytt   98 6月  18 16:31 .catkin_workspace
+drwxrwxr-x  4 sjytt sjytt 4096 6月  18 16:47 devel
+drwxrwxr-x  3 sjytt sjytt 4096 6月  18 16:47 src
+[exit=0]

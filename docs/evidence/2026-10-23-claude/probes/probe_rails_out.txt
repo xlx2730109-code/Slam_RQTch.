@@ -1,0 +1,63 @@
+ 23:24:51 up 7 min,  1 user,  load average: 3.79, 2.81, 1.35
+=== hwmon
+--- /sys/class/hwmon/hwmon0 name=pwm_tach
+--- /sys/class/hwmon/hwmon1 name=soctherm_oc
+--- /sys/class/hwmon/hwmon2 name=pwmfan
+--- /sys/class/hwmon/hwmon3 name=ina3221
+in1_label=VDD_GPU_SOC
+in2_label=VDD_CPU_CV
+in3_label=VIN_SYS_5V0
+in7_label=sum of shunt voltages
+in1_input=19096
+in2_input=19088
+in3_input=5048
+in4_input=280
+in5_input=200
+in6_input=1760
+in7_input=600
+curr1_input=140
+curr2_input=100
+curr3_input=880
+curr4_input=260
+shunt1_resistor=2000
+shunt2_resistor=2000
+shunt3_resistor=2000
+--- /sys/class/hwmon/hwmon4 name=ina3221
+in1_label=NC
+in2_label=VDDQ_VDD2_1V8AO
+in3_label=NC
+in7_label=sum of shunt voltages
+in1_input=0
+in2_input=5048
+in3_input=0
+in4_input=0
+in5_input=360
+in6_input=0
+in7_input=
+curr1_input=0
+curr2_input=180
+curr3_input=0
+curr4_input=
+shunt1_resistor=10000
+shunt2_resistor=2000
+shunt3_resistor=10000
+--- /sys/class/hwmon/hwmon5 name=ucsi_source_psy_1_00081
+in0_input=0
+curr1_input=0
+--- /sys/class/hwmon/hwmon6 name=ucsi_source_psy_1_00082
+in0_input=0
+curr1_input=0
+--- /sys/class/hwmon/hwmon7 name=6810000ethernet00
+=== tegra power sysfs
+1-0040
+1-0041
+bind
+module
+uevent
+=== 5s per-process disk writes
+2788 KB/s pid=3254 /usr/libexec/tracker-store 
+487 KB/s pid=312 /lib/systemd/systemd-journald 
+104 KB/s pid=272 
+54 KB/s pid=448 /usr/sbin/rsyslogd -n -iNONE 
+36 KB/s pid=12161 /home/sjytt/livo2_ws/devel/lib/fast_livo/fastlivo_mapping __name:=laserMapping __log:=/home/sjytt/.ros/log/e5a
+6 KB/s pid=2231 /bin/bash /home/sjytt/jiaoda/power_log.sh 

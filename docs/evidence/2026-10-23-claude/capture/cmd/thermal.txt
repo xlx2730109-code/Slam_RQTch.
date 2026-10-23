@@ -1,0 +1,13 @@
+$ for z in /sys/class/thermal/thermal_zone*; do echo "$(cat $z/type)=$(cat $z/temp)"; done
+CPU-therm=42031
+GPU-therm=-256000
+Tdiode_tegra=31750
+CV0-therm=-256000
+CV1-therm=-256000
+CV2-therm=-256000
+SOC0-therm=38312
+SOC1-therm=38375
+SOC2-therm=38468
+tj-therm=42156
+Tboard_tegra=31000
+[exit=0]

@@ -1,0 +1,3 @@
+$ ip neigh show dev eth1 2>&1 | sed -E 's/([0-9a-f]{2}:){5}[0-9a-f]{2}/xx:xx:xx:xx:xx:xx/'
+192.168.1.62 lladdr xx:xx:xx:xx:xx:xx REACHABLE
+[exit=0]

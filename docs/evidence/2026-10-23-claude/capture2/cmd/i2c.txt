@@ -1,0 +1,30 @@
+$ i2cdetect -l 2>&1; ls /sys/bus/i2c/devices 2>&1 | head -40
+i2c-3	i2c       	3190000.i2c                     	I2C adapter
+i2c-1	i2c       	c240000.i2c                     	I2C adapter
+i2c-8	i2c       	31e0000.i2c                     	I2C adapter
+i2c-6	i2c       	31c0000.i2c                     	I2C adapter
+i2c-4	i2c       	Tegra BPMP I2C adapter          	I2C adapter
+i2c-2	i2c       	3180000.i2c                     	I2C adapter
+i2c-0	i2c       	3160000.i2c                     	I2C adapter
+i2c-9	i2c       	NVIDIA SOC i2c adapter 0        	I2C adapter
+i2c-7	i2c       	c250000.i2c                     	I2C adapter
+i2c-5	i2c       	31b0000.i2c                     	I2C adapter
+1-0008
+1-0040
+1-0041
+4-0020
+4-0022
+4-003c
+4-004c
+8-001c
+i2c-0
+i2c-1
+i2c-2
+i2c-3
+i2c-4
+i2c-5
+i2c-6
+i2c-7
+i2c-8
+i2c-9
+[exit=0]

@@ -22,6 +22,17 @@ dropin() {  # dropin <unit> <name>，配置从标准输入读取
   cat > "$dir/$2.conf"
 }
 
+patch_console() {
+  local dst=/home/sjytt/jiaoda/console_backend.py bak=/home/sjytt/backup/console_backend.py.orig-20261023
+  [ -f "$HERE/patches/console_backend.py" ] || return 0
+  cmp -s "$HERE/patches/console_backend.py" "$dst" && return 0
+  mkdir -p /home/sjytt/backup
+  [ -f "$bak" ] || cp -p "$dst" "$bak"
+  install -m 0755 -o sjytt -g sjytt "$HERE/patches/console_backend.py" "$dst"
+  chown sjytt:sjytt "$bak" 2>/dev/null
+  systemctl restart jiaoda-console 2>/dev/null
+}
+
 status() {
   echo "cgroup 版本: v$CG"
   echo "systemd: $(systemctl --version | head -1)"
@@ -39,6 +50,10 @@ status() {
   echo "--- jiaoda-memguard: $(systemctl is-active jiaoda-memguard 2>/dev/null)"
   echo "--- jiaoda-netguard: $(systemctl is-active jiaoda-netguard 2>/dev/null)"
   echo "--- jiaoda-blackbox: $(systemctl is-active jiaoda-blackbox 2>/dev/null)"
+  echo "--- jiaoda-usbpower: $(systemctl is-active jiaoda-usbpower 2>/dev/null) autosuspend=$(cat /sys/module/usbcore/parameters/autosuspend 2>/dev/null)"
+  echo "--- tracker 进程数: $(pgrep -fc /usr/libexec/tracker)"
+  echo "--- 内核控制台级别: $(cat /proc/sys/kernel/printk)"
+  cmp -s "$HERE/patches/console_backend.py" /home/sjytt/jiaoda/console_backend.py && echo "--- console_backend: 已是补丁版" || echo "--- console_backend: 基线版"
   systemctl show user-1000.slice -p CPUQuotaPerSecUSec -p MemoryLimit -p MemoryMax 2>/dev/null
   sw=/sys/fs/cgroup/memory/system.slice/jiaoda-fastlivo.service/memory.swappiness
   [ -r "$sw" ] && echo "fastlivo cgroup swappiness=$(cat $sw)"
@@ -96,11 +111,20 @@ OOMScoreAdjust=-900
 $SSH_LINE
 EOF
 
-  # 4. 内核参数：少用交换（交换为 zram 时会占用 CPU 压缩），保留应急内存，内核崩溃后自动重启
+  # 3b. 相机发布降为 5 Hz：当前 SLAM 未启用视觉（img_en=0），图像仅供任务拍照；启用视觉时需恢复 15 Hz
+  dropin jiaoda-campub.service 90-hardening <<EOF
+[Service]
+Environment=CAMPUB_FPS=5
+EOF
+
+  # 4. 内核参数：少用交换（交换为 zram 时会占用 CPU 压缩），保留应急内存，内核崩溃后自动重启；
+  #    kernel.printk 把控制台级别降到 1，避免 USB 主控报错刷屏时同步写入慢速串口控制台而卡住 CPU
   cat > /etc/sysctl.d/90-jiaoda-hardening.conf <<EOF
 vm.swappiness = 10
 kernel.panic = 15
+kernel.printk = 1 4 1 7
 EOF
+  dmesg -n 1
   cur="$(sysctl -n vm.min_free_kbytes 2>/dev/null || echo 0)"
   if [ "${cur:-0}" -lt 262144 ]; then echo "vm.min_free_kbytes = 262144" >> /etc/sysctl.d/90-jiaoda-hardening.conf; fi
   sysctl --system >/dev/null 2>&1
@@ -117,6 +141,14 @@ EOF
   install -m 0644 "$HERE/jiaoda-netguard.service" /etc/systemd/system/jiaoda-netguard.service
   install -m 0755 "$HERE/jiaoda-blackbox.sh" /usr/local/sbin/jiaoda-blackbox.sh
   install -m 0644 "$HERE/jiaoda-blackbox.service" /etc/systemd/system/jiaoda-blackbox.service
+  install -m 0644 "$HERE/jiaoda-usbpower.service" /etc/systemd/system/jiaoda-usbpower.service
+
+  # 桌面文件索引服务（tracker）对机器人无用，却持续写盘约 2.8 MB/s 并占 CPU，停用并结束进程
+  systemctl --global mask tracker-store.service tracker-miner-fs.service tracker-extract.service tracker-writeback.service >/dev/null 2>&1
+  pkill -f /usr/libexec/tracker 2>/dev/null
+
+  # 控制台摄像头改为按需打开（基线版本常驻读取相机，占用共享的 USB 2.0 带宽）
+  patch_console
 
   # 远程登录会话（含各类自动化工具）的资源上限，防止一条重命令拖垮整机；SLAM 服务不在此 slice，不受影响
   mkdir -p /etc/systemd/system/user-1000.slice.d
@@ -127,8 +159,8 @@ EOF
   fi
 
   systemctl daemon-reload
-  systemctl enable jiaoda-memguard.service jiaoda-netguard.service jiaoda-blackbox.service >/dev/null 2>&1
-  systemctl restart jiaoda-memguard.service jiaoda-netguard.service jiaoda-blackbox.service
+  systemctl enable jiaoda-memguard.service jiaoda-netguard.service jiaoda-blackbox.service jiaoda-usbpower.service >/dev/null 2>&1
+  systemctl restart jiaoda-memguard.service jiaoda-netguard.service jiaoda-blackbox.service jiaoda-usbpower.service
 
   # 对已运行的 SLAM 立即把交换倾向置 0（cgroup v1）
   sw=/sys/fs/cgroup/memory/system.slice/jiaoda-fastlivo.service/memory.swappiness

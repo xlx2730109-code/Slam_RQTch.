@@ -1,0 +1,21 @@
+$ cd /home/sjytt && for d in *; do [ -d "$d" ] && echo "$(du -s --apparent-size "$d" 2>/dev/null | cut -f1) KB  $d"; done | sort -rn | head -30
+270785 KB  Sophus_src
+137359 KB  livo2_ws
+33195 KB  rslidar_ws
+12103 KB  unilidar_sdk
+6710 KB  jiaoda
+6292 KB  unilidar_sdk2
+6003 KB  capture_20261023
+5199 KB  ch343ser_linux
+4272 KB  backup
+2905 KB  Pictures
+152 KB  dog_backup
+65 KB  hardening
+13 KB  Desktop
+4 KB  Videos
+4 KB  Templates
+4 KB  Public
+4 KB  Music
+4 KB  Downloads
+4 KB  Documents
+[exit=0]

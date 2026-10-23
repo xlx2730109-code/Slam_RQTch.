@@ -1,0 +1,5 @@
+$ python3 -c 'import sys,numpy,cv2,serial,yaml; print(sys.version); print(numpy.__version__, cv2.__version__, serial.VERSION, yaml.__version__)'
+3.8.10 (default, Mar 18 2025, 20:04:55) 
+[GCC 9.4.0]
+1.17.4 4.2.0 3.4 5.3.1
+[exit=0]

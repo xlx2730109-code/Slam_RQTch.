@@ -1,0 +1,8 @@
+## livo2_ws/src/FAST-LIVO2
+0d2c0346107b75b59934975adec9a6eeeb913c64 2026-03-08 22:29:31 +0800 [Docs] update FAST-LIVO2-Dataset download link.
+origin	https://github.com/hku-mars/FAST-LIVO2.git (fetch)
+origin	https://github.com/hku-mars/FAST-LIVO2.git (push)
+?? config/camera_unitree.yaml
+?? config/unitree_l2.yaml
+?? config/unitree_l2.yaml.bak_vision
+?? launch/mapping_unitree_l2.launch

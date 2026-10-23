@@ -1,0 +1,96 @@
+$ lsmod
+Module                  Size  Used by
+nvidia_modeset       1093632  3
+fuse                  118784  3
+xt_connmark            20480  6
+xt_conntrack           16384  4
+ip6table_mangle        16384  1
+iptable_mangle         16384  1
+xt_MASQUERADE          16384  2
+xt_tcpudp              16384  2
+xt_mark                16384  8
+lzo_rle                16384  64
+lzo_compress           16384  1 lzo_rle
+zram                   32768  8
+nfnetlink              20480  0
+ip6table_nat           16384  1
+ip6table_filter        16384  1
+ip6_tables             36864  3 ip6table_filter,ip6table_nat,ip6table_mangle
+iptable_nat            16384  1
+nf_nat                 45056  3 ip6table_nat,iptable_nat,xt_MASQUERADE
+nf_conntrack          131072  4 xt_conntrack,nf_nat,xt_connmark,xt_MASQUERADE
+nf_defrag_ipv6         24576  1 nf_conntrack
+nf_defrag_ipv4         16384  1 nf_conntrack
+libcrc32c              16384  2 nf_conntrack,nf_nat
+iptable_filter         16384  1
+bnep                   28672  2
+ramoops                28672  0
+reed_solomon           20480  1 ramoops
+uvcvideo              102400  1
+snd_soc_tegra186_asrc    36864  1
+videobuf2_vmalloc      20480  1 uvcvideo
+snd_soc_tegra210_ope    32768  1
+snd_soc_tegra186_dspk    20480  2
+snd_soc_tegra186_arad    24576  2 snd_soc_tegra186_asrc
+snd_soc_tegra210_mvc    20480  2
+snd_soc_tegra210_iqc    16384  0
+snd_soc_tegra210_afc    20480  6
+snd_soc_tegra210_dmic    20480  4
+cdc_acm                36864  2
+snd_soc_tegra210_adx    28672  4
+snd_soc_tegra210_amx    32768  4
+snd_soc_tegra210_mixer    45056  1
+snd_soc_tegra210_admaif   118784  1
+snd_soc_tegra210_i2s    24576  6
+snd_soc_tegra210_sfc    57344  4
+snd_soc_tegra_pcm      16384  1 snd_soc_tegra210_admaif
+rtk_btusb              65536  0
+btusb                  57344  0
+aes_ce_blk             36864  1
+crypto_simd            24576  1 aes_ce_blk
+cryptd                 28672  1 crypto_simd
+aes_ce_cipher          20480  1 aes_ce_blk
+cam_cdi_tsc            20480  0
+btrtl                  24576  1 btusb
+snd_soc_tegra210_adsp   753664  1
+ghash_ce               28672  0
+btbcm                  24576  1 btusb
+sha2_ce                20480  0
+ucsi_ccg               28672  0
+btintel                32768  1 btusb
+snd_soc_tegra_machine_driver    16384  0
+rtl8822ce            2994176  0
+sha256_arm64           28672  1 sha2_ce
+sha1_ce                20480  0
+snd_soc_tegra_utils    28672  3 snd_soc_tegra210_admaif,snd_soc_tegra_machine_driver,snd_soc_tegra210_adsp
+nv_hawk_owl            36864  1 cam_cdi_tsc
+typec_ucsi             32768  1 ucsi_ccg
+snd_soc_simple_card_utils    24576  1 snd_soc_tegra_utils
+nct1008                24576  0
+nvadsp                110592  1 snd_soc_tegra210_adsp
+snd_soc_spdif_tx       16384  0
+max96712               20480  1 nv_hawk_owl
+snd_hda_codec_hdmi     57344  1
+typec                  40960  1 typec_ucsi
+i2c_nvvrs11            16384  0
+snd_soc_rt5640        114688  1
+snd_soc_tegra210_ahub  1257472  3 snd_soc_tegra210_ope,snd_soc_tegra210_sfc
+tegra_bpmp_thermal     16384  0
+snd_soc_rl6231         16384  1 snd_soc_rt5640
+snd_hda_tegra          16384  0
+cfg80211              724992  1 rtl8822ce
+userspace_alert        16384  0
+tegra210_adma          28672  2 snd_soc_tegra210_admaif,snd_soc_tegra210_adsp
+snd_hda_codec         118784  2 snd_hda_codec_hdmi,snd_hda_tegra
+snd_hda_core           81920  3 snd_hda_codec_hdmi,snd_hda_codec,snd_hda_tegra
+spi_tegra114           32768  0
+nvidia               1327104  7 nvidia_modeset
+loop                   36864  1
+binfmt_misc            24576  1
+ina3221                24576  0
+pwm_fan                24576  0
+nvgpu                2514944  16
+nvmap                 192512  59 nvgpu
+ip_tables              36864  3 iptable_filter,iptable_nat,iptable_mangle
+x_tables               49152  11 ip6table_filter,xt_conntrack,iptable_filter,xt_tcpudp,ip6_tables,xt_connmark,ip_tables,ip6table_mangle,xt_MASQUERADE,iptable_mangle,xt_mark
+[exit=0]

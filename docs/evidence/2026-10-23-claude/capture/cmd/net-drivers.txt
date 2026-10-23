@@ -1,0 +1,5 @@
+$ for n in eth0 eth1 wlan0; do echo "$n -> $(readlink -f /sys/class/net/$n/device 2>/dev/null | sed 's#.*/devices/##') driver=$(basename $(readlink -f /sys/class/net/$n/device/driver 2>/dev/null))"; done
+eth0 -> platform/3610000.xhci/usb1/1-4/1-4.1/1-4.1:2.0 driver=cdc_ether
+eth1 -> platform/6810000.ethernet driver=nvethernet
+wlan0 -> platform/14100000.pcie/pci0001:00/0001:00:00.0/0001:01:00.0 driver=rtl88x2ce
+[exit=0]

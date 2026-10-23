@@ -1,0 +1,4 @@
+$ cat /sys/class/mmc_host/mmc0/mmc0:0001/life_time; cat /sys/block/mmcblk0/queue/scheduler
+0x01 0x01
+[mq-deadline] kyber none
+[exit=0]

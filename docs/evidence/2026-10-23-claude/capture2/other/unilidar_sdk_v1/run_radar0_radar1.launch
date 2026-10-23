@@ -1,0 +1,9 @@
+<launch>
+  <node pkg="unitree_lidar_ros" type="unitree_lidar_ros_node" name="unitree1_radar0" respawn="true">
+    <rosparam command="load" file="$(find unitree_lidar_ros)/config/config_radar0.yaml"/>
+  </node>
+
+  <node pkg="unitree_lidar_ros" type="unitree_lidar_ros_node" name="unitree2_radar1" respawn="true">
+    <rosparam command="load" file="$(find unitree_lidar_ros)/config/config_radar1.yaml"/>
+  </node>
+</launch>

@@ -1,0 +1,22 @@
+$ cat /proc/meminfo | head -n 20
+MemTotal:       64309276 kB
+MemFree:        60329692 kB
+MemAvailable:   60728440 kB
+Buffers:           53128 kB
+Cached:          1295216 kB
+SwapCached:            0 kB
+Active:           388168 kB
+Inactive:        2524820 kB
+Active(anon):       2956 kB
+Inactive(anon):  1588252 kB
+Active(file):     385212 kB
+Inactive(file):   936568 kB
+Unevictable:       21492 kB
+Mlocked:              64 kB
+SwapTotal:      32154624 kB
+SwapFree:       32154624 kB
+Dirty:               812 kB
+Writeback:             0 kB
+AnonPages:       1543856 kB
+Mapped:           318916 kB
+[exit=0]

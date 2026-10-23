@@ -1,0 +1,12 @@
+$ nmcli -t -f DEVICE,TYPE,STATE,CONNECTION dev
+wlan0:wifi:connected:xlx
+tailscale0:tun:connected:tailscale0
+eth1:ethernet:connected:lidar-eth
+eth0:ethernet:disconnected:
+p2p-dev-wlan0:wifi-p2p:disconnected:
+l4tbr0:bridge:unmanaged:
+dummy0:dummy:unmanaged:
+rndis0:ethernet:unmanaged:
+usb0:ethernet:unmanaged:
+lo:loopback:unmanaged:
+[exit=0]

@@ -1,0 +1,13 @@
+diff --git a/unitree_lidar_ros/src/unitree_lidar_ros/config/config.yaml b/unitree_lidar_ros/src/unitree_lidar_ros/config/config.yaml
+index e344329..54d879b 100755
+--- a/unitree_lidar_ros/src/unitree_lidar_ros/config/config.yaml
++++ b/unitree_lidar_ros/src/unitree_lidar_ros/config/config.yaml
+@@ -3,7 +3,7 @@
+ ####################################################
+ 
+ # Configuration
+-initialize_type: 2 # 1-Serial, 2-UDP
++initialize_type: 2
+ work_mode: 0
+ use_system_timestamp: true
+ range_min: 0
