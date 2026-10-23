@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""录制位姿轨迹（示教用），每 0.4 s 一个点"""
-import rospy, json, math, time
+import rospy, json, math, time, signal
 from geometry_msgs.msg import PoseStamped
 OUT = "/home/sjytt/jiaoda/teach_track.jsonl"
 cur = {}

@@ -3,7 +3,9 @@
 import rospy, json, time, sys
 from geometry_msgs.msg import Twist
 OUT = sys.argv[1] if len(sys.argv) > 1 else "/home/sjytt/jiaoda/teach_cmd.jsonl"
+rec = {'on': True}
 def cb(m):
+    if not rec['on']: return
     with open(OUT, 'a') as f:
         f.write(json.dumps({'t': round(time.time(), 3),
                             'v': round(m.linear.x, 3),

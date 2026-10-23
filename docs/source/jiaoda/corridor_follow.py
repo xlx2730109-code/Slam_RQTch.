@@ -11,6 +11,7 @@ K  = 1.6
 WMAX = 0.30
 STOP_FRONT = 1.00
 TARGET = float(sys.argv[1]) if len(sys.argv) > 1 else 2.0
+STOP_ANG = float(sys.argv[2]) if len(sys.argv) > 2 else 30.0
 
 cloud = {}
 def cb(m):
@@ -32,7 +33,8 @@ def main():
     rospy.Subscriber('/unilidar/cloud', PointCloud2, cb, queue_size=1)
     pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
     rospy.sleep(1.5)
-    t0 = rospy.get_time(); travelled = 0.0
+    t0 = rospy.get_time()
+    travelled = 0.0
     while not rospy.is_shutdown():
         p = cloud.get('p')
         if p is None:
@@ -41,19 +43,21 @@ def main():
         R = sector_d(p, -125, -55)
         F = sector_d(p, -12, 12, rmax=4.0)
         if L is None or R is None:
-            pub.publish(Twist()); print('walls not visible, stop', flush=True); break
+            pub.publish(Twist()); print('左右墙不可见，停车', flush=True); break
         if F is not None and F < STOP_FRONT:
-            pub.publish(Twist()); print('front %.2f m, stop' % F, flush=True); break
+            pub.publish(Twist()); print('前方 %.2f m 有障碍，停车' % F, flush=True); break
         if rospy.get_time() - t0 > 60:
-            pub.publish(Twist()); print('timeout', flush=True); break
+            pub.publish(Twist()); print('超时停车', flush=True); break
+        # 左右差 -> 转向；离哪边近就往另一边修
         err = (L - R)
         m = Twist()
         m.angular.z = max(-WMAX, min(WMAX, K * err * 0.5))
         m.linear.x = VX * max(0.4, 1.0 - min(abs(err), 1.0))
         pub.publish(m)
-        travelled += VX * 0.05          # 无条件按时间积分
-        if travelled >= TARGET:
-            pub.publish(Twist()); print('reached %.2f m' % travelled, flush=True); break
+        if abs(err) < 0.15 and F is not None:
+            travelled += VX * 0.05
+            if travelled >= TARGET:
+                pub.publish(Twist()); print('到达 %.2f m，停车' % travelled, flush=True); break
         rospy.sleep(0.05)
     pub.publish(Twist())
 

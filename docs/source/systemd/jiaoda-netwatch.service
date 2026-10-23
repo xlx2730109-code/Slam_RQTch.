@@ -1,9 +1,0 @@
-[Unit]
-Description=Ensure wlan0 gets an IP (retry xlx)
-After=NetworkManager.service
-Wants=NetworkManager.service
-
-[Service]
-Type=oneshot
-ExecStart=/home/sjytt/jiaoda/net_watchdog.sh
-TimeoutStartSec=60

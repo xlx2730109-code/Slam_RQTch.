@@ -5,7 +5,7 @@
 # Configuration
 initialize_type: 2
 work_mode: 0
-use_system_timestamp: false
+use_system_timestamp: true
 range_min: 0
 range_max: 100
 cloud_scan_num: 18

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""极简巡检：位姿直达点，不用 A*/DWA/栅格地图。
-带三重保护：位姿跳变、卡死、超时。"""
+"""极简巡检：位姿直达点，不用 A*/DWA/栅格地图。带位姿跳变、卡死、超时三重保护。"""
 import rospy, math, sys, json
 from geometry_msgs.msg import Twist, PoseStamped
 
@@ -52,7 +51,7 @@ def main():
                     ref = (x, y, rospy.get_time())
             if d < TOL_POS:
                 pub.publish(Twist())
-                print('WP%d arrived, %.2f m left, %.1f s' % (i+1, d, rospy.get_time()-t0), flush=True)
+                print('WP%d 到达 剩余 %.2f m 用时 %.1f s' % (i+1, d, rospy.get_time()-t0), flush=True)
                 rospy.sleep(1.0); break
             m = Twist()
             if abs(err) > TOL_YAW:
@@ -63,9 +62,9 @@ def main():
             pub.publish(m)
             rospy.sleep(0.05)
             if rospy.get_time() - t0 > 60:
-                pub.publish(Twist()); print('WP%d timeout' % (i+1), flush=True); return
+                pub.publish(Twist()); print('WP%d 超时' % (i+1), flush=True); return
     pub.publish(Twist())
-    print('all done', flush=True)
+    print('全部完成', flush=True)
 
 if __name__ == '__main__':
     main()

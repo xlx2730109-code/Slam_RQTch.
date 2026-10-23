@@ -1,7 +1,6 @@
 [Unit]
 Description=Chassis+Gimbal serial control bridge
 After=jiaoda-lidar.service
-
 [Service]
 Type=simple
 User=sjytt
@@ -10,6 +9,5 @@ ExecStop=/usr/bin/python3 /home/sjytt/jiaoda/safe_stop.py
 TimeoutStopSec=6
 Restart=always
 RestartSec=3
-
 [Install]
 WantedBy=multi-user.target

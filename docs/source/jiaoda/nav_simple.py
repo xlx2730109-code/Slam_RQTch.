@@ -19,8 +19,8 @@ from nav_msgs.msg import OccupancyGrid, Path
 from actionlib_msgs.msg import GoalID
 
 # ===== 速度限制 =====
-VX_MAX        = 0.20   # 安全限速：首测阶段最高 0.2 m/s
-VX_MIN        = 0.05   # 允许极慢速爬行（原 0.5 太快）
+VX_MAX        = 0.30   # 实测标定后的真实 m/s 上限
+VX_MIN        = 0.26   # 电调最低可控速度，低于此值不动
 VYAW_MAX      = 0.30   # 安全限速：最大 0.3 rad/s
 
 # ===== Pure Pursuit =====
@@ -359,6 +359,7 @@ def publish_path(path):
 def loop():
     rate = rospy.Rate(HZ)
     last_log = 0
+    last_pose = None  # POSE_JUMP 保护用
     while not rospy.is_shutdown():
         rate.sleep()
         with lock:
@@ -376,8 +377,36 @@ def loop():
         if not active or not path or not goal:
             continue
 
+        # ---- POSE_JUMP 保护：位姿突变或跑到天边，立即停车 ----
+        if last_pose is not None:
+            jump = math.hypot(pos[0]-last_pose[0], pos[1]-last_pose[1])
+            if jump > 0.5 or abs(pos[0]) > 100 or abs(pos[1]) > 100:
+                rospy.logerr('[SAFETY] pose jump %.2f m at (%.1f, %.1f), stop' % (jump, pos[0], pos[1]))
+                pub_cmd.publish(Twist())
+                with lock:
+                    state['active'] = False; state['goal'] = None; state['path'] = None
+                last_pose = None
+                continue
+        last_pose = pos
+
         rx, ry = pos
         gx, gy = goal
+
+        # ---- STUCK_GUARD：有指令但 3 秒内几乎没位移 -> 判定卡死，停车 ----
+        if active and path:
+            nowt = rospy.get_time()
+            ref = state.get('stuck_ref')
+            if ref is None:
+                state['stuck_ref'] = (rx, ry, nowt)
+            elif nowt - ref[2] > 3.0:
+                if math.hypot(rx - ref[0], ry - ref[1]) < 0.05:
+                    rospy.logerr('[SAFETY] STUCK_GUARD: no motion in 3s, stop')
+                    pub_cmd.publish(Twist())
+                    with lock:
+                        state['active'] = False; state['goal'] = None; state['path'] = None
+                    state['stuck_ref'] = None
+                    continue
+                state['stuck_ref'] = (rx, ry, nowt)
         d_goal = math.hypot(gx-rx, gy-ry)
 
         # 到达 - 强制停车
@@ -394,7 +423,7 @@ def loop():
             target_yaw = math.atan2(gy - ry, gx - rx)
             yerr = normalize_angle(target_yaw - imu_yaw)
             # 速度: 距离越近越慢 (从 0.20 缓降到 0.10)
-            vx = max(0.10, min(0.20, d_goal * 0.3))
+            vx = max(0.26, min(0.30, d_goal * 0.3))  # 末段不得低于电调最小速度
             # 朝向修正: 小角度修正
             vyaw = max(-0.4, min(0.4, yerr * 1.0))
             vyaw_out = -vyaw if INVERT_YAW else vyaw
