@@ -1,1060 +1,732 @@
-# 消防巡检机器人 · Jetson SLAM/导航系统开发手册
+# Slam_RQTch
+目标：先看懂消防巡检机器人当前的硬件、软件、算法和数据流，能够顺着源码解释一次完整巡检，再考虑在另一台同配置机器人上复现。
 
-> 目的：**换一台电脑、断开本次会话，只靠这份文件也能把整套系统复现出来并继续开发**。
-> 适用设备：NVIDIA Jetson AGX Orin Developer Kit，主机名 `sjytt-desktop`，用户 `sjytt`。
-> 本文所有结论均来自 2026-10-21 的只读实测（命令、日志、`/proc`、话题频率），少数推断已在文中注明。
-> 源码/配置原件已导出到 [`docs/source/`](docs/source/)，配合第 14 章可从零重建。
-
-**目录**：[0 现状](#0-当前状态速览先看这个) · [1 上手](#1-十分钟上手) · [2 总览](#2-系统总览) · [3 拓扑](#3-运行时拓扑) · [4 启动](#4-启动机制与恢复) · [5 SLAM](#5-slamfast-livo2--宇树-l2) · [6 导航](#6-导航nav_simplepy-v8) · [7 底盘](#7-底盘与云台) · [8 视觉](#8-视觉) · [9 网页](#9-web-控制台8090) · [10 数据](#10-数据资产与备份) · [11 开发](#11-二次开发指南) · [12 排障](#12-故障速查表) · [13 问题](#13-已知问题清单按优先级) · [14 复现](#14-从零复现换一台新-jetson-也能重建) · [15 重做](#15-如果重做一个更好的架构建议)
-
----
-
-## 0. 当前状态速览（先看这个）
-
-> **2026-10-21 13:30 更新**：三个 P0 已修复并验证，系统现在是真的闭环了。修复前的故障态见 0.1。
-
-| 子系统 | 状态 | 证据（2026-10-21 13:30 实测） |
+| 阅读顺序 | 需要理解的问题 | 对应位置 |
 | --- | --- | --- |
-| 宇树 L2 雷达 | ✅ 正常 | `/unilidar/cloud` 11.94 Hz，`/unilidar/imu` 252.8 Hz |
-| 点云转发 | ✅ 正常 | `/synced/cloud` 11.97 Hz |
-| 相机发布 | ✅ 已恢复 | `/left_camera/image` **14.98 Hz**，`/dev/video3` |
-| FAST-LIVO2 | ✅ 已恢复 | `/aft_mapped_to_init` **11.96 Hz**，VIO 特征点 1755 |
-| 定位 `/slam_pose` | ✅ 已恢复 | 与 SLAM 同频；`/api/pose` 实时变化 |
-| 2D 建图 | ✅ 已恢复 | `/map` 1 Hz 且内容持续更新（PNG 哈希变化） |
-| 导航 `nav_simple` | ✅ 就绪 | 定位输入正常；无目标时不发 `cmd_vel`（符合设计） |
-| 底盘串口 | ✅ 已接通 | `serial opened: /dev/ttyACM0 @115200`，`/jiaoda/esp_tel` 9.96 Hz 回传 `GIMBAL_PULSE:1500,1500` |
-| 网页控制台 8090 | ✅ 可访问 | HTTP 200，地图与位姿均为实时 |
-| 标定页 8095 | ⛔ 未启用 | `jiaoda-calib` 为 disabled（按需启用） |
-| 巡检任务 | ✅ 已修复 | `jiaoda-mission` active，不再崩溃重启 |
-| 视觉-雷达外参 | ✅ 已验证 | `Rcl` 90° + `Pcl` 0；点云投影精确贴合地面与墙面（`docs/extr-check-overlay.jpg`） |
+| 1 | 这是什么系统，各设备分别做什么 | A 至 C |
+| 2 | 程序怎样启动，数据怎样传递 | D |
+| 3 | 机器人怎样估计位置、生成地图 | E、F |
+| 4 | 怎样找路、避障、驱动底盘 | G、H |
+| 5 | 怎样巡检、拍照，照片存在哪里 | I、J |
+| 6 | 代码从哪里读，怎样确认自己理解了 | K |
+| 7 | 当前缺什么，理解之后如何推进 | L、M |
+| 8 | 合同要求什么，资料与代码哪里不同 | N 至 Q |
+| 9 | 怎样逐项验收，连接原机后先查什么 | R、S |
+| 10 | 怎样把当前底盘控制代码交给协作者 | T |
 
-**一句话**：软件栈完整可用，外参也验证过是准的——这套系统现在是真能干活的状态。
+## 基准与结论
 
-### 0.1 2026-10-21 13:27–13:30 修复记录
+### A. 项目全貌与当前范围
 
-| # | 问题 | 改动 | 验证 |
+这套系统把一台履带机器人变成能够感知环境、估计位置、接受目标点、计算行驶命令并拍照的设备。它由车载计算机、传感器、下位机和底盘组成；网页是操作入口，SLAM、导航和主控程序在后台协同工作。
+
+| 对象 | 收到什么 | 做什么 | 交给谁 |
 | --- | --- | --- | --- |
-| 1 | 相机索引失效且不重连 | 重写 `cam_publisher.py`：`by-path`/索引双模式、2 s 重试、连续 10 帧失败自动重开、手动编码 `bgr8` 去掉 `cv_bridge` 依赖；`run_campub.sh` 改 `CAMPUB_INDEX=3` | 14.98 Hz，fd → `/dev/video3` ✓ |
-| 2 | `nav_mission` 崩溃循环 | 第 7/8 行对调，`import cv2` 提到 `cv_bridge` 之前 | `active`，重启计数不再增长 ✓ |
-| 3 | 底盘串口名错位 | `CTL_PORT` 默认改 `/dev/ttyACM0`；打开前把 DTR/RTS 置低，避免每次启动复位 ESP32 | `serial opened`，遥测 9.96 Hz ✓ |
+| 宇树 L2 雷达及其 IMU | 环境反射、惯性测量 | 输出周围物体的三维点和运动信息 | Jetson 上的雷达驱动 |
+| 定位 RGB 相机 | 环境光线 | 拍出连续图像 | 相机发布程序 |
+| Jetson AGX Orin | 雷达、图像、操作指令 | 运行 ROS、融合估计、建图、导航和网页 | ESP32 或本地文件 |
+| ESP32 主控 | 串口命令、遥控器脉冲 | 选择控制来源，输出 PWM | 底盘电调和云台 |
+| 底盘电调与执行机构 | 油门、转向等信号 | 驱动履带和云台产生实际运动 | 环境变化再次被传感器看到 |
+| 浏览器控制台 | 操作者点击、后台状态 | 显示地图和视频，提交航点及控制命令 | Jetson 网页后端 |
 
-备份：`~/backup/jiaoda-before-fix-1021-1327.tar.gz`。修复后的源码已同步到 [`docs/source/jiaoda/`](docs/source/jiaoda/)。
+从功能上分，SLAM回答“我在哪里、周围是什么样”，导航回答“怎样到目标”，控制回答“电机收到什么”，任务回答“先去哪里、到后做什么”。这些功能分属不同程序。
 
-> 修复前的状态（保留作对照）：相机进程持有 `/dev/video2 (deleted)` → 图像 0 Hz → SLAM 全部输出静默 → 导航空转、网页显示冻结快照、任务服务崩溃循环 1800+ 次。
+- **K11**：当前阅读目标是理解既有实现；README 作为自包含学习入口，复现准备置于最后，程序改造另按验证结果推进。
+- **K1**：后续复现对象已确认为另一台同配置 Jetson 和外设。
+- **01-K1**：当前主启动链使用一路 L2 点云和 IMU、一路定位 RGB 图像；第二雷达配置存在但未接入主链。设计图中的双雷达、深度和热成像不能作为当前已接入事实。
 
----
+阅读时要区分三个层次：源码写了某项处理、历史记录声称实机跑过、当前机器实际验证通过。本文对前两者有依据，尚未完成第三者的重新核验。
 
-## 1. 十分钟上手
+- **K2**：源码基准提交为 `3b664ba1444c3299b9201ffdb775e98cc1ebd45e`；`deploy/baseline-manifest.json` 记录233个文件的哈希，按 UTF-8 文本统一 LF、二进制保留原字节比较。
+- **K3**：目前依据为本地源码、配置和历史记录；未连接原机，未启动电机，未在新 Jetson 上编译。
+- **K4**：历史文档的“实测”指原记录声称的2026-10-21状态，不代表本轮重新验证。
+- **K9**：旧报告、手册与当前导出源码存在差异；实现以源码为准，运行效果以实测为准。
 
-### 1.1 怎么连上去
+### B. 先认识必要的术语
 
-| 方式 | 地址 | 说明 |
+| 术语 | 含义 | 本项目里的例子 |
 | --- | --- | --- |
-| **USB（首选）** | `ssh sjytt@192.168.55.1` | Jetson 的 `l4tbr0` 网桥，本机 USB 网卡 `192.168.55.100/24`，已配置 ed25519 免密，`ping` < 1 ms |
-| **Wi-Fi（跑车时用）** | `ssh sjytt@172.20.10.14`（固定）<br>`172.20.10.8`（DHCP，会变） | 热点 `xlx`，网段 `172.20.10.0/28`（**只有 .1–.14**）；`wlan0` 同时持有 DHCP 地址和固定地址 `.14`，固定地址已写入 NetworkManager，重启后仍在 |
-| 以太网 | `eth1 = 192.168.1.2`、`eth0` 无 IP | 雷达专用网段，别在上面乱加地址（见 12.3） |
+| 驱动 | 把设备协议转换成软件可使用的数据 | 雷达 UDP 数据转 ROS 点云 |
+| SLAM | 同步定位与建图 | 在运动中估计自身位置并建立环境地图 |
+| LIO | 激光与惯性里程计 | 用IMU预测运动，用雷达几何观测修正 |
+| VIO | 视觉与惯性里程计 | 用惯性预测和图像观测估计运动 |
+| ROS | 程序之间交换数据的一套机制 | 雷达、SLAM、导航分别运行并通信 |
+| 节点 node | 一个参加 ROS 通信的程序角色 | `nav_simple` 导航节点 |
+| 话题 topic | 一条有名字的数据通道 | `/cmd_vel` 传行驶指令 |
+| 消息 message | 通道中每一条数据的格式与内容 | `Twist` 中的线速度和角速度 |
+| 发布与订阅 | 一个程序发送，其他程序接收 | SLAM发布位姿，导航订阅位姿 |
+| ROS Master | 帮节点发现通信对象的登记服务 | 默认使用11311端口；业务数据通常由节点直接传输 |
+| 回调 callback | 数据到达时被调用的函数 | `on_pose` 在收到位置消息时更新状态 |
+| 位姿 pose | 位置加朝向 | 导航主要使用平面 x、y 和朝向 yaw |
+| 里程计 odometry | 连续估计随时间变化的位置和姿态 | FAST-LIVO2 的融合估计，不等于轮编码器 |
+| 点云 PointCloud2 | 一组空间点及其字段 | 每个点有 x、y、z，另有强度和时间等字段 |
+| TF | 不同坐标系之间的位置和旋转关系 | 雷达系中的点怎样换算到地图系 |
+| 外参 | 两个传感器或机体之间的安装位置关系 | 雷达到相机的旋转和平移 |
+| 内参 | 相机如何把空间投影成像素 | 焦距、主点、畸变参数 |
+| launch | 启动 ROS 程序并加载参数的配置 | `mapping_unitree_l2.launch` |
+| systemd 单元 | 操作系统管理程序启动、退出和重启的配置 | `jiaoda-fastlivo.service` |
+| 串口 | Jetson 与 ESP32 之间的字节通信链路 | 一行逗号分隔的控制命令 |
+| PWM | 以脉冲宽度表达控制量的电信号 | ESP32 发给电调和云台 |
+| rosbag | 把一段 ROS 消息录成文件 | 后续离线重放同一段传感器数据 |
 
-> Windows 上如果浏览器打不开 `192.168.55.1:8090`，通常是本机 Clash 代理劫持了内网请求。用 `ssh -L 8090:127.0.0.1:8090 sjytt@192.168.55.1` 建隧道后访问 `http://127.0.0.1:8090` 即可（`127.*` 在代理绕过列表里）。
+例如，`/left_camera/image` 是话题名，`sensor_msgs/Image` 是消息类型，`cam_publisher.py` 是发布它的程序。一个话题可有多个订阅者，因此同一相机图像能够同时被SLAM和拍照任务接收。
 
-### 1.2 30 秒健康检查
+ROS1中的`/move_base_simple/goal`只是一个名字。本项目沿用了这个常见目标话题名，接收它的是自研导航程序，并没有因此使用标准`move_base`导航栈。
 
-```bash
-# 1) 服务全不全
-systemctl list-units 'jiaoda*' --all --no-legend
+### C. 文件夹、运行位置与阅读入口
 
-# 2) ROS 节点
-source /opt/ros/noetic/setup.bash
-rosnode list
-
-# 3) 雷达有没有数据（应约 12 Hz）
-timeout 4 rostopic hz /unilidar/cloud
-
-# 4) SLAM 有没有输出（当前会"no new messages"）
-timeout 4 rostopic hz /aft_mapped_to_init
-
-# 5) 相机有没有出图（当前会"no new messages"）
-timeout 4 rostopic hz /left_camera/image
-
-# 6) 网页与位姿
-curl -s http://127.0.0.1:8090/api/pose
+```text
+Slam_RQTch/
+├── deploy/                         后来增加的复现配置和模板
+├── docs/
+│   ├── history/                    旧手册和旧部署说明
+│   ├── source/                     原机导出的运行源码
+│   │   ├── FAST-LIVO2/             融合估计的 C++ 算法
+│   │   ├── firmware/               ESP32 Arduino 草图
+│   │   ├── jiaoda/                 自研 Python 应用和网页
+│   │   │   ├── calib/              相机与雷达标定工具和样本
+│   │   │   └── maps/               原机二维地图样本
+│   │   ├── rpg_vikit/              视觉工具依赖
+│   │   ├── Sophus_src/             旋转和平移的数学库
+│   │   ├── systemd/                原机服务配置
+│   │   ├── unitree_lidar_ros/      L2 的 ROS 驱动
+│   │   └── unitree_lidar_sdk/      厂商 SDK 头文件和静态库
+│   ├── architecture.md             更细的实现与问题说明
+│   └── reproduction.md             理解系统后的复现步骤
+├── tests/                          后来增加的离线部署测试
+├── tools/                          后来增加的检查和候选生成工具
+└── README.md                       当前讲解与工作记录
 ```
 
-判读：3 有、4/5 无 = 当前已知故障（相机链路断，见 8.2）。4/5 都有 = 系统健康。
+历史记录中的原机环境是 Ubuntu 20.04、Jetson Linux R35.4.1、ROS Noetic 和 Python 3.8。原机应用位于`/home/sjytt/jiaoda`，算法工作区为`/home/sjytt/livo2_ws`，雷达工作区为`/home/sjytt/unilidar_sdk2/unitree_lidar_ros`。本地`docs/source/`保存的是这些内容的导出副本；在Windows打开源码不等于这些节点已经运行。
 
-### 1.3 重启整套栈
-
-系统用 systemd 托管，逐个重启即可，**不需要 `roslaunch` 手工起**：
-
-```bash
-sudo systemctl restart jiaoda-lidar        # 它会顺带拉起 ROS Master（见 4.3）
-sudo systemctl restart jiaoda-restamp
-sudo systemctl restart jiaoda-campub
-sudo systemctl restart jiaoda-fastlivo
-sudo systemctl restart jiaoda-grid
-sudo systemctl restart jiaoda-posebridge
-sudo systemctl restart jiaoda-nav
-sudo systemctl restart jiaoda-control
-sudo systemctl restart jiaoda-console
-```
-
-顺序很重要：下游脚本都以 `until rostopic list`、`until rostopic list | grep <topic>` 作为前置等待，乱序也不会崩，但会多等几秒。
-
-### 1.4 打开网页
-
-`http://192.168.55.1:8090/`（或隧道后的 `http://127.0.0.1:8090/`），标题「巡检机器人控制台」。
-
----
-
-## 2. 系统总览
-
-| 项 | 值 |
+| 想看什么 | 入口 |
 | --- | --- |
-| 计算平台 | Jetson AGX Orin Developer Kit（`t186ref`） |
-| 系统 | Ubuntu 20.04.6 LTS，aarch64，Jetson Linux / L4T **R35.4.1** |
-| 内核 | `5.10.120-tegra` |
-| 内存 / 磁盘 | 61 GiB（用 14 GiB）／ `/` 57 G（用 11 G，19%） |
-| ROS | **Noetic**，`/opt/ros/noetic`，`ROS_MASTER_URI=http://localhost:11311` |
-| Python | 3.8.10；`numpy 1.17.4`；`cv2 4.2.0`；`cv_bridge` 有导入顺序坑（见 12.5） |
-| 主代码 | `/home/sjytt/jiaoda`（**无 Git**，需自行备份） |
-| SLAM 工作区 | `/home/sjytt/livo2_ws`（catkin：`FAST-LIVO2`、`rpg_vikit`） |
-| 雷达工作区 | `/home/sjytt/unilidar_sdk2/unitree_lidar_ros`（catkin） |
-| 备份/旧版 | `/home/sjytt/dog_backup`、`/home/sjytt/unilidar_sdk`（第一代） |
-| 日志 | `/home/sjytt/.ros/log/`（约 90 MB） |
+| 当前整机是如何实现的 | 本 README 的 D 至 J |
+| 时间、坐标、字段等细节 | [实现与接口](docs/architecture.md) |
+| 原机当时的进程和服务证据 | [运行审计](docs/audit-runtime.md) |
+| 原机应用逐文件审计 | [代码审计](docs/audit-code.md) |
+| 旧说明如何描述系统 | [历史手册](docs/history/development-manual-20261021.md) |
+| 以后怎样部署到另一台机器 | [复现步骤](docs/reproduction.md) |
 
-### 2.1 硬件连接（实测）
+- **K10**：本文件同时作为学习入口和项目记忆；后续涉及本目录的工作先读本文件，结束后同步结论、已完成和待完成。详细接口见`docs/architecture.md`，部署操作见`docs/reproduction.md`。
 
-| 设备 | 接口 | 标识 | 节点 |
-| --- | --- | --- | --- |
-| 宇树 L2 雷达 | `eth1` 192.168.1.2 | 雷达 192.168.1.62:6101 → PC 6201 | `/unilidar/*` |
-| ESP32 主控 | USB `1-4.3` | WCH **CH343** `1a86:55d3`，SN `5B14050145` | `/dev/ttyACM0` |
-| ESP32 调试口 | USB `1-4.4` | Espressif `303a:1001`，SN `E8:F6:0A:85:8F:04` | `/dev/ttyACM1` |
-| 4 路 UVC 相机 | USB `1-4.2.x` | Sonix `0c45:6366`，四台序列号均为 `SN0001` | `/dev/video0…8` |
-| USB 网卡 | USB `1-4.1` | `1a86:5397`，MAC `6c:1f:f7:eb:48:3f` | `eth0`（无 IP） |
+### D. 开机后数据怎样流动
 
----
+原机不是只启动一个“SLAM软件”，而是由多份systemd单元分别启动程序。先看最主要的一条链：
 
-## 3. 运行时拓扑
-
-### 3.1 进程与单元（10 个运行中 + 2 个已禁用）
-
-| systemd 单元 | 启动脚本 | 程序 | 作用 | enabled |
-| --- | --- | --- | --- | --- |
-| `jiaoda-lidar` | `run_lidar.sh` | `roslaunch unitree_lidar_ros run_without_rviz.launch` | 雷达驱动，**并顺带启动 ROS Master** | ✅ |
-| `jiaoda-restamp` | `run_restamp.sh` | `cloud_restamp.py` | 点云时间戳改写为 `now()` → `/synced/cloud` | ✅ |
-| `jiaoda-campub` | `run_campub.sh` | `cam_publisher.py` | 相机 → `/left_camera/image` | ✅ |
-| `jiaoda-fastlivo` | `run_fastlivo.sh` | `roslaunch fast_livo mapping_unitree_l2.launch rviz:=false` | SLAM 主程序 `laserMapping` | ✅ |
-| `jiaoda-grid` | `run_grid.sh` | `grid_bridge.py` | 点云 → 2D 栅格 → `/map` + PNG | ✅ |
-| `jiaoda-posebridge` | `run_pose_bridge.sh` | `pose_bridge.py` | `/aft_mapped_to_init` → `/slam_pose` + `/imu` | ✅ |
-| `jiaoda-nav` | `run_nav_simple.sh` | `nav_simple.py` | A\* + Pure Pursuit + DWA → `/cmd_vel` | ✅ |
-| `jiaoda-control` | `run_control.sh` | `chassis_gimbal_bridge.py` | `/cmd_vel` + 云台 → 串口帧 | ✅ |
-| `jiaoda-console` | `run.sh` | `console_backend.py` | 网页后端 8090 | ✅ |
-| `jiaoda-mission` | `run_mission.sh` | `nav_mission.py` | 巡检任务调度 | ✅（崩溃循环） |
-| `jiaoda-chassis` | `run_chassis.sh` | `cmd_vel_to_pwm.py` | **旧版**底盘直驱（协议不符） | ⛔ disabled |
-| `jiaoda-calib` | `run_calib.sh` | `calib/calib_web.py` | 相机-雷达标定页 8095 | ⛔ disabled |
-
-> `jiaoda-chassis` 与 `jiaoda-control` 是两套互斥实现，同开会抢同一个串口。当前只启用后者。
-
-### 3.2 节点表（10 个）
-
-| 节点 | 订阅 | 发布 |
-| --- | --- | --- |
-| `/unitree_lidar_ros_node` | — | `/unilidar/cloud`、`/unilidar/imu`、`/unilidar/laserscan`、`/tf` |
-| `/cloud_restamp` | `/unilidar/cloud` | `/synced/cloud` |
-| `/cam_publisher` | — | `/left_camera/image` |
-| `/laserMapping`（FAST-LIVO2） | `/synced/cloud`、`/unilidar/imu`、`/left_camera/image` | `/aft_mapped_to_init`、`/cloud_registered`、`/Laser_map`、`/path`、`/rgb_img`、`/tf` 等 20+ 个 |
-| `/pose_bridge` | `/aft_mapped_to_init` | `/slam_pose`、`/imu` |
-| `/grid_bridge` | `/cloud_registered`、`/aft_mapped_to_init` | `/map` |
-| `/nav_simple` | `/slam_pose`、`/imu`、`/map`、`/unilidar/cloud`、`/move_base_simple/goal`、`/move_base/cancel` | `/cmd_vel`、`/nav_path` |
-| `/chassis_gimbal_bridge` | `/cmd_vel`、`/jiaoda/gimbal` | `/jiaoda/esp_tel` |
-| `/console_backend` | `/aft_mapped_to_init`、`/Odometry`、`/lio_sam/mapping/odometry` | `/cmd_vel`、`/jiaoda/gimbal` |
-| `/nav_mission` | —（启动即崩） | 计划：`/move_base_simple/goal`、`/jiaoda/gimbal` |
-
-### 3.3 关键话题与实测频率
-
-| 话题 | 类型 | 发布者 | 实测 |
-| --- | --- | --- | --- |
-| `/unilidar/cloud` | `PointCloud2` | 雷达驱动 | **11.94 Hz** ✅ |
-| `/unilidar/imu` | `Imu` | 雷达驱动 | **252.8 Hz** ✅ |
-| `/synced/cloud` | `PointCloud2` | cloud_restamp | **11.97 Hz** ✅ |
-| `/aft_mapped_to_init` | `Odometry` | laserMapping | **0**（发布者注册但无消息）❌ |
-| `/slam_pose` | `PoseStamped` | pose_bridge | **0** ❌ |
-| `/cloud_registered` | `PointCloud2` | laserMapping | **0** ❌ |
-| `/Laser_map` | `PointCloud2` | laserMapping | **0** ❌ |
-| `/map` | `OccupancyGrid` | grid_bridge | 1.1 Hz，内容**不变**（冻结）⚠️ |
-| `/left_camera/image` | `Image` | cam_publisher | **0** ❌ |
-| `/cmd_vel` | `Twist` | nav_simple / console | 15.9 Hz，**全为 0** ⚠️ |
-| `/jiaoda/esp_tel` | `String` | chassis_gimbal_bridge | 0（串口未开）❌ |
-| `/Odometry`、`/lio_sam/mapping/odometry` | `Odometry` | **无** | 死订阅（console 在等）❌ |
-| `/move_base_simple/goal`、`/move_base/cancel` | — | **无**（nav_mission 崩了） | nav_simple 收不到目标 ⛔ |
-
-### 3.4 服务与 TF
-
-- **没有任何自定义 ROS service**（全目录无 `rospy.Service`）。跨进程接口只有：话题 + `/dev/shm` 文件 + HTTP。
-- TF 只有雷达自家人：`unilidar_imu_initial → unilidar_imu → unilidar_lidar`，约 510 Hz。
-- **没有** `map → odom → base_link`，也**没有**相机坐标系。导航不依赖 TF，直接用 `/slam_pose` 的坐标值 + `/imu` 的 yaw。
-
----
-
-## 4. 启动机制与恢复
-
-### 4.1 谁启动 ROS Master
-
-`jiaoda-lidar` 的 `roslaunch` 是第一个起来的，它**顺带创建了 `rosmaster`（PID 2209，端口 11311）和 `rosout`**。其余单元的脚本都会先阻塞等待 `rostopic list` 可用。
-
-> 含义：**雷达单元是整套系统的事实上的入口**。它挂了，Master 就没了，后面全部起不来。
-
-### 4.2 启动脚本的等待逻辑
-
-```bash
-# run_lidar.sh：直接起
-# run_restamp.sh：等 master，再等 /unilidar/cloud 出现
-# run_fastlivo.sh：等 /synced/cloud 出现（只等话题存在，不等数据）
-# run_grid.sh：等 /cloud_registered 出现
-# 其余：等 master
+```text
+L2 雷达 -> 雷达驱动 -> 点云与原始 IMU --+
+                                      +-> FAST-LIVO2 -> 位姿与世界点云
+RGB 相机 -> cam_publisher -> 图像 ------+
+                                             |
+                         +-------------------+------------------+
+                         v                                      v
+                   pose_bridge                            grid_bridge
+                         |                                      |
+                   位置与朝向                            二维栅格与地图图片
+                         +-------------------+------------------+
+                                             v
+                                        nav_simple
+                                             |
+                                          /cmd_vel
+                                             v
+                                   串口桥 -> ESP32 -> 底盘
 ```
 
-⚠️ 因为只是「等话题名出现」，所以**相机没数据、SLAM 不出结果，这些服务照样会"成功"启动**——这正是当前故障能长期隐藏的原因。
+点云进入FAST-LIVO2前还有`cloud_restamp.py`转发。网页与巡检任务也会加入这条链，详见 I、J。
 
-### 4.3 开机行为
+| 先后关系 | 实际入口 | 为什么要这样 |
+| --- | --- | --- |
+| 雷达和 ROS 登记服务 | `run_lidar.sh` | 原机雷达的`roslaunch`会在必要时顺带创建Master |
+| 点云转发 | `run_restamp.sh` | 等雷达话题后转发点云 |
+| 图像采集 | `run_campub.sh` | 给融合算法提供图像 |
+| 融合估计 | `run_fastlivo.sh` | 加载工作区和YAML，运行`laserMapping` |
+| 位姿与地图桥 | `run_pose_bridge.sh`、`run_grid.sh` | 把融合结果提供给导航和网页 |
+| 导航、控制与任务 | 对应`run_*.sh` | 处理目标、速度和拍照流程 |
+| 网页 | `run.sh` | 提供浏览器入口和HTTP接口 |
 
-12 个单元里 10 个 enabled，**开机会自动拉起整套栈**。实测时间线（monotonic）：
+原脚本有些等待的是“话题名已出现”，并非“实际有新消息”。所以进程活着、服务显示active、网页能打开，都不足以说明数据链正常。例如相机发布者存在但没有出图，融合仍可能一直等待。
 
-| 时刻 | 事件 |
+关键话题按数据流排列如下。以此表对照各脚本中的`Publisher`和`Subscriber`即可建立程序之间的联系。
+
+| 话题 | 消息类型 | 谁发布 | 谁使用 |
+| --- | --- | --- | --- |
+| `/unilidar/cloud` | `PointCloud2` | 雷达驱动 | 时标转发、局部避障 |
+| `/unilidar/imu` | `Imu` | 雷达驱动 | FAST-LIVO2 |
+| `/synced/cloud` | `PointCloud2` | `cloud_restamp` | FAST-LIVO2 |
+| `/left_camera/image` | `Image` | `cam_publisher` | FAST-LIVO2、任务拍照 |
+| `/aft_mapped_to_init` | `Odometry` | FAST-LIVO2 | 位姿桥、栅格桥、网页 |
+| `/cloud_registered` | `PointCloud2` | FAST-LIVO2 | 栅格桥 |
+| `/slam_pose` | `PoseStamped` | 位姿桥 | 导航、任务 |
+| `/imu` | `Imu` | 位姿桥合成 | 导航取朝向 |
+| `/map` | `OccupancyGrid` | 栅格桥 | A*规划 |
+| `/move_base_simple/goal` | `PoseStamped` | 任务或其他目标发布者 | 自研导航 |
+| `/cmd_vel` | `Twist` | 导航、网页后端 | 串口控制桥 |
+| `/jiaoda/gimbal` | `Int16MultiArray` | 任务、网页后端 | 串口控制桥 |
+| `/jiaoda/esp_tel` | `String` | 串口控制桥 | 调试观察，现用网页未完整解析 |
+
+### E. 传感器如何变成位置估计
+
+雷达给出“某个物体相对雷达在哪里”的点，图像给出纹理，IMU给出角速度和加速度。三者各有作用：雷达提供几何结构，相机提供视觉变化，IMU提供高频运动预测。IMU自己不能长期给出准确位置，连续积分会积累误差，需要其他观测校正。
+
+FAST-LIVO2可以分成“预测、匹配、校正、更新地图”理解：
+
+1. 根据上一时刻状态和IMU预测现在的运动。
+2. 整理同一时间段的雷达点和图像。雷达一帧内各点采样时刻不同，运动时还需要去畸变。
+3. 把预测位置下的雷达点与已有体素平面对应，利用不一致修正状态，这部分是LIO。
+4. 利用图像块与已有视觉信息的光度差异继续修正状态，这部分是VIO。
+5. 将当前观测加入地图，发布位姿和转换后的点云，进入下一轮。
+
+这里的“融合”不是分别计算三份位置再简单求平均，而是让不同观测参与同一套状态估计。公式实现集中在C++算法中，读源码时先理解输入和状态更新顺序，再展开滤波矩阵。
+
+| 需要对照的源码位置 | 负责的工作 |
 | --- | --- |
-| +15 s | 10 个 `jiaoda-*` 服务全部被拉起 |
-| +17 s | ROS Master `:11311` 就绪 |
-| +22 s | `jiaoda-fastlivo` 完成等待并启动 |
+| `FAST-LIVO2/config/unitree_l2.yaml` | 话题、启用项、外参、滤波与保存参数 |
+| `FAST-LIVO2/config/camera_unitree.yaml` | 相机模型、内参和缩放 |
+| `LIVMapper.cpp`的`readParameters` | 读取上述配置 |
+| `standard_pcl_cbk/imu_cbk/img_cbk` | 接收三类输入 |
+| `sync_packages` | 按时间组织参与计算的数据 |
+| `processImu`与`IMU_Processing.cpp` | 惯性处理与预测 |
+| `handleLIO`与`voxel_map.cpp` | 几何匹配和地图更新 |
+| `handleVIO`与`vio.cpp` | 视觉处理与校正 |
+| `publish_odometry` | 发布估计出的位姿 |
 
-`jiaoda-calib`、`jiaoda-chassis` 为 disabled。`crontab`、`~/.config/autostart`、`/etc/rc.local` 均无相关配置，`.bashrc` 只 source 环境。
+本表文件位于`docs/source/`的FAST-LIVO2目录。其输出是估计结果，不是定位“真值”；定位精度需要与独立测量比较。
 
-服务进程内的 ROS 环境：`ROS_MASTER_URI=http://localhost:11311`，`ROS_IP`/`ROS_HOSTNAME` **未设置**（单机运行没问题，多机联调时必须补）。
+- **01-K2**：当前`lidar_type=2`实际进入`VELO16`解析分支，字段类型与L2输出声明匹配；不是专用“宇树 L2 类型”，点内时间语义仍需录包验证。
+- **01-K3**：当前`img_en=1`时同步器等待图像、点云和IMU；相机断流可使融合输出停摆。纯LIO属于另一组配置，需要独立验证。
 
-### 4.4 冷启动恢复清单（从"什么都没跑"开始）
+时间同步解释“哪些观测属于同一时刻”，外参解释“不同传感器看见的位置如何换算”。`cloud_restamp.py`只是把点云头时间覆盖成系统当前时间，并没有实现硬件同步。相机图像也在读取后打时间戳；传输延迟和点内时间单位都可能影响运动估计，细节见[采集与同步分析](docs/architecture.md#采集和同步)。
 
-```bash
-sudo systemctl start jiaoda-lidar       # 含 ROS Master
-sudo systemctl start jiaoda-restamp
-sudo systemctl start jiaoda-campub
-sudo systemctl start jiaoda-fastlivo
-sudo systemctl start jiaoda-grid
-sudo systemctl start jiaoda-posebridge
-sudo systemctl start jiaoda-nav
-sudo systemctl start jiaoda-control
-sudo systemctl start jiaoda-console
-# 任务调度待修好 cv_bridge 后再启
-# sudo systemctl start jiaoda-mission
+内参决定空间点怎样投到图像；`Rcl/Pcl`决定雷达点怎样转换到相机系；`extrinsic_R/T`描述雷达与IMU的安装关系。传感器移动后这些关系可能变化。
+
+- **K6**：现有算法、协议和标定参数保留作基准；原机投影图只作参考，新机复制外参仅作初始值，不能当作已完成标定。
+
+### F. 三维点云怎样变成二维地图
+
+先区分三个对象：原始点云描述相对雷达的空间点；`/cloud_registered`描述经过位姿估计转换后的世界点；二维栅格把地面划成小格，记录哪里可能被占据。
+
+`grid_bridge.py`收到世界点云和位姿后，按高度、距离过滤点，把点投影到地面网格。被障碍点命中的格子增加占据证据，雷达与命中点之间经过的部分格子增加自由空间证据；多次观测后再将累计值分类。
+
+| 地图对象 | 内容 | 用途 |
+| --- | --- | --- |
+| 内存中的log-odds数组 | 累计占据证据 | 持续建图 |
+| `/map` | 占据栅格，未知/空闲/占据分别为-1/0/100 | 导航规划 |
+| `jiaoda_map.png` | 裁剪后的显示图，含机器人标记 | 网页显示 |
+| `jiaoda_map.json` | 图像原点、每像素米数、宽高 | 网页坐标换算 |
+| 保存的NPZ | 栅格数组、尺寸、分辨率 | 保存与加载二维地图快照 |
+
+默认栅格分辨率为0.05m，尺寸为2000×2000，因此覆盖约100m×100m。这里的格子大小不等于定位误差，地图看起来细也不表示机器人定位同样准确。
+
+位姿、点云和地图只有采用一致的坐标关系，才知道“机器人在地图哪一格”。机器人朝前与地图x轴方向并不总相同；车转身后，朝前移动可能同时改变地图x、y。网页图片的y轴通常向下，而世界地图的y轴向上，所以显示和点击目标时需要换算。
+
+- **01-K4**：FAST-LIVO2发布`camera_init -> aft_mapped` TF，但缺少标准`map -> odom -> base_link`及传感器安装TF链。
+- **01-K5**：位姿桥只改frame名并复制数值；导航使用的`/imu`由里程计构造，不是原始IMU，也没有完成机体安装外参变换。
+- **01-K9**：地图加载只恢复栅格，没有找到旧地图配准、初始位姿输入或跨重启坐标对齐实现。
+
+保存一张地图并不自动告诉重启后的机器人自己在哪里。跨重启复用旧航点，需要先把新会话的位置与旧地图坐标对齐，这就是后续重定位要解决的问题。
+
+### G. 目标点怎样变成行驶路线
+
+导航输入是“当前位置、朝向、地图、眼前障碍和目标点”，输出是速度指令。任务决定去哪个点，导航负责尝试走到那里。
+
+| 环节 | 解决的问题 | 当前实现 |
+| --- | --- | --- |
+| 全局规划 | 大体应绕哪面墙、经过哪条通道 | A*在膨胀后的栅格中搜索路径 |
+| 路径跟踪 | 这一刻应朝路径哪一段前进 | 在路径前方取一个跟踪点 |
+| 局部避障 | 眼前有人或物体，当前速度是否会碰撞 | DWA风格的速度采样与轨迹评分 |
+| 到点判断 | 是否已接近目标，需要停止 | 按当前位姿与目标的距离判断 |
+
+障碍膨胀相当于给墙和物体增加安全边界，避免把车当成一个没有体积的点。A*找到路径后，前视跟踪不会要求车死追脚下某一点，而是看路径稍前方的位置。
+
+DWA风格采样会假设若干组“向前多快、转弯多快”，短暂模拟每组命令的结果，再比较碰撞、距离、朝向和速度评分。当前实现没有按真实速度与加速度构造完整动态窗口，因此不能直接套用标准DWA的全部能力描述。
+
+| 关键参数 | 当前源码值 | 影响 |
+| --- | --- | --- |
+| `VX_MAX/VX_MIN` | 0.20/0.05 m/s | 常规采样线速度范围 |
+| `VYAW_MAX` | 0.30 rad/s | 常规采样角速度范围 |
+| `LOOKAHEAD_DIST` | 0.8m | 前视跟踪点距离 |
+| 速度组合 | 5×11组 | 每轮候选命令数量 |
+| 预测时间 | 2秒 | 每组命令模拟多久 |
+| `ARRIVE_FINAL` | 0.30m | 导航到点阈值 |
+| 控制循环 | 20Hz | 计划生成速度命令的周期 |
+
+- **01-K6**：导航采用自研A*、前视跟踪和速度采样，不使用`move_base`；上表常量不是所有分支的统一限幅，末端和脱困分支还有硬编码输出。
+
+当前全局路径只在收到目标时生成一次。A*失败后程序会退回直线路径；未知格被当作可通行。局部控制没有雷达新鲜度检查，近终点又切换到绕过DWA的简单控制。理解这些分支后，才能判断为什么“算法能出速度”还不等于“各种情况下都能可靠避障”。
+
+当前到点只检查平面距离，没有根据目标消息里的姿态完成最终朝向对准。若巡检要求车头或相机必须朝向某个设施，需要另行处理车体最终朝向与云台方向。
+
+### H. 速度指令怎样让底盘运动
+
+`/cmd_vel`中的`linear.x`表示期望前向速度，`angular.z`表示期望转向角速度。它们先到串口桥，桥不会直接把单位m/s写成电调PWM，而是经过比例转换：
+
+```text
+linear.x  * 55 -> 整数化并限制到 ±30 -> throttle
+angular.z * 45 -> 整数化并限制到 ±30 -> steer
+云台俯仰、偏航各限制到 ±30
+checksum = throttle + steer + pitch + yaw
+串口一行 = throttle,steer,pitch,yaw,checksum
 ```
 
-### 4.5 时钟陷阱（排障必读）
+例如，仅演示换算，假定云台指令均为零：前向命令`0.10m/s`、转向命令为零，会形成`5,0,0,0,5`。这只说明软件如何编码，不能据此断言履带实际按给定速度行驶。
 
-Jetson 的 RTC 在断电后不保持，**开机瞬间系统时间会回到上次关机时刻**，NTP 同步后才跳到正确时间。本次实测：
+ESP32检查校验和与控制模式，然后把数字映射为电调或舵机脉冲。零值对应1500微秒中位；非零值按正反向分别映射。主控给出的是油门和转向信号，左右履带怎样混合响应还取决于底盘电调及接线。
 
-- 开机时系统时间为 `2026-09-10 17:12`（比真实时间早 **40 天 17.5 小时**）；
-- `2026-10-21 11:32:46` 由 timesyncd 校正到真实时间（日志 `Initial synchronization to time server ...`）。
+- **01-K7**：现有链路没有轮速反馈；比例、整数化和分段脉宽映射之后，指令速度不能当作实测车速。
+- **01-K8**：串口协议为上述五字段格式，遥控优先；云台脉宽遥测是输出指令值，不是编码器角度。
+- **01-K12**：旧`chassis_bridge.py`和`cmd_vel_to_pwm.py`使用其他协议，不能替换当前控制桥，也不能同时占用主控串口。
 
-后果：`/home/sjytt/.ros/log/` 里今天产生的日志**时间戳写着 9 月 10 日**，`ps` 的 `lstart` 也会前后不一致。判断进程新旧请看 `etime`（已运行时长），不要看日志日期。日志目录约 89 MB 且**无轮转**，长期运行需自行清理。
+整机运动后，传感器更新位置，导航据此继续修正命令，这是位置反馈。底层若没有轮速测量，就不能另外声称已经有速度反馈控制。定位、导航、执行三个环节要分别检查。
 
----
+控制桥和固件均有速度或串口超时处理，但实现还存在边界：RC脉宽在断信号后保留旧值，可能使控制模式无法正确切换；串口首次打开后掉线也没有完整重连。具体问题统一列在 L。
 
-## 5. SLAM（FAST-LIVO2 + 宇树 L2）
+### I. 网页、巡检任务与照片
 
-### 5.1 数据流
+网页不是SLAM算法本身。浏览器加载`console.html`，通过HTTP请求访问Jetson上的`console_backend.py`。后端一部分操作直接发布ROS话题，另一部分通过共享文件交给其他进程。
 
-```
-雷达 L2 (192.168.1.62:6101) ──UDP──> unitree_lidar_ros_node ──> /unilidar/cloud (11.9Hz)
-                                                             └─> /unilidar/imu (253Hz)
-                                                                     │
-                                            cloud_restamp ──> /synced/cloud (时间戳改为 now())
-                                                                     │
-相机 /dev/video? ──cam_publisher──> /left_camera/image ──────────────┤
-                                                                     ▼
-                                                          FAST-LIVO2 (/laserMapping)
-                                                                     │
-              ┌──────────────────────────────────────────────────────┼─────────────────────┐
-              ▼                        ▼                             ▼                     ▼
-    /aft_mapped_to_init        /cloud_registered              /Laser_map              /rgb_img
-              │                        │
-      pose_bridge                 grid_bridge ──> /map (0.05 m, 2000×2000)
-              │
-     /slam_pose + /imu ──> nav_simple ──> /cmd_vel ──> chassis_gimbal_bridge ──> 串口
-```
-
-### 5.2 参数（`/home/sjytt/livo2_ws/src/FAST-LIVO2/config/unitree_l2.yaml`）
-
-| 组 | 参数 | 值 | 说明 |
+| 操作或数据 | 发起者 | 中间接口 | 接收者或结果 |
 | --- | --- | --- | --- |
-| common | `img_topic` | `/left_camera/image` | 图像输入 |
-| | `lid_topic` | `/synced/cloud` | 点云输入 |
-| | `imu_topic` | `/unilidar/imu` | IMU 输入 |
-| | `img_en` | **1** | **必须为 1**，缺图像则整条链路不出结果 |
-| extrin_calib | `extrinsic_T` | `[-0.007698, -0.014655, 0.00667]` m | 雷达-IMU 平移 |
-| | `extrinsic_R` | 单位阵 | 雷达-IMU 旋转 |
-| | `Rcl` / `Pcl` | 90° 旋转 / 原点 | 相机-雷达外参 |
-| preprocess | `lidar_type` | 2 | 宇树 L2 |
-| | `scan_line` | 18 | 线数 |
-| | `blind` | 0.5 m | 盲区 |
-| lio | `voxel_size` | 0.5 m | 体素降采样 |
-| | `max_layer` / `max_points_num` | 2 / 50 | 分层与点数 |
-| vio | `patch_size` / `patch_pyrimid_level` | 8 / 4 | 光度块 |
-| | `outlier_threshold` | 1000 | 外点阈值 |
-| local_map | `map_sliding_en` | false | 不滑窗，全局地图 |
-| pcd_save | `pcd_save_en` | false | **不落盘 PCD** |
+| 查看位置 | 网页 | `/api/pose` | 后端缓存的融合位姿 |
+| 查看地图 | 网页 | `/api/map`、`/api/mapinfo` | 栅格桥生成的PNG与元信息 |
+| 手动驾驶 | 网页 | `/api/ctl/drive` | 后端发布速度 |
+| 开始巡检 | 网页 | `/api/nav/start` | 写任务JSON与命令文件 |
+| 读取航点 | 任务节点 | `/dev/shm/jiaoda_mission.json` | 依次发布导航目标 |
+| 保存照片 | 任务节点 | 最新ROS图像缓存 | Jetson本地`~/jiaoda/photos/` |
+| 查看任务进度 | 网页 | `/api/nav/status` | 任务节点写的状态JSON |
 
-相机内参（`config/camera_unitree.yaml`）：`1280×720`，`scale: 0.5`，`fx=fy=914.0`，`cx=640.0`，`cy=360.0`，畸变全 0。
+`/dev/shm`是进程可共同访问的内存文件位置，用于交换当前地图和任务命令；它不是长期照片仓库，重启后内容不能当作持久数据使用。`photos/`里的JPG则是磁盘文件。
 
-### 5.3 雷达驱动配置（`unilidar_sdk2/unitree_lidar_ros/src/unitree_lidar_ros/config/config.yaml`）
+任务节点先给出一个航点，持续比较当前位置与该点的距离，判为到达后发云台指令、等待、保存缓存图像，然后切到下一个航点。当前任务到达阈值大于导航停车阈值，因此“任务认为到了”不保证“底盘已经停稳”。
 
-| 项 | 值 |
+- **01-K10**：当前任务拍照与SLAM共用定位图像，只保存本地JPG；`photo.py`虽能生成JSON元数据，但没有被任务主链调用。
+- **01-K11**：未找到现用链路中的YOLO、烟雾/燃气/热成像采集、公司服务器上传或报告生成实现；网页板载温度不是火场温度。
+- **03-K6**：公司平台接收、识别和报告属于后续接口工作；本机控制台不能作为公司服务器平台已完成的证据。
+
+网页还有独立相机采集线程。因此网页能看到视频，并不能证明定位相机话题在更新；SLAM图像正常，也不能证明展示画面来自同一台相机。云台照片是否正确，需要核对实际相机角色。
+
+暂停、路线加载、冻结地图、航向标定和部分拍照按钮含占位或未贯通逻辑，不能只凭按钮和成功提示判断功能已实现。当前任务也不会在结束后自动增加返航步骤。
+
+### J. 用一次巡检串起全流程
+
+以下是假设操作者已在当前地图里设置目标P1后的软件流程示例，不是新增的实测结果。
+
+1. 操作者在网页选择目标，网页将像素位置转换为地图坐标，组成航点列表。
+2. 网页后端写入任务文件；`nav_mission`读取任务，将P1发布为ROS目标消息。
+3. `nav_simple`读取当前位置和地图，A*生成路径，局部控制给出速度命令。
+4. 串口桥把速度编码成五字段帧；ESP32在控制模式允许时输出PWM，底盘运动。
+5. 雷达、相机、IMU继续采集，FAST-LIVO2更新位姿；导航用新位置调整下一轮命令。
+6. 任务判断接近P1，发云台指令并尝试保存当前图像；导航另有自己的停车条件。
+7. 本地照片保存后，任务转向下一个航点；网页读取状态文件显示进度。
+8. 最后一个点处理完后任务写完成状态；公司服务器接收、识别和报告尚未在这条主链接通。
+
+沿链定位故障时，应先找“第一个没有新输出的环节”：
+
+| 现象 | 应首先区分的问题 |
 | --- | --- |
-| `initialize_type` | 2 = **UDP 模式** |
-| `lidar_ip` / `lidar_port` | 192.168.1.62 / 6101 |
-| `pc_ip` / `pc_port` | 192.168.1.2 / 6201 |
-| `cloud_scan_num` | 18 |
-| `cloud_frame` / `imu_frame` | `unilidar_lidar` / `unilidar_imu` |
-| `serial_port` / `baudrate` | `/dev/ttyACM0` / 4000000 ⚠️ **仅在串口模式生效；这个端口正是 ESP32 主控口，切勿把 `initialize_type` 改成 1** |
+| 网页能打开，位置一直不变 | 后端只是活着，还是融合位姿也有新消息 |
+| 雷达有点云，SLAM没有输出 | 当前图像、IMU、时间组织是否满足同步器要求 |
+| 导航发速度，车不动 | 串口是否连通、RC是否接管、电调是否响应 |
+| 拍到了照片，但内容不对 | 实际相机角色、缓存图像时间和云台动作是否正确 |
+| 加载旧地图后目标偏移 | 当前位姿是否与旧地图坐标对齐 |
+| 网页点击取消后仍可能运动 | 取消是否到达导航，是否仍有其他速度发布者 |
 
-### 5.4 输出含义
+### K. 源码阅读顺序与理解自检
 
-| 话题 | 用途 |
-| --- | --- |
-| `/aft_mapped_to_init` | **位姿真值**，nav_simple 的定位来源（经 pose_bridge） |
-| `/cloud_registered` | 世界坐标系点云，grid_bridge 用它建 2D 图 |
-| `/Laser_map` | 累积地图点云 |
-| `/path` | 轨迹 |
-| `/rgb_img` | 回投影图像（由 laserMapping 自己发布，不是相机直出） |
+先读应用接口，再进入C++算法。无需先从所有第三方数学函数开始逐行阅读。
 
-### 5.5 当前故障：为什么"有进程没输出"
-
-1. 开机时相机以旧编号枚举（含 `video2`），`cam_publisher` 打开 `video2` 成功；
-2. 时钟校正前的 `17:36:58`（真实约 11:07），内核连续 10 条 `uvcvideo: Failed to resubmit video URB (-19)`——旧设备掉线（-19 = ENODEV）；
-3. `17:49:00`（真实约 11:20）四路相机重新枚举（`usb 1-4.2.x: New USB device found, idVendor=0c45`），节点号变成 `0,1,3,4,5,6,7,8`，**`video2` 不复存在**；
-4. `cam_publisher` **不重连**，fd 一直指向 `/dev/video2 (deleted)`，`cap.read()` 永远失败；
-5. `img_en=1` 的 FAST-LIVO2 收不到图像 → 不进入建图循环 → 所有输出话题沉默；
-6. 下游全部拿到"空输入"，`nav_simple` 只能 20 Hz 发零速保平安。
-
-**验证命令**：`ls -l /proc/1094/fd | grep video` → `10 -> /dev/video2 (deleted)`。
-
-> 注意日志时间戳是时钟校正前的（9 月 10 日），对应真实时间是 11:07 / 11:20。
-
----
-
-## 6. 导航（`nav_simple.py` v8）
-
-自研导航栈，**不用 move_base**。473 行。
-
-### 6.1 算法
-
-```
-收到目标点 → A* 全局规划（一次，不重规划）
-     ↓ 20 Hz 控制循环
-Pure Pursuit：沿路径找前方 0.8 m 的 lookahead 点
-DWA：采样 5×11 组 (vx, vyaw)，2 s 前向预测，激光碰撞检测，按 4 项权重打分
-     ↓
-发布 /cmd_vel
-```
-
-### 6.2 参数（源码常量）
-
-| 参数 | 值 | 含义 |
+| 次序 | 阅读文件与关键位置 | 应能解释的问题 |
 | --- | --- | --- |
-| `VX_MAX` / `VX_MIN` | 1.0 / 0.5 m/s | **不允许后退**，最低 0.5 |
-| `VYAW_MAX` | 0.8 rad/s | 最大角速度 |
-| `LOOKAHEAD_DIST` | 0.8 m | 前视距离 |
-| `DWA_*_SAMPLES` | 5 × 11 | vx / vyaw 采样 |
-| `DWA_PREDICT_T` / `DWA_DT` | 2.0 s / 0.1 s | 预测时长与步长 |
-| `DWA_W_HEAD/DIST/VX/OBST` | 1.5 / 1.0 / 0.3 / 30.0 | 评分权重（避障权重最大） |
-| `ROBOT_RADIUS` / `SAFE_DIST` | 0.5 m / 0.7 m | 车体半径与安全距离 |
-| `ARRIVE_FINAL` | 0.30 m | 到点判定 |
-| `INVERT_YAW` | True | **转向反装标志**，换主控后若原地打转就改这里 |
-| `INFLATE_RADIUS` / `PATH_SIMPLIFY` | 0.5 m / 4 | 地图膨胀与路径简化 |
-| `WD_S` / `HZ` | 1.5 s / 20 Hz | 看门狗与频率 |
+| 1 | [位姿桥](docs/source/jiaoda/pose_bridge.py)的`cb` | 输入位姿如何被包装成两个输出话题 |
+| 2 | [任务节点](docs/source/jiaoda/nav_mission.py)的`main/snap` | 航点如何推进，照片何时保存 |
+| 3 | [串口桥](docs/source/jiaoda/chassis_gimbal_bridge.py)的`on_cmd_vel/main` | 速度如何变成一行串口数据 |
+| 4 | [主控固件](docs/source/firmware/control_1.ino)的`handleSerialControl/setChassisSignal` | 谁优先控制，数字如何变成PWM |
+| 5 | [栅格桥](docs/source/jiaoda/grid_bridge.py)的`integrate/publish_map` | 世界点怎样进入二维栅格 |
+| 6 | [导航](docs/source/jiaoda/nav_simple.py)的`on_goal/plan_astar/find_lookahead/dwa_select/loop` | 目标、路径、候选速度与停车分支如何联系 |
+| 7 | [网页后端](docs/source/jiaoda/console_backend.py)的`do_GET/do_POST`，再看`console.html` | 页面操作究竟触发了什么 |
+| 8 | [融合入口](docs/source/FAST-LIVO2/src/LIVMapper.cpp)与两份配置 | 三种观测怎样同步、触发LIO/VIO与发布结果 |
+| 9 | `IMU_Processing.cpp`、`voxel_map.cpp`、`vio.cpp` | 运动预测、几何误差、光度误差如何修正状态 |
 
-### 6.3 接口
+每个文件可先找四类内容：配置常量、订阅者、回调函数、发布者；再看主循环和失败处理。函数名旁的注释只能帮助定位，最终行为要看实际执行分支。
 
-- 输入：`/slam_pose`（位置）、`/imu`（yaw）、`/map`（A\* 用）、`/unilidar/cloud`（DWA 避障，只取 6 m 内、z∈(-0.3,1.0)、剔除车身矩形）、`/move_base_simple/goal`、`/move_base/cancel`
-- 输出：`/cmd_vel`、`/nav_path`（当前**无人订阅**）
+阅读后的自检问题如下。能对照源码回答即可，不要求先记住所有公式。
 
-### 6.4 安全逻辑
+1. 为什么相机断流会使当前融合停止，而网页视频仍可能显示？
+2. `/unilidar/imu`与`/imu`分别由谁产生，后者实际包含什么？
+3. 三维点云、二维栅格、网页PNG和机器人位姿分别是什么？
+4. A*、前视跟踪、局部速度采样分别解决哪个问题？
+5. 一个速度指令通过哪些换算到达电调，实测车速还缺什么？
+6. 导航停车和任务拍照是否使用相同条件，为什么可能不同步？
+7. 哪段程序真正写照片，照片有没有经过公司服务器？
+8. 加载旧地图后，还需要什么才能继续使用旧航点？
 
-- 位姿或 IMU 超过 1.5 s 未更新 → 发零速；
-- 到点 0.3 m 内 → 强制零速并清状态；进入 0.8 m 缓速区改走简单比例控制（0.10–0.20 m/s）；
-- DWA 全碰撞 → 原地转向脱困。
+### L. 当前缺口与后续处理顺序
 
-### 6.5 怎么让它动
+| 优先级 | 源码中的问题 | 对理解和后续实现的意义 |
+| --- | --- | --- |
+| 高 | 任务取消未发布导航取消 | 任务停止与导航停止不是同一事件 |
+| 高 | 网页和导航都发`/cmd_vel` | 多个控制来源需要统一仲裁 |
+| 高 | L2点内时间声明与解析换算尺度疑似不一致 | 需录包核实，不能仅凭有位姿输出判断时间正确 |
+| 高 | 雷达无时效检查，末端绕过DWA，堵塞仍给前进量 | 各分支未统一满足相同的运动约束 |
+| 高 | A*失败后直线兜底，未知格可通行 | “有路径输出”与“已找到可行通道”需要分开 |
+| 高 | RC信号消失后保留旧脉宽 | 控制来源有效性需要时间信息 |
+| 中 | 串口断开后未完整重连 | 初次打开成功不等于长期可恢复 |
+| 中 | 云台角度直接作为任务协议单位 | 网页显示单位、串口单位和物理角度需要统一 |
+| 中 | 冻结、暂停、路线加载存在占位 | 需要追踪前端到执行端的整个调用链 |
+| 中 | 保存栅格未恢复SLAM位置 | 持久地图和重定位需要独立设计 |
 
-目前唯一的入口 `/move_base_simple/goal` **没有发布者**（原设计由 `nav_mission` 发，而它崩了）。手工测试：
+- **03-K1**：上述问题来自源码可达分支，不等于已通过本轮真机复现，也未因增加部署工具而修复。
+- **03-K2**：后续控制修改先做离线输入和回放检查，再做架空与低速实测；软件停止不替代独立硬件急停。
+- **03-K3**：此前已优化基准检查、设备配置、候选生成、Master分离和分阶段验收；算法与控制缺口仍按本节处理。
+- **03-K4**：先保持原系统和驱动基准，ROS2迁移另设工作包。
+- **03-K5**：优先统一控制仲裁、TF、定位和任务状态，再考虑拆成ROS包；目录拆分本身不证明可靠性提高。
+
+### M. 理解之后再推进复现
+
+现阶段先用 K 节的源码阅读和自检建立整体理解。下列内容保留已经完成的复现准备，实际操作步骤集中在[复现手册](docs/reproduction.md)，不作为当前学习的起点。
+
+- **K5**：离线文件、语法和生成结构通过，不代表定位精度、避障、制动、任务闭环或重启重定位通过。
+- **K7**：候选保留原ROS话题和`/dev/shm`接口，须与旧栈分时运行；独立安装目录不等于运行时隔离。
+- **K8**：后续先复现单次启动的建图和定位，跨重启复用地图单独验收。
+
+| 已准备的工具 | 用途 | 验证边界 |
+| --- | --- | --- |
+| `tools/reproduce.py audit` | 对照基准和检查文件结构 | 不运行机器人 |
+| `deploy/robot.example.json` | 记录新机用户、路径和设备配置 | 示例值需要现场核对 |
+| `tools/reproduce.py stage` | 在新目录生成候选副本 | 不编译、不启动设备 |
+| `deploy/templates/` | 构建、独立Master与启动模板 | 新机仍需实测 |
+| `tools/health_check.py` | 观察实际消息与HTTP结构 | 不证明定位和运动精度 |
+
+- **02-K1**：候选生成只写指定新目录，不编译、不执行sudo、不操作服务、网络或串口；输出包含文件哈希。
+- **02-K2**：候选安装路径、用户、相机by-path、串口、控制台相机和雷达IP来自一个JSON，示例不代表新机身份。
+- **02-K3**：候选单元使用`/bin/bash run_node.sh`，规避原脚本Git模式`100644`及旧步骤漏给`run.sh`执行权限的问题。
+- **02-K4**：候选默认验收感知链，导航、控制和任务不自动启动，主控不刷写。
+- **02-K5**：候选适配应用路径、雷达IP和Sophus库搜索路径，排除旧根目录启动脚本；原导出运行代码不改写。
+- **02-K6**：原`floor1.npz`放在候选`reference_maps/`，候选应用地图目录为空，避免误用旧图坐标。
+- **02-K7**：候选发现active旧服务或已有Master会拒绝并行启动；手工进程仍需现场核对。
+- **02-K8**：检查会报告空的netwatch单元与未使用的厂商Python2脚本，候选不安装空单元。
+
+在仓库根目录可运行以下只读检查；不需要先部署到机器人。
 
 ```bash
-rostopic pub -1 /move_base_simple/goal geometry_msgs/PoseStamped \
-'{header: {frame_id: "map"}, pose: {position: {x: 2.0, y: 0.0, z: 0.0}, orientation: {w: 1.0}}}'
+python -B tools/reproduce.py audit
 ```
 
-⚠️ 前提：定位必须先是活的（当前不是），且底盘必须已接通。**在轮子离地前不要执行。**
+后续计划保留原任务编号，当前尚未进入新机实施阶段。
 
-### 6.6 地图格式
+#### 阶段 0 理解与准备
 
-`/map`：`OccupancyGrid`，分辨率 **0.05 m**，**2000×2000**，原点 `(-50, -50)`，`frame_id=map`，取值 `-1/0/100`。
-落盘：`~/jiaoda/maps/floor1.npz`（`log_odds` float32 2000×2000 + `size` + `res`）；网页用图 `/dev/shm/jiaoda_map.png`。
+- [x] **T10** 已建立可重复的基准检查和独立候选生成，见02-K1至02-K8。
+- [x] **T11** 已完成离线测试并记录边界，见K5和`docs/reproduction.md`。
+- [ ] **T23** 结合 K 节源码阅读和自检确认理解程度，尚未确认用户已掌握。
 
----
+#### 阶段 1 新机环境与静止感知
 
-## 7. 底盘与云台
+- [ ] **T12** 核对新机环境和设备，安装依赖并编译两个catkin工作区；当前缺少新机运行条件。
+- [ ] **T13** 只启动感知链、检查实际消息并录包；当前未连接新机。
 
-### 7.1 链路
+#### 阶段 2 建图和定位
 
-```
-/cmd_vel (Twist) ─┐
-                  ├─> chassis_gimbal_bridge ─> 串口 "/dev/ttyACM0" @115200 ─> ESP32 主控
-/jiaoda/gimbal ───┘        20 Hz, 5 字段帧                    ↑
-                                                    /jiaoda/esp_tel（回传遥测）
-```
+- [ ] **T14** 验证点云字段、时间对齐、标定和栅格坐标；目前依据为源码和旧记录。
 
-### 7.2 串口协议（与固件自述一致）
+#### 阶段 3 底盘控制
 
-- 下行：`"%d,%d,%d,%d,%d\n"` = `throttle,steer,pitch,yaw,checksum`，取值限幅 **±30**，**20 Hz**；`checksum` 目前是四者直接相加（未取模，见 13.3）。
-- 换算：`throttle = clamp(linear.x × 55)`，`steer = clamp(angular.z × 45)`。
-- 看门狗：`/cmd_vel` 超过 **0.5 s** 没更新 → 自动清零。
-- 上行：任意文本行 → `/jiaoda/esp_tel`（当前无人订阅）。
+- [ ] **T15** 先处理 L 节控制缺陷，再架空检查模式、方向、失联停车和重连。
+- [ ] **T16** 测量地面速度、转向率、制动距离和失效表现；不以话题频率代替。
 
-### 7.3 固件行为（只读读取得知）
+#### 阶段 4 任务与跨重启使用
 
-```
-=== Fire Inspection Robot Control System ===
-RC Mapping: CH1=Steer, CH2=Throttle, CH3=Pitch, CH4=Yaw
-Serial Format: throttle,steer,pitch,yaw,checksum
-Priority: RC > Serial
-```
+- [ ] **T17** 验收多点巡检、停稳拍照、照片关联和任务取消。
+- [ ] **T18** 实现持久地图重定位，再验证断电后继续旧路线。
 
-- **`Priority: RC > Serial`**：遥控器有信号时，串口指令被完全忽略。联调前必须先关遥控器。
-- **怎么判断它现在收不收串口**：固件每收一帧合法指令都会回一行 `Serial T:x S:y P:x Y:y`。若发 `/cmd_vel` 后 `/jiaoda/esp_tel` 里**没有**这行，就是还在 RC 模式（2026-10-21 实测就是这种情况：发了 1.5 s 的 0.08 m/s，车没动，回显 0 行）。
-- **⚠️ 固件 bug：拔掉接收机后必须重启主控才会切模式。** `pulseWidths[]` 只在下沿中断里更新，信号消失后**保留最后一次的值**；`isRCActive()` 只看数值范围，所以会一直返回 true，永远不进 `RC Signal Lost` 分支。实测：拔接收机后不重启，仍然 0 回显；**给 ESP32 复位一次**后，开机日志里不再出现 `Mode: RC Control`，串口立即生效（实测 `Serial T:16` 正常回显）。
-- **复位主控的正确姿势**：给 `RTS` 一个脉冲（`p.rts=True; sleep(0.15); p.rts=False`）是正常复位；单独拉 `DTR` 会把它打进 **DOWNLOAD 模式**（日志 `boot:0x23 (DOWNLOAD(USB/UART0))` + `waiting for download`），这时固件不跑，需要再用 RTS 复位一次。
-- 自报 `GIMBAL_PULSE:1500,1500`（约 20 Hz），云台中位。
-- **打开串口会因 DTR→EN 让 ESP32 复位一次**，属正常现象，不是故障。
+### N. 项目资料与证据索引
 
-### 7.4 急停
+本节及后续各节为2026-10-23复核后的项目记忆。以下原件位于仓库的上一级目录，不随仓库自动交付。SHA-256列为原文件字节哈希的前12位，仅用于快速识别版本。
 
-网页「急停」按钮 → `POST /api/nav/cancel` + `POST /api/ctl/drive {v:0,w:0}`。
-物理层最可靠的手段仍是**断电**或关遥控器。软件急停依赖串口链路，而该链路当前是断的。
-
----
-
-## 8. 视觉
-
-### 8.1 四路相机映射（实测抓帧确认）
-
-| USB 口 | 节点 | 占用者 | 画面 |
+| 来源 | 本地原件 | 读取范围与用途 | SHA-256前12位 |
 | --- | --- | --- | --- |
-| `1-4.2.2` | `video0/1` | console（按需打开） | 走廊「安全出口」方向 |
-| `1-4.2.1.3` | `video3/4` | 空闲 | 长走廊 + 蓝色展板，视角最低最广 |
-| `1-4.2.3` | `video5/6` | 空闲 | 棕色木门特写，视野窄 |
-| `1-4.2.4` | `video7/8` | 空闲 | 工位前用笔记本的人 |
+| S1 | [军令状][src-s1] | 全文50页，项目目标、分工与总体验收 | `a254ed8b0eff` |
+| S2 | [软件服务合同][src-s2] | 全文6页，软件公司的交付范围；另核对第2、6页图像 | `22f77bb7e904` |
+| S3 | [五月报告][src-s3] | 正文、表述及内嵌样机与软件截图 | `5e3ae3bab9a3` |
+| S4 | [六月报告][src-s4] | 正文、数据表及内嵌截图；正文日期为2026-06-13 | `79971950647d` |
+| S5 | [早期完成情况汇报][src-s5] | 正文日期为2025-12-17，含流程、供电与硬件图 | `d2b0ecbb7e2b` |
+| S6 | [消防方案PPT][src-s6] | 9页，原生图形及文字；第6、8页为空白 | `a4404482ac8e` |
+| S7 | [电路原理图][src-s7] | ESP32-S3扩展、电平转换、RC和执行器接口 | `56236b56f198` |
+| S8 | [标定板][src-s8] | 单页，已渲染核对板型及尺寸标注 | `7baf06e0b729` |
+| S9 | [主控固件][src-s9] | 全文，对照仓库固件逐字节校验 | `4fb5c3e51343` |
+| S10 | [RC测试固件][src-s10] | 全文，对照仓库固件逐字节校验 | `e984fc1c55a0` |
 
-四台全是**同型号 RGB**（`0c45:6366`，2592×1944 MJPG，序列号同为 `SN0001`），**没有热成像、没有深度相机**。`/dev/v4l/by-id` 因序列号冲突只有一个条目，稳定映射只能用 `by-path`。
+[src-s1]: <../北京市科技计划“揭榜挂帅”项目军令状(1).pdf>
+[src-s2]: <../服务合同_室内履带机器人巡检系统_修订版(1)(1).pdf>
+[src-s3]: <../0515进展报告_bjtu(1).docx>
+[src-s4]: <../0617-进展报告_bjtu(1).docx>
+[src-s5]: <../火灾隐患非现场监管智能巡检装备研究与示范应用项目-完成情况汇报(1).docx>
+[src-s6]: <../消防.pptx>
+[src-s7]: <../9dfc062e5ef651741d9ef5f5e4818d29.png>
+[src-s8]: <../calib_board(1).pdf>
+[src-s9]: <../control_1.ino>
+[src-s10]: <../ReadRC.ino>
 
-### 8.2 `cam_publisher` 的缺陷（2026-10-21 已修复）
+- **K12**：S1是整个科研项目的目标依据，S2是外包软件服务范围，S3至S6是历史汇报或方案。报告数字、图片和设计图均不替代当前源码、运行记录及验收测试。
+- **K13**：S1第22至23页的中电投与S2第1页的北京科躯智能是不同主体；后续说“公司”必须明确对象，不能把服务器开发与导航外包混为同一份合同。
+- **K14**：用户2026-10-23答复S2“应该就是这个”，并明确要求实现合同全部功能。当前按S2督办，不自行删减双雷达、四建图相机或动态剔除等要求；正式签章版本与变更记录仍需归档。S2第6页可见乙方签章，甲方签署栏在该副本中空白，不能仅凭此文件确认签署手续已齐全。
 
-**修复前**（保留说明故障原理）：
+本次没有修改原件，也没有逐装配核验同级各日期的SolidWorks模型。历史CAD截图只作为用户说明的结构背景，不作为接线、尺寸和功能已验收的证据。合同含商务及签署信息，本文不复制银行账号、个人联系方式或签名；推送公共仓库前仍需检查摘要公开范围。
 
-```python
-IDX = int(os.environ.get("CAMPUB_INDEX", "2"))   # 第 6 行：写死 2
-cap = cv2.VideoCapture(IDX, cv2.CAP_V4L2)        # 第 13 行：只打开一次，永不重开
-```
+### O. 必须交付的全部合同功能
 
-设备重新枚举后 `video2` 消失，进程不重连、不报错、不打日志，话题有发布者但零数据。
+S2第1至3页第2条是当前软件工作范围。下表的C编号为合同检查项，不表示已经实现。现状仅依据本地导出代码，原机是否有另一个版本尚待核对。
 
-**修复后**（现版本）：
-
-- 支持 `CAMPUB_DEV`（稳定 by-path）/`CAMPUB_INDEX` 双模式，当前 `CAMPUB_INDEX=3`；
-- 打不开就每 2 s 重试；连续 10 帧读失败自动 `release()` 重开；
-- 手动填 `sensor_msgs/Image`（`bgr8`），**不再 import `cv_bridge`**，绕开导入顺序坑；
-- 分辨率/帧率可用 `CAMPUB_W/H/FPS` 覆盖。
-
-复现方式见 [`docs/source/jiaoda/cam_publisher.py`](docs/source/jiaoda/cam_publisher.py)。原版备份在 `~/backup/jiaoda-before-fix-1021-1327.tar.gz`。
-
-### 8.3 标定页 8095
-
-代码在 `~/jiaoda/calib/calib_web.py`（`CALIB_PORT` 默认 8095），启动脚本 `run_calib.sh`（`CALIB_CAM=2`，同样指向已消失的 video2）。对应单元 `jiaoda-calib` 为 disabled。启用方式：`sudo systemctl enable --now jiaoda-calib`。
-
-⚠️ 该页的 `/saveextr` 会**直接覆写** `unitree_l2.yaml` 且不备份。
-
----
-
-## 9. Web 控制台（8090）
-
-- 后端：`console_backend.py`（304 行，`ThreadingHTTPServer`，监听 `0.0.0.0:8090`，**无鉴权**）
-- 前端：同目录 `console.html`（单文件，约 28 KB，「巡检机器人控制台」）
-- 摄像头流：按需打开 `video0`，输出 MJPEG 到 `/api/cam/stream.mjpg`
-
-### 9.1 HTTP API
-
-| 方法 | 路径 | 作用 |
+| 检查项 | 合同内容及出处 | 当前证据与缺口 |
 | --- | --- | --- |
-| GET | `/api/pose` | 当前位姿（来自 `/aft_mapped_to_init` 等三选一） |
-| GET | `/api/ctl/status` | 电量、温度、雷达 hz、导航状态 |
-| GET | `/api/mapinfo` | 地图元信息 `{x0,y0top,mpp,w,h}` |
-| GET | `/api/map` | 地图 PNG（读 `/dev/shm/jiaoda_map.png`） |
-| GET | `/api/cam/stream.mjpg` | MJPEG 视频流 |
-| GET | `/api/nav/status` | 任务状态（读 `/dev/shm/jiaoda_nav_status.json`） |
-| POST | `/api/ctl/drive` | 直接给速度 **（无限幅，注意）** |
-| POST | `/api/ctl/param` | 调参（`pspeed/pyaw/pclear/pstop`，其中后两个未被真正使用） |
-| POST | `/api/ctl/calib_heading` | 航向标定（空实现） |
-| POST | `/api/gimbal` | 云台 |
-| POST | `/api/nav/start` | 开始巡检（写 `/dev/shm/jiaoda_mission.json`，但**无人消费**） |
-| POST | `/api/nav/cancel` | 取消 |
-| POST | `/api/route/save`、`/api/route/load` | 路线存取（`~/jiaoda/routes`） |
-| POST | `/api/map/save`、`/api/map/load`、`/api/map/clear` | 地图存取（`~/jiaoda/maps`） |
+| C01 | 纯软件部署配置及集成；甲方提供全部硬件；改硬件须书面确认，2.1(1) | 有上位机、固件和部分设备链路；完整接线及全设备联调未核验 |
+| C02 | 建图模式：遥控驾驶、控制云台、同步建图、手动记录兴趣点的位置、姿态和云台朝向，2.1(2) | 有RC、地图、网页航点及云台字段；模式启停、姿态记录和端到端保存需逐项验证 |
+| C03 | 两种模式采用雷视融合，首选FAST-LIVO2；均调用2个L2及4个建图相机全向感知，2.1(3) | 当前主链仅一路L2与一路定位图像，见01-K1；不能用检测到USB设备代替算法接入 |
+| C04 | 室内无GPS、光照良好的退化场景稳定定位建图，无明显漂移，2.1(4) | 融合源码存在；走廊等场景效果与漂移原始记录缺失 |
+| C05 | 自动滤除动态障碍，地图规模不小于4000平方米；建图和巡检延迟均≤500ms，2.1(5) | 未找到报告所述语义动态剔除主链；地图数组容量、单帧耗时不能证明面积和端到端时延达标 |
+| C06 | 适应少量减速带、120mm台阶及30°纵坡，倾斜振动不影响建图巡检，2.1(6) | 未有对应测试记录；底盘机械能力由硬件条件约束，软件也须在约定工况持续工作 |
+| C07 | 巡检按已记录兴趣点顺序自主到达，控制两自由度云台、自动拍照并保存，2.1(2)、(7) | 已有任务循环和JPG保存；目标姿态、云台单位、停稳与新鲜图像、专用巡检相机均有缺口 |
+| C08 | 避障优先绕行；不可达时减速停车、提示介入；超时无响应则跳到下一兴趣点，2.1(8) | 有简化规划及避障；不可达状态机、提示、响应超时及跳点未贯通，见L节 |
+| C09 | 指定显示屏GUI：建图启停、兴趣点管理、一键巡检、状态、巡检相机画面及地图实时显示，2.1(9) | 有网页界面，但部分按钮为占位；须在指定屏幕验收真实动作，不能只看页面 |
+| C10 | 580mm宽、730mm长平台通过最窄800mm门，50次碰撞不超过1次，2.1(10) | 尚无本轮记录；外壳、相机及附件外伸后须复测实际整机包络 |
+| C11 | 通信额外预留5路整数下行电机控制、8路整数上行传感器数据，并在屏幕显示，2.1(11) | 现有四控制量加校验和不等于额外5路；云台脉宽反馈不等于8路传感器通道 |
+| C12 | 甲方派1名技术人员配合，在乙方指导下完成非技术性测试，2.1(12) | 测试分工及现场人员待确定，不能把算法开发与调试转成甲方的非技术测试责任 |
+| C13 | 完整交付上下位机代码，包含SLAM、导航、云台及GUI，必要注释与README，2.2(1) | 有源码导出与文档；是否等于实际运行版本、依赖及设备配置是否完整仍待核对 |
+| C14 | 培训技术人员，使其能在相同硬件独立重新部署，2.2(2) | 已有离线复现准备，尚未由甲方人员在另一套设备独立部署成功 |
+| C15 | 商场环境待定，进行50次建图与巡检，任务失败不多于1次，2.3 | 尚无可追溯的50次完整测试及双方验收记录 |
 
-### 9.2 跨进程 `/dev/shm` 契约（隐式 API）
+- **K15**：用户要求完整实现C01至C15，不能以“能建图、能走、能拍照”代替合同交付。软件安全问题应先处理；功能、性能、交付和培训分别验收。
+- **K16**：S2没有明确把消防目标识别、热成像/烟雾/燃气业务、服务器上传、自动报告和灭火机构设计列为该公司的开发任务。它们仍属于整体项目或后续接口工作，不能替代S2任何未完成项；新增委托须另行明确。
+- **K17**：S2第3页记载交付验收期限为2026-04-30、验收后线上支持1个月且响应≤24小时。当前实际交付、延期约定、验收签署和支持起算日未知，不据旧日期自行推断履约结论。
 
-| 文件 | 生产者 | 消费者 |
+S1的整体项目范围另外保留如下，以免缩小科研任务或错误转嫁给外包公司：
+
+| 对象 | S1中的职责或指标 | 来源 |
 | --- | --- | --- |
-| `jiaoda_map.png` / `jiaoda_map.json` | grid_bridge | 网页地图 |
-| `jiaoda_sensors.json` | chassis_bridge（未运行） | 网页电量（**恒空**） |
-| `jiaoda_nav_status.json` | nav_mission（崩） | 网页任务状态（**恒 idle**） |
-| `jiaoda_mission.json` / `jiaoda_nav_cmd` | 网页 | nav_mission |
-| `jiaoda_map_save` / `_load` / `_clear` | 网页 | grid_bridge |
+| 中电投 | 巡查需求及基础图库、服务器端分析管理平台、示范应用 | 第22至23页 |
+| 北京交通大学 | 深度学习识别、移动底盘、设备端平台 | 第23页 |
+| 总体榜单 | ≥10类场所、≥3种关联数据、≥10种目标识别且准确率≥95%、点位巡视准确率≥95%、应急灭火、报告及公共接口、数据≥365天 | 第5页 |
+| 项目细化承诺 | 场所和目标各扩至13类；13类目标每类图像≥500张；有效载荷≥60kg含20kg灭火剂、速度≥8.3km/h、越障≥120mm、坡度≥30°、续航≥6h及≥20km | 第24页 |
+| 平台业务 | 任务与结果上传、现场照片、轨迹痕迹、整改建议、每2小时报告、A类即时通知、B/C类每日汇总、监管与物联网接口 | 第17至18页 |
+| 里程碑 | 数据库2026-03-31、平台2026-08-31、样机2027年6月、示范与报告2027-08-31；验收后维护≥2年 | 第22页 |
 
-> 这些文件无锁、无版本号。**二次开发替换节点时必须保持文件名与字段名不变。**
+S1第18、20、22页明确写4类场所、每类≥3处及12处示范，第24页又出现“场所3处”的不一致；第22页“2027-06-31”是不存在的日期。正式督办需澄清，不能擅自选择较低数量。S1的两年维护与S2的软件服务支持期不是同一承诺。
 
----
+### P. 历史报告与当前代码的差异
 
-## 10. 数据资产与备份
-
-| 路径 | 内容 | 备注 |
+| 主题 | 文档说法 | 当前依据与后续证据要求 |
 | --- | --- | --- |
-| `~/jiaoda` | 主代码（2234 行 Python） | **无 Git**，改前先 `tar` 备份 |
-| `~/jiaoda/maps/floor1.npz` | 2D 地图（log_odds 2000×2000） | 22 KB |
-| `~/jiaoda/routes/` | 巡检路线 JSON | 目前为空 |
-| `~/jiaoda/photos/` | 巡检拍照 | **尚未创建**（mission 崩溃） |
-| `~/.ros/log/` | 各节点日志 | 约 90 MB，时间戳受 4.5 影响 |
-| `~/livo2_ws` | FAST-LIVO2 + rpg_vikit 源码与构建产物 | 最近构建 2026-09-10 12:22 |
-| `~/unilidar_sdk2` | 雷达 SDK | 可执行文件构建于 2026-06-18 |
+| 研发阶段 | S5记录Point-LIO与FAST-LIVO2并行、YOLOv8演示部署，等待中电投完整数据集训练 | 能说明早期路线，不能说明本机已经有消防业务识别模型 |
+| 感知配置 | S3、S4写双雷达、RGB-D等；S4还写PTP、FPGA同步 | 当前导出链路见01-K1，点云还会重打时间戳；须索取对应硬件、节点、参数和同步测量 |
+| 导航算法 | S3及S4前半段写Dijkstra+DWA；S4后半段写MPC窄门控制 | 当前`nav_simple.py`为A*、前视跟踪和局部速度采样；没有发现MPC接入 |
+| 定位增强 | S3、S4写开机重定位、全局匹配；S4增写Scan Context与图优化 | 当前未找到对应定位后端；加载NPZ地图不能恢复原SLAM坐标 |
+| 动态剔除 | S4写YOLOv8联合点云动态识别、地面约束、坡道权重、IMU温漂补偿等 | 未找到所述成套模块与配置；先向乙方索取运行入口、提交及原始测试，不能按描述直接认定已实现 |
+| 运行环境 | S4第八节写AGX Orin 32GB、JetPack6.0、CUDA12.2及CSI相机 | 原仓库2026-10-21记录为约61GiB内存、L4T35.4.1、Ubuntu20.04、USB RGB相机；可能涉及另一台机器，未验证 |
+| 性能数据 | S3、S4写串口<20ms、单帧<50ms；S4写0.17m精度、96.7%窄门通过率及多组YOLO吞吐量 | 无对应测试脚本、原始日志、模型和统计样本；均不计为本轮验收结果 |
+| 照片与平台 | S6第9页计划自动返航、识别、上报和灭火 | 当前照片本地保存，见01-K10、01-K11；方案流程不等于已联通公司平台 |
 
----
+- **K18**：S4文件名为0617，正文日期为2026-06-13，其中还引用2024-04-25故障案例。日期、设备环境与实现存在待核对项；差异可能来自分支、其他设备或文档失配，不据此直接判定对方未做过，也不把其数字当作复现基准。
+- **K19**：报告里的点云图、导航界面、参数截图只能证明文件含该图。当前程序是否使用相同地图、参数或分支，须以进程启动参数、源码哈希、话题与录包建立对应关系。
 
-## 11. 二次开发指南
+### Q. 接线、固件与标定的核对要点
 
-### 11.1 改代码的完整流程
+| 对象 | 已核对的事实 | 连接实机后要确认 |
+| --- | --- | --- |
+| S9主控固件 | 根目录与`docs/source/firmware/control_1.ino`字节完全一致 | 实际烧录版本、Arduino核心版本、板型、USB CDC及串口连接方式 |
+| S10测试固件 | 根目录与仓库`ReadRC.ino`字节完全一致；仅输出10路RC脉宽 | 它是独立测试草图，不能与S9同时放入一个草图一起编译 |
+| 底盘输出 | S9油门GPIO21、转向GPIO47；S7的两路ESC对应这两个GPIO | 哪个物理接口是油门、哪个是转向，电调混控与方向是否一致 |
+| 云台输出 | S9俯仰GPIO48、偏航GPIO45；S7云台接口却标GPIO4/5/6/7 | 原理图或固件是否过期，实线接到哪里；不能照图直接重接 |
+| 电路扩展 | S7包含TXS0102的3.3V/5V转换、10路RC以及多组电机接口 | 只说明设计预留，不能证明额外5路下行和8路上行通信已经实现 |
+| 标定板 | S8标注1400×1000mm、4个直径240mm圆孔、圆心间距500×400mm、`DICT_6X6_250`标记ID1至4 | 实物是否切孔、是否100%打印、孔距和标记尺寸，是否有对应识别工具 |
+| 仓库标定工具 | `calib/aprilgrid.yaml`和检测脚本默认6×6 AprilTag 36h11、tag88mm、间隙比0.3 | 与S8不是同一种板；本轮不修改参数，也不能照用脚本宣称完成标定 |
+
+- **K20**：固件相同只证明两处文件一致，不证明ESP32烧录的是该版本，也不证明S7原理图就是当前布线。
+- **K21**：S8圆孔板与仓库AprilGrid工具存在板型和检测字典差异，必须先确认实际标定流程。标定板文件不等于有效内外参，需保留采集数据、尺寸、计算过程和误差报告。
+
+### R. 全合同验收基准
+
+以下是执行C01至C15的技术验收方案。合同原有数值不得降低；合同未给出的阈值和步骤标为“建议”或“待双方确认”，不能当成已经签署的新条款。任何一项必需功能缺失都应单独记录，不能用综合成功率掩盖。
+
+#### R1. 功能与性能检查
+
+| 关联项 | 测试方法与必须保留的证据 | 通过判据 |
+| --- | --- | --- |
+| C01 | 设备清单、接线照片、进程与驱动表、软件版本和硬件变更单 | 指定设备完成集成；硬件调整有甲方书面确认 |
+| C02 | 使用航模遥控器行驶并转动云台，建图时添加多个兴趣点；查看保存的数据，再重新读取 | 每点包含位置、机身姿态、云台朝向；数据可用且与界面操作对应，不能只存x/y |
+| C03 | 两模式分别记录2个L2、4个建图相机的唯一身份、频率、时间戳及算法订阅关系，遮挡/暂停单路作对照 | 各路都实际参与预期感知或融合。只有话题名、进程、USB枚举或轮流显示画面不通过 |
+| C04 | 无GPS，在光照良好的长走廊等退化区域重复行走，保留真值参照、轨迹与录包 | 无明显漂移或定位中断。建议以起终点偏差和沿途参照测量；最大误差阈值待双方确认 |
+| C05动态 | 同一路段有人经过与无人经过对照，检查静态地图及移动目标去除效果，保留时序点云和图像 | 自动滤除移动障碍且不长期污染静态地图；允许残留时长与误删阈值待双方确认 |
+| C05面积 | 在实际连通区域建图，保留区域边界/测绘依据、完成地图与轨迹 | 有效覆盖≥4000平方米；空白栅格、重复累加面积或大图尺寸不作为有效覆盖 |
+| C05时延 | 建图、巡检分别记录源传感器采集时间与对应结果/显示时间；跨设备先校时 | 两模式均≤500ms。测量终点、采样频率和统计口径待双方确认；仅SLAM单帧耗时不通过 |
+| C06 | 在硬件能力与防倾覆措施确认后，分别通过减速带、120mm台阶、30°纵坡，记录姿态、定位和导航 | 约定工况中建图巡检正常，无失控或明显失效；载荷、路面与允许振动范围待双方确认 |
+| C07 | 不同位置和朝向的连续航点，逐点检查到达、机身方向、云台两轴、专用巡检相机照片及磁盘文件 | 顺序正确，达到保存的点位与姿态，云台朝向正确，自动保存相应照片；建议确认停稳及帧新鲜度 |
+| C08可绕行 | 在原路线设置可绕过障碍并完整记录轨迹与控制量 | 自动重规划/调整路径绕行，无碰撞，不以盲目前行代替绕行 |
+| C08不可达 | 完全封路，分别测试及时人工响应与超时无响应两种情形 | 减速停车、有介入提示；等待期间不自行挤过，超时跳过当前点并继续下一点；等待时长待双方确认 |
+| C09 | 在甲方指定显示屏逐项操作启停、点位增删改、开始巡检、地图和巡检相机画面，保留录屏及后台事件 | 每项有真实后台动作和正确状态，不接受占位成功提示、仅命令行可用或错误相机画面 |
+| C10 | 测量净门宽及实际整机包络，编号开展50次800mm门通行，保留连续录像与接触记录 | 50次碰撞≤1次；计数独立于C15，不替换成95%或报告中的96.7% |
+| C11 | 用测试端分别改变额外5个下行整数、8个上行整数，核对接收值、独立通道及屏幕显示 | 额外通道全部可传输、可区分，上行8路均正确显示；范围、单位、刷新率及异常值处理待双方确认 |
+| C12 | 明确甲乙方测试人员，乙方提供测试指导和操作记录表 | 甲方技术人员能在指导下完成约定非技术测试，不替代乙方开发工作 |
+
+#### R2. 交付与综合验收
+
+| 关联项 | 验收工作 | 通过判据 |
+| --- | --- | --- |
+| C13 | 固定一份版本，核对上下位机、SLAM、导航、云台、GUI完整源码及配置，附构建部署说明、依赖版本和必要注释 | 交付代码与运行版本可追溯；不依赖乙方未交付的关键脚本、参数或私有程序 |
+| C14 | 建议由甲方受训人员在另一套同配置Jetson及外设从约定初始环境独立部署，乙方观察并记录帮助次数 | 可按交付文档独立重建系统并运行两模式；所需镜像/安装包和网络条件事先约定 |
+| C15 | 双方先确定商场或替代场地、路线、点位、障碍及失败定义，编号完成50次建图与巡检 | 完整任务失败≤1次；没有跳过必需步骤、漏图后补拍或无记录人工接管冒充自主成功 |
+| 服务支持 | 核对S2第4条支持期限、响应方式及问题工单 | 验收起算日与联系方式明确，按合同提供支持；不能只交一次演示视频 |
+
+- **K22**：合同有两个独立的50次指标：C10窄门碰撞≤1次、C15建图巡检任务失败≤1次。各自需要逐次计数，49/50等于98%，不能以≥95%替代。
+- **K23**：建议验收记录至少包含试验编号、软件提交/哈希、硬件与载荷、地图/路线/点位版本、起止时间、是否人工介入、结果及失败原因，并关联原始日志、视频、轨迹和照片。失败试验也保留，不能只挑成功记录。
+- **K24**：取消、急停/接管、传感器断流及控制失联测试是后续开展运动验收的安全前提建议，见L节；这不意味着合同数值已满足，也不授权本轮进行运动或故障注入。
+
+建议提前写明“任务失败”至少如何处理碰撞、定位失效、漏点、错误顺序、拍照缺失、错误云台方向、不可达处置错误和非约定人工接管。重试、正常跳过不可达点与真正失败的区别需双方签认；不能由程序自行把错误改标成完成。
+
+### S. 下次连接原机的工作入口
+
+#### S-A. 已知环境与连接状态
+
+| 对象 | 本次确认程度 | 下一步 |
+| --- | --- | --- |
+| 当前桌面主机 | 用户说明为校园网，工具在这台Windows上运行 | 保持现有代理、防火墙和其他项目配置，不因连Jetson而改全局网络 |
+| 笔记本与Jetson | 用户说明同连`xlx`手机热点，与桌面不在同一局域网 | 笔记本可用于首次SSH和协助安装，不能据热点名称推断桌面可直接访问 |
+| Tailscale | 2026-10-23主机只读实查：1.104.2，`BackendState=Running`、`Self.Online=true`、健康提示为空；其他可见设备0台，尚未看到Jetson | 桌面已登录在线；下一步在Jetson加入同一授权私网，再用普通SSH；不自动开启Tailscale SSH或出口节点 |
+| 原机历史身份 | `sjytt`、`sjytt-desktop`，历史USB SSH为`192.168.55.1` | 这些来自旧资料，热点/Tailscale实际地址与主机密钥需重新确认，不照抄旧IP |
+| 当前权限 | 尚未连接Jetson，未核验服务或设备，未试SSH认证 | 获得连接条件后先只读盘点，不刷机、不装依赖、不停现有栈、不发运动命令 |
+
+- **K25**：本机到Jetson尚未建立已验证的连接。远程访问能补齐运行事实，但不能替代标定测量、真值定位、机械检查或完整验收；“掌握项目”不能承诺为所有隐藏状态都已知。
+
+#### S-B. 连接后按以下顺序收集证据
+
+| 顺序 | 只读核查 | 预期产出与停止边界 |
+| --- | --- | --- |
+| 1 | 核对SSH主机身份、当前用户、主机名、时间/uptime、系统与JetPack、ROS/Python/依赖版本 | 明确是不是原机，不接受主机密钥变化后直接跳过验证 |
+| 2 | 查看systemd状态、启动参数、实际进程、工作目录和源码哈希 | 对照K2基准及C13，确认是否存在报告中另一套程序；只读日志，不重启服务 |
+| 3 | 枚举相机by-path/角色、雷达配置、串口身份及占用者 | 对照C03与Q节；不先打开相机或串口，避免抢占、DTR复位或影响现有栈 |
+| 4 | 查看ROS节点、消息类型、发布/订阅关系，对关键话题限时订阅频率和时间 | 追踪L2/IMU/图像到位姿、地图，区分“节点活着”“有新数据”“数据正确”；不发布目标或速度 |
+| 5 | 检查两雷达四相机接入、时序、TF、标定文件和旧图使用入口 | 核对C03至C06；点内时间疑点见E节，确认数据单位前不改同步代码 |
+| 6 | 读取现有航点、任务配置、照片样本、GUI接口和日志 | 核对C02、C07至C11；只用读取接口，不调用drive/start/cancel等会改变运行状态的接口 |
+| 7 | 列出“合同条款－实际程序－运行证据－缺口”，给出最小修复顺序 | 优先处理L节安全缺口，再谈受控运动、录包和新机复现；改运行文件另行说明并确认 |
+
+频率检查每条先限时10至30秒，避免长期订阅挤占带宽。需要录包、下载样本或新增日志时，先说明存储量和运行影响；临时材料按全局规则放仓库外。现场运动须有人看护、具备独立急停并先确定载荷和防倾覆条件。
+
+#### S-C. 用户的机械任务与协作边界
+
+| 用户此前说明 | 当前应保留的理解 | 尚未验证 |
+| --- | --- | --- |
+| 两灭火器及附件各按20kg，总计40kg，曾给力臂0.35m | 属于用户给定的设计载荷；静态重力矩量级约137N·m，不是推杆推力或选型结论 | 实物重心、机构全行程受力、冲击及整机稳定性 |
+| 当前CAD采用推杆翻转，老师希望前移收纳，抬起时同步后退 | 需协调平移与翻转以避免竖直后底部越出平台；此前移动铰点/连杆等只是备选 | 最终机构、导轨或连杆尺寸、运动包络和干涉 |
+| 外壳顶盖靠灭火器抬起接触而向两侧打开，下降时随动关闭 | 被动随动盖，不把独立开盖电机当成既定需求 | 接触位置、滚轮、回落阻力、夹伤及卡滞风险 |
+| 用电机收线压紧/放松灭火器压把 | 属于待验证机构构想，现用主控未见灭火器控制实现 | 压把力/行程、复位、保险及失效状态 |
+| 相机太轻不能在云台零位正常工作 | 用户明确需要可调配重，不用泛泛的云台调参替代这一问题 | 云台型号、力矩平衡、配重质量/位置及相机与线缆干涉 |
+
+- **K26**：S-C节机械背景来自用户历史说明而非本轮实物测试。下一次软件接机不能顺带把机械方案、灭火动作或新增接线视为已批准、已完成。
+
+#### S-D. Tailscale连接交接步骤
+
+| 步骤 | 执行位置 | 状态与要求 |
+| --- | --- | --- |
+| 1 | 当前Windows桌面 | 已确认Tailscale登录在线，OpenSSH客户端存在；CLI路径为`C:\Program Files\Tailscale\tailscale.exe`，当前会话的PATH尚未发现该命令 |
+| 2 | 笔记本 | 与Jetson同连热点，先通过原有方式SSH到Jetson；本方案不要求笔记本也装Tailscale |
+| 3 | Jetson终端 | 检查是否已安装，未安装时按下列官方方法安装；安装会新增软件、后台服务和网络接口，尚未执行 |
+| 4 | Jetson终端及用户浏览器 | 执行`sudo tailscale up`，按输出链接使用与桌面相同账号登录；用户自行完成认证，不把登录链接或凭据写入README |
+| 5 | Jetson与当前桌面 | 查看私网IPv4、设备列表，确认双方可见；若仍不可见，再核对账号、设备审批及访问策略，不直接放宽防火墙 |
+| 6 | 当前桌面 | 校验Jetson主机密钥和用户名后，用普通`ssh 用户名@Jetson私网IP`检查；网络连通不等于SSH认证已完成 |
+
+在Jetson终端先检查安装情况：
 
 ```bash
-tar czf ~/jiaoda-$(date +%m%d-%H%M).tar.gz ~/jiaoda      # 1. 备份
-vim ~/jiaoda/xxx.py                                      # 2. 改
-python3 -m py_compile ~/jiaoda/xxx.py                    # 3. 语法检查
-sudo systemctl restart jiaoda-<对应单元>                  # 4. 重启单个服务
-journalctl -u jiaoda-<单元> -f                           # 5. 看日志
+command -v tailscale
 ```
 
-### 11.2 改 SLAM 需要重新编译
+仅在尚未安装且允许安装时，使用[官方Linux安装方式](https://tailscale.com/docs/install/linux)：
 
 ```bash
-cd ~/livo2_ws
-catkin_make -j4          # 或 catkin build fast_livo
-source devel/setup.bash
-sudo systemctl restart jiaoda-fastlivo
+curl -fsSL https://tailscale.com/install.sh | sh
 ```
 
-改参数（yaml）不用编译，直接重启 `jiaoda-fastlivo` 即可。
-
-当前构建产物时间：`livo2_ws/devel/lib/fast_livo/fastlivo_mapping` = 2026-09-10 12:22；`unilidar_sdk2/.../unitree_lidar_ros_node` = 2026-06-18 16:48。`devel/.catkin` 标记存在，支持增量构建。
-
-### 11.3 加一个新节点
+安装后发起登录，浏览器认证由用户完成：
 
 ```bash
-# 1) 写 ~/jiaoda/my_node.py（记得 source /opt/ros/noetic/setup.bash）
-# 2) 加执行权限 chmod +x
-# 3) 复制一个 unit 模板：
-sudo cp /etc/systemd/system/jiaoda-nav.service /etc/systemd/system/jiaoda-mynode.service
-# 4) 改 Description / ExecStart / After
-sudo systemctl daemon-reload && sudo systemctl enable --now jiaoda-mynode
+sudo tailscale up
 ```
 
-### 11.4 调试技巧
+查看Jetson的Tailscale IPv4，后续SSH使用这个地址而非旧USB地址：
 
-- 看谁在发：`rostopic info /话题`
-- 看频率：`timeout 4 rostopic hz /话题`
-- 看内容：`rostopic echo -n 1 /话题`
-- 看节点连接：`rosnode info /节点`
-- 看串口占用：`ls -l /proc/<pid>/fd | grep tty`
-- 看 USB 重枚举：`journalctl -k | tail -50`
+```bash
+tailscale ip -4
+```
 
----
+- **K27**：桌面在线状态已直接核实，但当前没有可见对端，Jetson安装、入网、点对点连通、22端口及SSH认证均未验证。沙箱首次读取本地Tailscale管道被拒绝，主机权限下只读查询成功；不能把该沙箱报错解释成Tailscale服务未启动。查询没有更改代理、防火墙、出口节点、SSH或机器人服务，也未保存含账号及节点密钥的完整状态JSON。
 
-## 12. 故障速查表
+### T. 底盘控制代码交接
 
-| 症状 | 最可能原因 | 检查 | 处理 |
-| --- | --- | --- | --- |
-| 发 `/cmd_vel` 车"不动"、但固件有 `Serial` 回显 | **机器人被架起来了**，轮子空转不产生位移 | 看轮子是否接触地面 | 放回地面再测；架起时只能验证"轮子转不转"，不能验证位姿 |
-| 发 `/cmd_vel` 车不动、无 `Serial` 回显 | 固件在 RC 模式（接收机有信号，含失控保护值） | `timeout 5 rostopic echo /jiaoda/esp_tel \| grep Serial` | 拔接收机 → **重启 ESP32**（RTS 脉冲）|
-| 拔了接收机还是 0 回显 | 固件 `pulseWidths` 保留旧值，不重启不切模式 | 同上 | 复位主控一次 |
-| `/unilidar/cloud` 无数据、`eth1` 显示 `NO-CARRIER` | 雷达网线松/断，或雷达断电 | `cat /sys/class/net/eth1/carrier`（1=通） | 插回 RJ45；`ping 192.168.1.62` |
-| 网页地图有图、位姿不动 | SLAM 停摆（相机无图） | `rostopic hz /aft_mapped_to_init` | 修相机索引后重启 fastlivo |
-| `/left_camera/image` 无数据 | 相机索引失效 | `ls -l /proc/1094/fd \| grep video` | 改 `CAMPUB_INDEX` 或加重连 |
-| 发 `/cmd_vel` 车不动 | 串口名错 / RC 优先 / 急停 | 看 bridge 日志、遥控器是否开着 | 改 `CTL_PORT=/dev/ttyACM0`；关遥控器 |
-| `ttyCH343USB0` 打不开 | CH343 以 CDC 模式枚举成 `ttyACM0` | `ls /dev/ttyACM*` | 用 `/dev/ttyACM0`，别装 ch343.ko |
-| 网页打不开 | 本机代理劫持 | `curl --noproxy '*'` 试 | 建 SSH 隧道走 127.0.0.1 |
-| 日志时间全是 9 月 10 日 | RTC 未保持 | `timedatectl` | 正常现象，看 `etime` |
-| 服务反复重启 | 见 13.1、13.2 | `systemctl status` | 修 `cv_bridge` / 相机索引 |
-| 地图越走越糊 | `grid_bridge` 随机 25% 回填 | 看 13.3 | 需要改算法 |
+先按接入层选择文件，不将同名或相似脚本混用。本节描述导出代码，没有启动硬件或重新验证实际方向。
 
-### 12.1 网络注意
-
-- `eth0` 与 `eth1` **在同一个二层网段**（同一台交换机），`eth0` 上只能看到 `192.168.1.62` 的广播 ARP。
-- **不要给 `eth0` 配 `192.168.1.3/24`**：会与 `eth1` 的 `192.168.1.2/24` 冲突，可能搞断雷达链路。
-- 设计图里的第二台雷达 `192.168.1.63` 与网口相机**当前不存在**。
-- 热点 `xlx` 是 **`172.20.10.0/28`**，可用地址只有 `.1–.14`。给 `wlan0` 加固定地址时必须落在这个范围内（`.88` 这种在网段外，加了解析不到，实测踩过）。
-- 固定地址的持久化命令：`sudo nmcli con mod xlx +ipv4.addresses 172.20.10.14/28`（保留 `ipv4.method=auto`，DHCP 照常）。
-
----
-
-## 13. 已知问题清单（按优先级）
-
-> 编号沿用 [docs/audit-code.md](docs/audit-code.md) 的缺陷编号，便于交叉检索；P0/P1/P2 表示修复优先级。
-
-### 13.1 P0 · 已修复（2026-10-21 13:30）
-
-| 编号 | 问题 | 位置 | 处理 |
-| --- | --- | --- | --- |
-| P1 | `cam_publisher` 打开不存在的 `video2`，且不重连、不报错 | `cam_publisher.py`、`run_campub.sh` | **已重写**：重连 + 索引 3 + 去掉 cv_bridge 依赖 |
-| P2 | 串口默认值 `/dev/ttyCH343USB0` 不存在 | `chassis_gimbal_bridge.py:8` | **已改** `/dev/ttyACM0`，并关闭 DTR 复位 |
-
-### 13.2 P1 · 严重但可绕过
-
-| 编号 | 问题 | 位置 | 状态 |
-| --- | --- | --- | --- |
-| N1 | `nav_mission` 因 `cv_bridge` 导入失败无限重启 | `nav_mission.py:7` | **已修复**（对调 import） |
-| M3 | 旧 `cmd_vel_to_pwm.py` 无速度看门狗（已 disabled，勿启用） | `cmd_vel_to_pwm.py:18-28` | 未动，保持禁用 |
-| C1 | 控制台无鉴权，`/api/ctl/drive` 无限幅 | `console_backend.py:237` | **未修，仍暴露** |
-| CL1 | 标定页可无鉴权覆写 FAST-LIVO 配置且不备份 | `calib_web.py:200-211` | 未动（服务未启用） |
-
-### 13.3 P2 · 影响精度/可维护性
-
-| 编号 | 问题 | 说明 |
+| 协作者需要了解什么 | 应发文件 | 阅读位置 |
 | --- | --- | --- |
-| T1 | `cloud_restamp` 用 `now()` 覆盖雷达时间戳 | 破坏 SLAM 时间语义 |
-| R1 | `grid_bridge` 负坐标半格偏差 | 栅格化偏移 |
-| R2 | 建图随机 25% 回填 | 同一份数据两次建图结果不同 |
-| S3/S8 | 不重规划；无激光时仍按最高 1.0 m/s 走 | 需要改安全策略 |
-| B1 | `/imu` 是伪 IMU（协方差为 0，frame 名 `base` 不规范） | pose_bridge 里拼出来的 |
-| — | `chksum` 是四值直接相加未取模 | 固件如何校验待确认 |
-| — | 三个串口协议并存（`t,s,p,y,chk` / `left,right` / `M<l>,<r>`） | 只有第一种与固件匹配 |
+| ROS速度如何交给主控 | [现用串口桥](docs/source/jiaoda/chassis_gimbal_bridge.py) | `on_cmd_vel`、`open_port`、`main`；这是核心文件 |
+| 主控如何驱动底盘 | [主控固件](docs/source/firmware/control_1.ino) | `speedToMicroseconds`、`setChassisSignal`、`handleRCControl`、`handleSerialControl`；与串口桥成对交接 |
+| 网页请求如何生成速度 | [网页后端](docs/source/jiaoda/console_backend.py) | `Ros.drive`及`do_POST`的`/api/ctl/drive`分支 |
+| 前后和转向操作如何发送 | [网页前端](docs/source/jiaoda/console.html) | `joystick`、`drv`、`sendDrive` |
+| 串口桥实际如何启动 | [启动脚本](docs/source/jiaoda/run_control.sh)、[服务单元](docs/source/systemd/jiaoda-control.service) | ROS环境、用户、启动入口与默认串口配置 |
 
----
+```text
+网页前后/转向操作
+  -> HTTP POST /api/ctl/drive，JSON字段v、w
+  -> console_backend.py转换为Twist，发布/cmd_vel
+  -> chassis_gimbal_bridge.py转换并周期发送串口帧
+  -> ESP32的control_1.ino校验、选择模式、输出油门/转向PWM
+  -> 底盘电调及其混控/接线驱动左右履带
+```
 
-## 14. 从零复现（换一台新 Jetson 也能重建）
-
-> 本章目标：拿到一台空白 Jetson AGX Orin + 同样外设，照着做完就能得到和现在**等价**的系统。
-> 本次所有源码/配置原件已导出到 [`docs/source/`](docs/source/)，可直接当"出厂镜像"用。
-
-### 14.1 物料清单
-
-| 部件 | 规格 | 关键点 |
+| 接口 | 当前导出实现 | 排查重点 |
 | --- | --- | --- |
-| 计算单元 | Jetson AGX Orin Developer Kit | JetPack 5.1.x（L4T **35.4.1**） |
-| 激光雷达 | 宇树 **Unitree L2** | 出厂 IP `192.168.1.62`，UDP 6101 → 6201 |
-| 主控 | ESP32-S3 开发板（板载 WCH CH343） | 串口 115200，协议见 7.2 |
-| 相机 | 4× UVC（Sonix `0c45:6366`，2592×1944 MJPG） | **四个序列号相同**，必须用 USB 口位区分 |
-| USB Hub | 有源 USB 2.0/3.0 Hub | 相机全部挂在它下面 |
-| 网络 | 板载 RJ45（`eth1`）+ 交换机 | 雷达与 `eth0` 在同一条二层网络 |
-
-接线顺序（对照 `docs/jetson-hardware-topology-2026-10-21.png`）：
-`Jetson USB → Hub → 4 路相机 / ESP32`；`Jetson eth1 → 交换机 → L2 雷达`。
-
-### 14.2 软件版本矩阵（本机实测版本，复现请对齐）
-
-| 组件 | 版本 |
-| --- | --- |
-| Ubuntu | 20.04.6 LTS (focal), aarch64 |
-| 内核 | 5.10.120-tegra（L4T R35.4.1） |
-| ROS | Noetic（`packages.ros.org` focal 源），roscpp 1.17.4 |
-| GCC / CMake | 9.4.0 / 3.16.3 |
-| Eigen / PCL / Boost / OpenCV | 3.3.7 / 1.10.0 / 1.71 / **4.2.0** |
-| Python | 3.8.10；numpy **1.17.4**、pyserial **3.4**、PyYAML **5.3.1** |
-| FAST-LIVO2 | `hku-mars/FAST-LIVO2` @ **0d2c034** |
-| rpg_vikit | `xuankuzcr/rpg_vikit` @ **6c886c8** |
-| Sophus | `strasdat/Sophus` @ **a621ff2e** |
-| unitree_lidar_ros | `unitreerobotics/unilidar_sdk2` @ **0e3c51f** |
-
-> OpenCV 必须是 4.2.0（Ubuntu 20.04 自带）。**不要**用 pip 升级 numpy/opencv，否则 `cv_bridge` 必崩（见 14.12）。
-
-### 14.3 步骤 1：系统与依赖
-
-```bash
-# 1) 刷 JetPack 5.1.2（L4T 35.4.1）到 Orin，完成首次开机
-# 2) ROS Noetic
-sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu focal main" \
-  > /etc/apt/sources.list.d/ros-latest.list'
-sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' \
-  --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
-sudo apt update && sudo apt install -y ros-noetic-desktop-full
-sudo rosdep init && rosdep update
-echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
-
-# 3) 编译与运行依赖
-sudo apt install -y build-essential cmake git libeigen3-dev libpcl-dev \
-  libopencv-dev libboost-all-dev python3-pip python3-serial python3-yaml \
-  ros-noetic-cv-bridge ros-noetic-pcl-ros ros-noetic-image-transport \
-  ros-noetic-eigen-conversions ros-noetic-tf
-```
-
-### 14.4 步骤 2：编译 Sophus
-
-源码**已随仓库提供**（`docs/source/Sophus_src`，140 KB）：
-
-```bash
-cp -r <本仓库>/docs/source/Sophus_src ~/Sophus_src
-cd ~/Sophus_src && mkdir -p build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release && make -j4 && sudo make install
-```
-
-> 本机其实**没有 install**：`CMakeCache.txt` 里 `Sophus_DIR=/home/sjytt/Sophus_src/build`，是靠这个路径找到的。复现时建议直接 `make install` 到 `/usr/local`，省得每次传路径。
-
-### 14.5 步骤 3：FAST-LIVO2 + rpg_vikit
-
-**源码已随仓库提供，不需要联网 clone**（`docs/source/` 里是完整可编译代码，含本机改过的三个文件）：
-
-```bash
-mkdir -p ~/livo2_ws/src
-cp -r <本仓库>/docs/source/FAST-LIVO2  ~/livo2_ws/src/
-cp -r <本仓库>/docs/source/rpg_vikit   ~/livo2_ws/src/
-cd ~/livo2_ws && catkin_make -j4 -DCMAKE_BUILD_TYPE=Release
-source ~/livo2_ws/devel/setup.bash
-# 若找不到 Sophus：catkin_make -DSophus_DIR=$HOME/Sophus_src/build
-```
-
-想用上游仓库也行（两者等价）：`hku-mars/FAST-LIVO2@0d2c034` + `xuankuzcr/rpg_vikit@6c886c8`，再覆盖 `config/unitree_l2.yaml`、`config/camera_unitree.yaml`、`launch/mapping_unitree_l2.launch` 三个文件。
-
-### 14.6 步骤 4：雷达驱动
-
-**包和 SDK 都随仓库提供**。注意：ROS 包的 `CMakeLists.txt` 用**相对路径** `../../../unitree_lidar_sdk`
-引用 SDK 的头文件和 `lib/aarch64/libunilidar_sdk2.a`，**少放 SDK 就编不过**：
-
-```bash
-mkdir -p ~/unilidar_sdk2/unitree_lidar_ros/src
-cp -r <本仓库>/docs/source/unitree_lidar_sdk  ~/unilidar_sdk2/
-cp -r <本仓库>/docs/source/unitree_lidar_ros  ~/unilidar_sdk2/unitree_lidar_ros/src/
-cd ~/unilidar_sdk2/unitree_lidar_ros && catkin_make
-```
-
-部署后的目录形状必须是：
-
-```
-~/unilidar_sdk2/
-├── unitree_lidar_sdk/          # include/ + lib/aarch64/
-└── unitree_lidar_ros/
-    └── src/unitree_lidar_ros/  # 这个包
-```
-
-雷达参数在 `config/config.yaml`：`initialize_type=2`（UDP）、`lidar_ip=192.168.1.62`、`pc_ip=192.168.1.2`、端口 6101/6201。
-
-### 14.7 步骤 5：部署 `~/jiaoda`
-
-```bash
-cp -r <本仓库>/docs/source/jiaoda ~/jiaoda
-chmod +x ~/jiaoda/run_*.sh ~/jiaoda/*.py
-mkdir -p ~/jiaoda/maps ~/jiaoda/routes
-```
-
-### 14.8 步骤 6：网络
-
-```bash
-# eth1 固定 IP（雷达网段）
-sudo nmcli con add type ethernet ifname eth1 con-name lidar-eth ip4 192.168.1.2/24
-sudo nmcli con up lidar-eth
-ip -4 addr show eth1        # 应显示 192.168.1.2/24
-ping -c 2 192.168.1.62
-```
-
-### 14.9 步骤 7：systemd 托管
-
-```bash
-sudo cp <本仓库>/docs/source/systemd/*.service /etc/systemd/system/
-sudo systemctl daemon-reload
-for s in lidar restamp campub fastlivo grid posebridge nav control console; do
-  sudo systemctl enable --now jiaoda-$s
-done
-# mission 可选：sudo systemctl enable --now jiaoda-mission
-```
-
-> 单元文件里的 `ExecStart` 指向 `~/jiaoda/run_*.sh`，如果换用户/换路径要一起改。
-
-### 14.10 步骤 8：验收清单
-
-| 检查项 | 命令 | 期望 |
-| --- | --- | --- |
-| 服务 | `systemctl list-units 'jiaoda*'` | 9 个 active |
-| 雷达 | `timeout 4 rostopic hz /unilidar/cloud` | ≈ 12 Hz |
-| 转发 | `timeout 4 rostopic hz /synced/cloud` | ≈ 12 Hz |
-| 相机 | `timeout 4 rostopic hz /left_camera/image` | ≥ 10 Hz（**本机当前为 0，见 8.2**） |
-| SLAM | `timeout 4 rostopic hz /aft_mapped_to_init` | ≥ 10 Hz |
-| 定位 | `timeout 4 rostopic hz /slam_pose` | 同 SLAM |
-| 地图 | `curl -s :8090/api/mapinfo` | 返回 `mpp/w/h` |
-| 网页 | `curl -s -o /dev/null -w '%{http_code}' :8090/` | 200 |
-| 底盘 | `journalctl -u jiaoda-control -n 20` | 无 ENOENT |
-
-### 14.11 相机-雷达标定（**已验证可用**）
-
-当前值：`Rcl = [0,1,0,-1,0,0,0,0,1]`（绕 Z 轴 90°）、`Pcl = [0,0,0]`；内参 `fx=fy=914.0`、`cx=640.0`、`cy=360.0`、畸变全 0。
-
-**2026-10-21 实测验证**：取同一时刻的一帧图像与 `/synced/cloud`，按 `p_cam = Rcl·p_lidar + Pcl` 投影叠加，结果见 [`docs/extr-check-overlay.jpg`](docs/extr-check-overlay.jpg)。
-
-- 地面点云形成**笔直的放射线**并准确落在真实地面上；
-- 左右墙面、玻璃隔断上的点与画面中的结构边界**贴合**；
-- 4818 个点中 1937 个落在视野内，分布合理。
-
-结论：**外参是标定过的、可用的**。此前依据 `calib/calib_cam_lidar.md` 里"当前是单位阵占位"那句判断它未标定，是**误判——那份文档过时了**，实际 yaml 里已经是标好的 90° 旋转 + 零平移（相机与雷达同轴安装，平移接近 0 是合理的）。
-
-**什么时候需要重标**：换相机、改动相机/雷达安装位置、换雷达。
-
-复跑验证的最小脚本（Jetson 上跑，机器人保持静止）：
-
-```python
-# 订阅 /left_camera/image 与 /synced/cloud，各取一帧
-R = np.array([0,1,0, -1,0,0, 0,0,1], np.float32).reshape(3,3)   # = Rcl
-T = np.array([0,0,0], np.float32)                                # = Pcl
-pc = pts @ R.T + T
-u = 914.0*pc[:,0]/pc[:,2] + 640.0
-v = 914.0*pc[:,1]/pc[:,2] + 360.0
-# 画到图上，地面线贴合即正确
-```
-
-> 注：`calib/data/` 里那批旧图用的是 **2×2 的 6×6 ArUco 板**，而 `calib_intrinsics.py` 假设的是 **6×6 AprilGrid 36h11**（`TAG_SIZE=0.088`、间距 0.3），所以那批图跑不出结果——是**两套板型对不上**，不影响现有已标定的参数。要重标请按脚本假设的板型拍，或改脚本的 `TAG_COLS/TAG_ROWS/TAG_SIZE/TAG_SPACING`。
-
-- [`docs/source/jiaoda/calib/calib_intrinsics.md`](docs/source/jiaoda/calib/calib_intrinsics.md)（75 行）
-- [`docs/source/jiaoda/calib/calib_cam_lidar.md`](docs/source/jiaoda/calib/calib_cam_lidar.md)（107 行）
-
-**内参（纯 cv2 + AprilGrid，无需 Kalibr）**
-
-```bash
-python3 calib/grab_frames.py 0 ./frames 1280 720   # ≥20 张，覆盖四角/远近/±20~45°倾斜
-python3 calib/calib_intrinsics.py ./frames 1280 720
-# 合格标准：RMS 重投影误差 < 0.5 px；cx,cy 接近 (640,360)
-# 结果写入 camera_unitree.yaml 的 cam_fx/fy/cx/cy/d0..d3
-```
-
-**外参（推荐 `hku-mars/livox_camera_calib`，无靶标）**
-
-1. 找有大量直角/门框/货架的静态场景；
-2. 机器人**完全静止 20–40 s**，让 L2 把稀疏帧累积成稠密点云；
-3. 同时抓一张同视角的图；
-4. 用 `calib.launch` 离线标一次，看它输出的点云-图像叠加图，边缘重合即成功；
-5. 输出直接是 `p_camera = R·p_lidar + t`，`Rcl`（行主序 9 个数）、`Pcl`（米）填回 yaml。
-
-**兜底方案**：AprilGrid 同名点 + `cv2.solvePnP`（精度依赖手点，适合交叉验证）。
-**方向搞反**：`Rcl = R_lcᵀ`、`Pcl = -R_lcᵀ·t_lc`。
-
-> 已有的原始采集数据在 `docs/source/jiaoda/calib/data/`：`extr/` 8 组 jpg+npy（点云）、`intr/` 5 张标定图，可直接复算。
-
-⚠️ 文档与代码有出入：`calib_cam_lidar.md` 说把 `Rcl/Pcl` 填进 `camera_unitree.yaml`，但**实际读取的是 `unitree_l2.yaml` 的 `extrin_calib` 段**（`calib_web.py` 里的 `MAIN_YAML` 也指向它）。以代码为准。
-
-### 14.12 复现陷阱（踩过，别重复）
-
-| 陷阱 | 现象 | 规避 |
-| --- | --- | --- |
-| `cv_bridge` 导入顺序 | `SystemError: initialization of cv_bridge_boost` | 任何脚本**先 `import cv2` 再 `import cv_bridge`** |
-| 相机设备号漂移 | `/dev/video2` 消失 | 用 `by-path`，并给采集程序加重连 |
-| `cv2.VideoCapture` 不重连 | 有发布者、零数据、无报错 | 采集循环里检测 `isOpened()/read()` 失败就重开 |
-| CH343 被认成 `ttyACM0` | `/dev/ttyCH343USB0` 不存在 | 用 `ttyACM0`；别装 `ch343.ko` |
-| ROS Master 寄生 | 停雷达 → 全栈塌 | 单独 `roscore` 服务，或用 `roslaunch --wait` |
-| RTC 不保持 | 日志时间错 40 天 | 装 RTC 电池，或开机强制 `ntpdate` |
-| `libopencv-dev` 与 pip opencv 混装 | 符号冲突 | 只用 apt 版本 |
-| 四个相机同序列号 | `by-id` 只有一个 | 用 USB 物理口 `by-path` |
-
----
-
-## 15. 如果重做一个更好的（架构建议）
-
-现在这套是"能跑起来的原型"：2234 行 Python 全部堆在一个目录、无 Git、无测试、无 TF 树、无鉴权。要做得更好，建议按下面顺序改。
-
-### 15.1 结构：把单体拆成包
-
-| 现状 | 更好 |
-| --- | --- |
-| 12 个 `.py` 平铺在 `~/jiaoda` | 拆成 catkin 包：`jiaoda_driver` / `jiaoda_nav` / `jiaoda_web` / `jiaoda_msgs` |
-| 跨进程靠 `/dev/shm/*.json` | 自定义 msg + 话题；状态用 `rosbridge` 或参数服务器 |
-| 启动靠 12 个 systemd 单元 | 一个 `roslaunch` + 单元只负责 launch |
-| 无 Git | 立刻 `git init`，按节点拆提交 |
-
-### 15.2 设备：稳定命名 + 自愈
-
-- 相机：`/dev/v4l/by-path/...` 固定映射，采集端加"打不开就重试"循环（当前 P0 的根因就是缺这两条）。
-- 底盘：为 `1a86:55d3` 写 udev 规则生成 `/dev/jiaoda-chassis`，别用 `ttyACMx`。
-- 启动顺序：所有节点对"数据"做超时判断，而不是对"话题名存在"做判断（当前 `run_fastlivo.sh` 只 grep 话题名，所以空跑也算成功）。
-
-### 15.3 坐标与里程计
-
-- 现在 TF 只有 `unilidar_*`，没有 `map→odom→base_link`，nav 只能用原始 `PoseStamped`。
-- 补一条标准 TF 链：`map → odom → base_link → {lidar, camera, imu}`，`/odom` 由轮速或 SLAM 输出。
-- `/Odometry` 目前是死订阅（console 在等），要么去掉，要么真的发布。
-
-### 15.4 安全（优先级最高）
-
-| 风险 | 现在就有的问题 | 改法 |
-| --- | --- | --- |
-| 网络无鉴权 | `0.0.0.0:8090` + `/api/ctl/drive` 无限幅，谁都能让车动 | 加 token/白名单；后端强制限幅（`vx≤0.3` 等） |
-| 急停依赖软件 | 串口断了急停就失效 | 独立硬件急停回路；看门狗断电 |
-| RC 与串口抢控制 | 固件 `RC > Serial`，但上位机不知道 | 固件回报当前模式，上位机据此禁发 |
-| 无碰撞兜底 | `nav_simple` 无激光时仍最高 1.0 m/s | 无点云/无定位立即零速并上报 |
-
-### 15.5 可观测性
-
-- 录包：现在**一条 rosbag 都没有**。加一个"异常自动录 30 s"的环形缓冲。
-- 日志：89 MB 无轮转，配 `logrotate`。
-- 指标：`/cmd_vel`、定位频率、串口丢帧率上报到网页（`/api/ctl/status` 里的 `hz` 现在恒 0）。
-
-### 15.6 工程质量
-
-- 单元测试：A\*、DWA 打分、栅格化（现在 `grid_bridge` 负坐标半格偏差 + 25% 随机回填，不可复现）。
-- 时间戳：`cloud_restamp` 用 `now()` 覆盖雷达时间戳，破坏 SLAM 时间语义——应改成"保留原时间戳 + 单独记录到达时间"。
-- 配置版本化：外参虽已验证，但只存在于 yaml 里、没有标定报告与版本记录；建议把标定结果、日期、验证图一并纳入 Git。
-- 依赖锁定：`requirements.txt` + 固定 apt 版本，避免某次 `apt upgrade` 把 `cv_bridge` 弄坏。
-
-### 15.7 建议路线图
-
-| 阶段 | 目标 | 工作量 |
-| --- | --- | --- |
-| 第 1 周 | 修好相机重连 + 底盘端口 + `cv_bridge`，让系统真正闭环 | 1–2 天 |
-| 第 2 周 | 加 TF 树与 `/odom`，把 nav 迁到标准接口 | 3–5 天 |
-| 第 3 周 | 安全加固（鉴权、限幅、硬件急停）、日志与录包 | 3–5 天 |
-| 第 4 周 | 拆包、加测试、Git 化，形成可复现构建 | 1 周 |
-
----
-
-### 14.13 主控固件（源码已归档）
-
-**源码找到了**：[`docs/source/firmware/control_1.ino`](docs/source/firmware/control_1.ino)（321 行）+ [`ReadRC.ino`](docs/source/firmware/ReadRC.ino)（RC 测试草图）。Arduino 框架，ESP32-S3。
-
-实机行为与源码完全对得上（串口横幅、帧格式、超时值都一致），**不需要再从芯片里 dump 二进制**。
-
-关键实现（`control_1.ino`）：
-
-| 项 | 值 |
-| --- | --- |
-| 底盘电调 | `THROTTLE_PIN 21`、`STEER_PIN 47`；50 Hz、13 bit、`PWM_MAX 8191` |
-| 云台舵机 | `GIMBAL_PITCH_PIN 48`、`GIMBAL_YAW_PIN 45` |
-| RC 输入 | 10 通道，`{1,2,42,41,40,39,38,37,36,35}`，上升/下降沿中断测脉宽 |
-| RC 映射 | CH1 转向、CH2 油门、CH3 俯仰、CH4 偏航、CH5 保存（边沿触发） |
-| 速度→脉宽 | `-30..30` → `1000..2000 µs`；`0`→1500；正向 1600–2000，反向 1000–1400（中位 ±100 µs 为死区） |
-| 串口 | 115200，`throttle,steer,pitch,yaw,checksum`，校验为四值直接相加 |
-| 模式 | `MODE_RC` / `MODE_SERIAL` / `MODE_IDLE`，**RC 有效时直接 return，不处理串口** |
-| 超时 | RC 200 ms、串口 500 ms，超时即回中位 |
-| 上报 | 每 100 ms 发 `GIMBAL_PULSE:<p>,<y>`，另在调试时回 `Serial T:.. S:..` |
-
-两个容易踩的实现细节：
-
-1. **转向是反的**：`setChassisSignal()` 里 `s_us = speedToMicroseconds(-steer)` —— 转向通道取负。上位机的 `nav_simple` 用 `INVERT_YAW=True` 再反一次，两边配合才对；
-2. **串口校验不做取模**：`throttle+steer+pitch+yaw == chk`，范围 ±120，D 位足够，暂无溢出风险。
-
-**硬件副作用**：CH343 的 DTR 接了 EN，**打开串口会让 ESP32 复位一次**。桥接程序已改成打开前把 DTR/RTS 置低，避免每次重启都复位。
-
-**烧录**：Arduino IDE 选 `ESP32S3 Dev Module`，USB 口用 `1-4.4`（原生 USB）或 `1-4.3`（CH343），115200 上传即可。
-
----
-
-## 附录 A：原始实测记录（2026-10-21）
-
-### A. 设备与访问
-- **K1** NVIDIA Jetson AGX Orin DevKit，`sjytt-desktop`，Ubuntu 20.04.6 LTS、aarch64、L4T R35.4.1、内核 `5.10.120-tegra`。
-- **K2** `l4tbr0` = 192.168.55.1/24，本机 192.168.55.100，SSH `0.0.0.0:22`，USB SSH 可用。
-- **K3** 不配置 Windows OpenSSH Server，不做远程跳板。
-
-### B. 网络
-- **K4** Wi-Fi `xlx`（wlan0，172.20.10.8/28，网关 172.20.10.1），DHCP 会变。
-- **K5** NM 状态：`xlx/wlan0` 已连、`eth1/lidar-eth` 已连、`eth0` 无 IPv4、`l4tbr0` 为 USB 网桥。
-- **K6** `eth1` 192.168.1.2/24，邻居 192.168.1.62 可达。
-- **K7** `eth0` 为 WCH USB 网卡 `1a86:5397` SN `6C1FF7EB483F`，有载波无 IP。
-- **K8** 旧记录的 `asd` / 192.168.43.114 已失效。
-
-### C. 设计图与实际
-设计图见 `docs/jetson-hardware-topology-2026-10-21.png`，仅代表设计目标。四路相机实为同型号 RGB；第二台雷达与网口相机未发现；ESP32 已验证为控制口。
-
-### D. 相机
-- **K9** 四路 UVC 物理路径：`1-4.2.1.3`→video3/4、`1-4.2.2`→video0/1、`1-4.2.3`→video5/6、`1-4.2.4`→video7/8。
-- **K10** 四台标识完全相同（`0c45:6366`，SN `SN0001`），无法靠名字区分角色。
-- **K11** 另有 Realtek 蓝牙 `13d3:3549`。
-
-### E. ESP32 / 雷达 / ROS
-- **K12** ESP32 两个 USB 口：原生 USB（ttyACM1，JTAG）与 CH343（ttyACM0，控制台）。
-- **K13** 运行节点：cam_publisher、console_backend、unitree_lidar_ros_node、laserMapping、nav_simple、chassis_gimbal_bridge、pose_bridge、grid_bridge、cloud_restamp。
-- **K14** 关键话题见 3.3。
-- **K15** ROS Master 在 11311。
-- **K22** `/dev/ttyACM0` 即主控控制口，固件协议与 bridge 一致。
-- **K23** 固件 `Priority: RC > Serial`。
-- **K24** 桥接失联是端口名错位，非硬件断线；`ch343.ko` 无效。
-- **K25** 打开 ttyACM0 会复位 ESP32，属预期。
-- **K26** `/cmd_vel` 15.9 Hz 全 0；`/Odometry` 无消息。
-
-### F. 网页与代码
-- **K16** 8090 可访问，标题「巡检机器人控制台」。
-- **K17** 8095 未监听，代码在 `calib/calib_web.py`，`run_calib.sh` 未启用。
-- **K18** 主代码 `~/jiaoda`；`~/dog_backup` 为旧版。
-- **K19** Git 状态：FAST-LIVO2 `0d2c034` 有未跟踪配置；`unilidar_sdk` 有修改；`jiaoda`/`dog_backup` 无 Git。
-
-### G. 脚本风险
-- **K20** `~/dog_backup/start_all.sh` 会按宽泛进程名强杀 ROS/SLAM，**不要在当前栈运行时执行**。
-
-### H. 凭据
-- **K21** 本文件不保存任何密码、密钥、口令。
-
-### 仓库版本状态（2026-10-21 快照）
-
-| 目录 | HEAD | 状态 |
-| --- | --- | --- |
-| `~/livo2_ws/src/FAST-LIVO2` | `0d2c034` | **未跟踪** `config/camera_unitree.yaml`、`config/unitree_l2.yaml`、`launch/mapping_unitree_l2.launch` |
-| `~/livo2_ws/src/rpg_vikit` | `6c886c8` | 干净 |
-| `~/rslidar_ws/src/rslidar_sdk` | `78d2abb` | 干净（未使用） |
-| `~/rslidar_ws/.../rs_driver` | `4eeadac` | 嵌套仓库，detached HEAD |
-| `~/unilidar_sdk` | `1bd7d95` | `config/config.yaml`、`include/unitree_lidar_ros.h` 已修改 |
-| `~/unilidar_sdk2` | `0e3c51f` | `config.yaml` 已修改，有 `config2.yaml`、`run_lidar2.launch` |
-| `~/Sophus_src` | `a621ff2e` | detached HEAD，`so2.cpp` 已修改 |
-| `~/ch343ser_linux` | `b5515b9` | `driver/` 下有编译产物（当前无用） |
-| `~/jiaoda`、`~/dog_backup` | — | **无 `.git`**，必须手工备份 |
-
-### 待完成（T）
-- **T1** 确认四路相机与物理位置的固定映射（已抓帧，位置待现场确认）。
-- **T2** `eth0` 实际接的是交换机；第二台雷达 `.63` 链路不存在。**不要**配 192.168.1.3。
-- **T3** 底盘联调：轮子离地、关遥控器、`CTL_PORT=/dev/ttyACM0`、0.1 m/s 起步。
-- **T4** 显示屏/键鼠/交换机现场确认。
-- **T5** 重启后复核自启、相机、雷达、Master、8090。
-- **T6** 对未提交改动先备份/提交，尤其是 FAST-LIVO2 的三个本地配置。
-- **T7** 确认底盘有无里程计回传（`/Odometry` 空）。
-
----
-
-## 附录 B：文件索引
-
-| 文件 | 行数 | 作用 |
-| --- | --- | --- |
-| `console_backend.py` | 304 | 网页后端 + 直接发 cmd_vel/云台 |
-| `nav_simple.py` | 473 | A\* + Pure Pursuit + DWA |
-| `grid_bridge.py` | 266 | 点云 → 2D 栅格 → `/map` + PNG/NPZ |
-| `cam_publisher.py` | 28 | 相机 → ROS Image |
-| `chassis_gimbal_bridge.py` | 72 | cmd_vel + 云台 → 串口 |
-| `chassis_bridge.py` | 159 | 旧 ESP32 协议（未运行） |
-| `gimbal_driver.py` | 155 | 独立舵机云台库（未被引用） |
-| `cmd_vel_to_pwm.py` | 52 | 旧底盘直驱（disabled） |
-| `nav_mission.py` | 93 | 巡检任务（崩） |
-| `pose_bridge.py` | 32 | 位姿转发 |
-| `cloud_restamp.py` | 10 | 点云时间戳改写 |
-| `photo.py` | 61 | 拍照（未被引用） |
-| `calib/calib_web.py` | 324 | 标定页 8095 |
-| `calib/calib_intrinsics.py` | 144 | 内参标定 |
-| `calib/grab_frames.py` | 61 | 抓帧 |
-| `console.html` | — | 单页前端 |
-
----
-
-## 附录 C：审计材料与源码包
-
-- [docs/source/](docs/source/)：**自包含复现包**（`docs/source/README.md` 有部署对照表）——
-  `jiaoda/` 全部应用代码、`FAST-LIVO2/` 完整可编译源码（含本地 3 个改动）、`rpg_vikit/`、
-  `Sophus_src/`、`unitree_lidar_ros/` + `unitree_lidar_sdk/`（含 aarch64 预编译库）、
-  `firmware/`（ESP32 固件）、`systemd/`（12 个单元）、`verify.sh`（部署自检）。
-  **clone 本仓库后不需要再访问任何其他仓库。**
-- [docs/source/firmware/](docs/source/firmware/)：`control_1.ino`（321 行，主控固件）+ `ReadRC.ino`（RC 测试）
-- [docs/extr-check-overlay.jpg](docs/extr-check-overlay.jpg)：**外参验证图**——雷达点云投影到相机画面，地面线贴合即外参正确
-- [docs/audit-code.md](docs/audit-code.md)：`~/jiaoda` 全部源码逐文件接口审计（840 行）
-- [docs/audit-runtime.md](docs/audit-runtime.md)：启动机制、进程树、自启排查、构建状态、恢复方案（528 行）
-- 相机抓帧存证：`docs/cam-video3-2026-10-21.jpg`、`cam-video5-*.jpg`、`cam-video7-*.jpg`、`slam-camera-frame.jpg`
-- 地图快照：`docs/jetson-map-2026-10-21.png`
-- 拓扑设计图：`docs/jetson-hardware-topology-2026-10-21.png`
+| 网页输入 | 操作杆正常产生约±1范围的`v/w`；后端默认`linear.x=v×0.55`、`angular.z=w×radians(40)` | 网页归一化输入与ROS物理量不是同一数值，参数可被界面修改 |
+| ROS输入 | 默认订阅`/cmd_vel`的`geometry_msgs/Twist`，使用`linear.x`、`angular.z` | 必须处于同一ROS图，核对实际发布者及`CMD_VEL_TOPIC`覆盖值 |
+| 串口量化 | `int(linear.x×55)`与`int(angular.z×45)`，分别限制到±30 | 过小输入可能整数化为0；数值过大将饱和，不代表真实m/s或rad/s |
+| 串口格式 | `throttle,steer,pitch,yaw,checksum`，ASCII十进制，以换行结束；校验为前四项相加 | 必须保留云台两字段；不是左右轮PWM、JSON、二进制帧或带M前缀的格式 |
+| 串口设置 | `CTL_PORT`默认`/dev/ttyACM0`、115200；打开前DTR/RTS置低 | 实机端口需按身份确认；仅一个进程占用，串口工具可能引起复位 |
+| 发送周期 | 桥以20Hz发帧；超过0.5秒未收到速度消息，清零油门与转向 | 单次发送Twist不会长期保持运动；发送频率与实际发布者须核对 |
+| ESP32映射 | GPIO21油门、GPIO47转向；`setChassisSignal`内部对`steer`取负；零值1500µs，非零分段映射 | 不额外套用通用左右轮混控或随意反转符号；实际前后左右需架空实测 |
+| 控制优先级 | RC优先于串口；串口有效帧超时500ms归中 | RC有效性存在旧脉宽残留缺陷，见L节；不能假定关遥控器就必然切回串口 |
+
+- **K28**：用户2026-10-23反馈网页前后、转向可以正常控制；本轮未连接实机复测。若他人在同一台车同一条件下无法控制，优先对比其接入层、协议、ROS图、发送频率及串口占用，不直接认定电机或电调损坏。
+- **K29**：协作者最少应得到现用串口桥与主控固件两份代码；若要复查网页链路，再附前后端及启动文件。旧`chassis_bridge.py`采用`M左PWM,右PWM`等协议，`cmd_vel_to_pwm.py`采用两字段PWM，均不与当前五字段固件兼容，也不能与现用桥同时占用串口。
+- **K30**：导出前端`sendDrive`只在操作杆事件调用，带80ms节流，未见持续驾驶心跳；桥却在0.5秒无新速度消息时归零。存在按住不移动时停车、快速松手的零指令被节流跳过的源码疑点，尚未实机复现，本轮不修改前端。导航与网页共用速度话题的仲裁问题仍见L节。
+
+2026-10-23只做了默认参数的离线数值代入：假设云台命令为0，网页`v=1,w=0`形成`30,0,0,0,30`，`v=-1,w=0`形成`-30,0,0,0,-30`，`v=0,w=1`形成`0,30,0,0,30`。这些是编码检查而非真实车速/方向验证，未发往设备；不要把最大量级样例直接当作安全试车指令。
+
+协作者排障前还需说明：控制的是不是同一台车、通过网页/ROS/串口哪一层、具体是不动/方向错误/动作断续/无法停车，以及使用的代码和固件版本。串口直控会同时影响云台字段，不能只关注底盘；所有运动试验均须现场看护、独立急停及受控架空条件。
+
+## 已完成
+
+- [x] **T1** 2026-10-22 拉取原仓库并确认源码基准，见K2。
+- [x] **T2** 2026-10-22 阅读应用、启动链、固件、配置及算法接入代码，见D至I及01-K1至01-K12。
+- [x] **T3** 2026-10-22 完成前版记录并保留历史手册，见K9、K10。
+- [x] **T6** 2026-10-22 建立模块和接口说明，见D节及`docs/architecture.md`。
+- [x] **T7** 2026-10-22 纠正旧文档中算法、限速、TF和上传功能的判断，见01-K4、01-K6、01-K11。
+- [x] 2026-10-22 完成T10、T11的复现工具与离线检查，明细见M节。
+- [x] **T19** 2026-10-22 形成源码缺口与优化顺序，见L节。
+- [x] **T22** 2026-10-22 按用户要求合并为单一一级标题和三个二级栏目，改为学习优先的讲解顺序，保留全部原结论与任务编号，见K11。
+- [x] **T24** 2026-10-23 复核截图中的10份资料，补入主体分工、报告差异、固件一致性及标定/接线疑点，见K12至K21、N至Q节。
+  - 原件完整哈希及资料链接已核对，离线源码基准检查通过；本轮正式文件仅修改本README。
+- [x] **T25** 2026-10-23 按用户要求建立全合同检查项与验收基准，区分硬指标和待协商测试口径，见K15、K22至K24、R节。
+- [x] **T26** 2026-10-23 整理下次只读接机顺序、网络状态及机械背景，见K25、K26、S节；未连接Jetson、未修改运行代码。
+- [x] **T30** 2026-10-23 只读确认桌面Tailscale已登录在线，记录尚无可见对端及Jetson入网操作步骤，见K27、S-D节；未修改任何网络设置。
+- [x] **T31** 2026-10-23 重新核对网页到底盘的控制代码与默认编码换算，整理协作者交接入口、协议差异及前端时序疑点，见K28至K30、T节；仅更新说明，未运行控制节点或发送运动指令。
+
+## 待完成
+
+- [ ] 当前优先完成 M 节阶段0的T23，再考虑推进后续复现阶段；分阶段任务不在此重复列出。
+- [ ] **T4** 进入复现阶段后取得新机用户名、接线、USB物理路径和网络信息，见K1、02-K2。
+- [ ] **T5** 原机允许采集时取得同一时段的雷达、IMU、图像和位姿录包，支撑理解与回放，见K3。
+- [ ] **T8** 复现阶段重新量化检查相机内参、雷达到相机外参和机体外参，见K6。
+- [ ] **T9** 对照录包分析点内时间和传感器时间关系，再决定同步改法，见E节。
+- [ ] **T20** 理解现有流程后，在候选环境设计控制仲裁、任务取消和统一限速；仍需回放与硬件验收条件，见L节。
+- [ ] **T21** 原机允许只读访问后，对比实际运行源码、依赖和服务状态，见K3、K4。
+- [ ] **T27** 归档S2最终签章及书面变更，按R节约定漂移/时延口径、不可达等待时间、完整任务失败定义和验收场地；当前不删减任何合同功能。
+- [ ] **T28** 核对原理图与云台实线、实际烧录版本及标定板对应工具，见Q节；不得直接按旧图重接或套用AprilGrid参数。
+- [ ] **T29** 完成Tailscale/SSH连接条件后，按S-B节只读核查并填补C01至C15的实机证据，先形成缺口清单，再批准修复及运动验收。
+- [ ] **T32** 明确协作者的接入方式、故障现象及实际代码版本，再对比现用控制链；用户仅确认网页可控，尚未获得对方具体报错或日志。

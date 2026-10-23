@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "user": "sjytt",
+  "install_root": "/home/sjytt/slam_repro",
+  "camera_device": "/dev/v4l/by-path/platform-3610000.xhci-usb-0:4.2.1.3:1.0-video-index0",
+  "serial_device": "/dev/ttyACM0",
+  "console_camera_index": 0,
+  "console_port": 8090,
+  "lidar_pc_ip": "192.168.1.2",
+  "lidar_ip": "192.168.1.62"
+}
