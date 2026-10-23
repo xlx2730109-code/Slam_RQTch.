@@ -1,0 +1,211 @@
+{
+  "utc": "2026-10-23T13:39:07.557157Z",
+  "uname": [
+    "Linux",
+    "sjytt-desktop",
+    "5.10.120-tegra",
+    "#1 SMP PREEMPT Tue Aug 1 12:32:50 PDT 2023",
+    "aarch64",
+    "aarch64"
+  ],
+  "uid": 1000,
+  "home": "/home/sjytt",
+  "files": {
+    "/etc/os-release": "NAME=\"Ubuntu\"\nVERSION=\"20.04.6 LTS (Focal Fossa)\"\nID=ubuntu\nID_LIKE=debian\nPRETTY_NAME=\"Ubuntu 20.04.6 LTS\"\nVERSION_ID=\"20.04\"\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nVERSION_CODENAME=focal\nUBUNTU_CODENAME=focal\n",
+    "/etc/nv_tegra_release": "# R35 (release), REVISION: 4.1, GCID: 33958178, BOARD: t186ref, EABI: aarch64, DATE: Tue Aug  1 19:57:35 UTC 2023\n",
+    "/proc/uptime": "1266.55 7540.25\n"
+  },
+  "commands": {
+    "memory": {
+      "argv": [
+        "free",
+        "-m"
+      ],
+      "returncode": 0,
+      "stdout": "              total        used        free      shared  buff/cache   available\nMem:          62802       18906       38644           4        5250       43286\nSwap:         31401           0       31401\n",
+      "stderr": "",
+      "seconds": 0.003
+    },
+    "disk": {
+      "argv": [
+        "df",
+        "-h",
+        "/",
+        "/home/sjytt"
+      ],
+      "returncode": 0,
+      "stdout": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/mmcblk0p1   57G   16G   39G  29% /\n/dev/mmcblk0p1   57G   16G   39G  29% /\n",
+      "stderr": "",
+      "seconds": 0.003
+    },
+    "units": {
+      "argv": [
+        "systemctl",
+        "list-units",
+        "--all",
+        "--no-pager",
+        "--no-legend",
+        "jiaoda*"
+      ],
+      "returncode": 0,
+      "stdout": "jiaoda-campub.service     loaded active   running Camera to ROS image publisher               \njiaoda-console.service    loaded active   running Jiaoda inspection console backend           \njiaoda-control.service    loaded active   running Chassis+Gimbal serial control bridge        \njiaoda-fastlivo.service   loaded active   running Fast-LIVO2 SLAM                             \njiaoda-grid.service       loaded active   running 2D occupancy grid bridge                    \njiaoda-lidar.service      loaded active   running Unitree L2 lidar driver                     \njiaoda-mission.service    loaded active   running jiaoda inspection mission                   \njiaoda-nav.service        loaded active   running jiaoda nav                                  \njiaoda-netwatch.service   masked inactive dead    jiaoda-netwatch.service                     \njiaoda-posebridge.service loaded active   running jiaoda posebridge                           \njiaoda-powerlog.service   loaded active   running Log Jetson input rails (power cut forensics)\njiaoda-restamp.service    loaded active   running Cloud restamp relay                         \njiaoda-safe-stop.service  loaded inactive dead    Send neutral PWM before power off           \njiaoda-netwatch.timer     loaded inactive dead    Periodic wlan0 IP check                     \n",
+      "stderr": "",
+      "seconds": 0.007
+    },
+    "unit_files": {
+      "argv": [
+        "systemctl",
+        "list-unit-files",
+        "--no-pager",
+        "--no-legend",
+        "jiaoda*"
+      ],
+      "returncode": 0,
+      "stdout": "jiaoda-calib.service      disabled enabled\njiaoda-campub.service     enabled  enabled\njiaoda-chassis.service    disabled enabled\njiaoda-console.service    enabled  enabled\njiaoda-control.service    enabled  enabled\njiaoda-fastlivo.service   enabled  enabled\njiaoda-grid.service       enabled  enabled\njiaoda-lidar.service      enabled  enabled\njiaoda-mission.service    enabled  enabled\njiaoda-nav.service        enabled  enabled\njiaoda-netwatch.service   masked   enabled\njiaoda-posebridge.service enabled  enabled\njiaoda-powerlog.service   enabled  enabled\njiaoda-restamp.service    enabled  enabled\njiaoda-safe-stop.service  enabled  enabled\njiaoda-netwatch.timer     enabled  enabled\n",
+      "stderr": "",
+      "seconds": 0.028
+    },
+    "usb": {
+      "argv": [
+        "lsusb"
+      ],
+      "returncode": 0,
+      "stdout": "Bus 002 Device 004: ID 05e3:0626 Genesys Logic, Inc. \nBus 002 Device 003: ID 05e3:0626 Genesys Logic, Inc. \nBus 002 Device 002: ID 0bda:0420 Realtek Semiconductor Corp. 4-Port USB 3.0 Hub\nBus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub\nBus 001 Device 012: ID 303a:1001 Generic 4-Port USB 2.0 Hub\nBus 001 Device 006: ID 1a86:55d3 QinHeng Electronics Bluetooth Radio\nBus 001 Device 011: ID 0c45:6366 Microdia 4-Port USB 2.0 Hub\nBus 001 Device 009: ID 0c45:6366 Microdia \nBus 001 Device 010: ID 0c45:6366 Microdia Bluetooth Radio\nBus 001 Device 007: ID 05e3:0610 Genesys Logic, Inc. 4-port hub\nBus 001 Device 005: ID 05e3:0610 Genesys Logic, Inc. 4-port hub\nBus 001 Device 004: ID 1a86:5397 QinHeng Electronics \nBus 001 Device 003: ID 0bda:5420 Realtek Semiconductor Corp. 4-Port USB 2.0 Hub\nBus 001 Device 002: ID 13d3:3549 IMC Networks Bluetooth Radio\nBus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub\n",
+      "stderr": "",
+      "seconds": 0.022
+    },
+    "cameras": {
+      "argv": [
+        "v4l2-ctl",
+        "--list-devices"
+      ],
+      "returncode": 0,
+      "stdout": "NVIDIA Tegra Video Input Device (platform:tegra-camrtc-ca):\n\t/dev/media0\n\nUSB 2.0 Camera: USB Camera (usb-3610000.xhci-4.2.1.3):\n\t/dev/video2\n\t/dev/video3\n\t/dev/media2\n\nUSB 2.0 Camera: USB Camera (usb-3610000.xhci-4.2.2):\n\t/dev/video0\n\t/dev/video1\n\t/dev/media1\n\nUSB 2.0 Camera: USB Camera (usb-3610000.xhci-4.2.4):\n\t/dev/video4\n\t/dev/video5\n\t/dev/media3\n\n",
+      "stderr": "",
+      "seconds": 0.173
+    },
+    "listeners": {
+      "argv": [
+        "ss",
+        "-lntp"
+      ],
+      "returncode": 0,
+      "stdout": "State  Recv-Q Send-Q                         Local Address:Port    Peer Address:Port                 Process                                                    \nLISTEN 0      5                                    0.0.0.0:8090         0.0.0.0:*                     users:((\"python3\",pid=1091,fd=3))                         \nLISTEN 0      128                                  0.0.0.0:34331        0.0.0.0:*                     users:((\"roslaunch\",pid=1098,fd=4))                       \nLISTEN 0      5                                    0.0.0.0:34875        0.0.0.0:*                     users:((\"unitree_lidar_r\",pid=2625,fd=9))                 \nLISTEN 0      5                                    0.0.0.0:42431        0.0.0.0:*                     users:((\"python3\",pid=1094,fd=7))                         \nLISTEN 0      128                                  0.0.0.0:33601        0.0.0.0:*                     users:((\"python3\",pid=1099,fd=4))                         \nLISTEN 0      128                                  0.0.0.0:35553        0.0.0.0:*                     users:((\"python3\",pid=1100,fd=4))                         \nLISTEN 0      128                                  0.0.0.0:41441        0.0.0.0:*                     users:((\"python3\",pid=1094,fd=4))                         \nLISTEN 0      5                                    0.0.0.0:37219        0.0.0.0:*                     users:((\"fastlivo_mappin\",pid=3041,fd=9))                 \nLISTEN 0      128                                  0.0.0.0:35587        0.0.0.0:*                     users:((\"python3\",pid=1091,fd=6))                         \nLISTEN 0      4096                100.81.12.112%tailscale0:41893        0.0.0.0:*                                                                               \nLISTEN 0      100                                  0.0.0.0:37221        0.0.0.0:*                     users:((\"rosout\",pid=2607,fd=7))                          \nLISTEN 0      128                                  0.0.0.0:45671        0.0.0.0:*                     users:((\"python3\",pid=1101,fd=4))                         \nLISTEN 0      5                                    0.0.0.0:42119        0.0.0.0:*                     users:((\"python3\",pid=1091,fd=9))                         \nLISTEN 0      5                                    0.0.0.0:46155        0.0.0.0:*                     users:((\"python3\",pid=1101,fd=7))                         \nLISTEN 0      128                                  0.0.0.0:41419        0.0.0.0:*                     users:((\"python3\",pid=1102,fd=4))                         \nLISTEN 0      128                                  0.0.0.0:33867        0.0.0.0:*                     users:((\"python3\",pid=1096,fd=4))                         \nLISTEN 0      128                                  0.0.0.0:11311        0.0.0.0:*                     users:((\"rosmaster\",pid=2514,fd=4))                       \nLISTEN 0      4096                                 0.0.0.0:111          0.0.0.0:*                                                                               \nLISTEN 0      100                                  0.0.0.0:48273        0.0.0.0:*                     users:((\"fastlivo_mappin\",pid=3041,fd=7))                 \nLISTEN 0      5                                    0.0.0.0:43731        0.0.0.0:*                     users:((\"python3\",pid=1102,fd=7))                         \nLISTEN 0      128                                  0.0.0.0:40947        0.0.0.0:*                     users:((\"roslaunch\",pid=1092,fd=4))                       \nLISTEN 0      5                                    0.0.0.0:42485        0.0.0.0:*                     users:((\"python3\",pid=1096,fd=7))                         \nLISTEN 0      4096                           127.0.0.53%lo:53           0.0.0.0:*                                                                               \nLISTEN 0      128                                  0.0.0.0:22           0.0.0.0:*                                                                               \nLISTEN 0      5                                    0.0.0.0:42583        0.0.0.0:*                     users:((\"python3\",pid=1099,fd=8))                         \nLISTEN 0      5                                    0.0.0.0:40919        0.0.0.0:*                     users:((\"python3\",pid=1097,fd=7))                         \nLISTEN 0      5                                    0.0.0.0:45719        0.0.0.0:*                     users:((\"rosout\",pid=2607,fd=9))                          \nLISTEN 0      5                                    0.0.0.0:36441        0.0.0.0:*                     users:((\"python3\",pid=1100,fd=7))                         \nLISTEN 0      128                                  0.0.0.0:45369        0.0.0.0:*                     users:((\"python3\",pid=1097,fd=4))                         \nLISTEN 0      100                                  0.0.0.0:41177        0.0.0.0:*                     users:((\"unitree_lidar_r\",pid=2625,fd=7))                 \nLISTEN 0      4096                                    [::]:111             [::]:*                                                                               \nLISTEN 0      4096   [fd7a:115c:a1e0::ef2b:c71]%tailscale0:65205           [::]:*                                                                               \nLISTEN 0      128                                     [::]:22              [::]:*                                                                               \n",
+      "stderr": "",
+      "seconds": 0.034
+    },
+    "devices": {
+      "argv": [
+        "ip",
+        "-j",
+        "address",
+        "show"
+      ],
+      "returncode": 0,
+      "stdout": "[{\"ifindex\":1,\"ifname\":\"lo\",\"flags\":[\"LOOPBACK\",\"UP\",\"LOWER_UP\"],\"mtu\":65536,\"qdisc\":\"noqueue\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"loopback\",\"address\":\"00:00:00:00:00:00\",\"broadcast\":\"00:00:00:00:00:00\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"127.0.0.1\",\"prefixlen\":8,\"scope\":\"host\",\"label\":\"lo\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"::1\",\"prefixlen\":128,\"scope\":\"host\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":2,\"ifname\":\"dummy0\",\"flags\":[\"BROADCAST\",\"NOARP\"],\"mtu\":1500,\"qdisc\":\"noop\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"76:4e:fe:c2:03:c2\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":3,\"ifname\":\"eth0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"6c:1f:f7:eb:48:3f\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":4,\"ifname\":\"eth1\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"mq\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"3c:6d:66:b1:39:04\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"192.168.1.2\",\"prefixlen\":24,\"broadcast\":\"192.168.1.255\",\"scope\":\"global\",\"noprefixroute\":true,\"label\":\"eth1\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::14f4:6524:5f26:8210\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":5,\"ifname\":\"wlan0\",\"flags\":[\"BROADCAST\",\"MULTICAST\",\"UP\",\"LOWER_UP\"],\"mtu\":1500,\"qdisc\":\"mq\",\"operstate\":\"UP\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"f8:3d:c6:56:c3:6d\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"altnames\":[\"wlP1p1s0\"],\"addr_info\":[{\"family\":\"inet\",\"local\":\"172.20.10.8\",\"prefixlen\":28,\"broadcast\":\"172.20.10.15\",\"scope\":\"global\",\"dynamic\":true,\"noprefixroute\":true,\"label\":\"wlan0\",\"valid_life_time\":2354,\"preferred_life_time\":2354},{\"family\":\"inet\",\"local\":\"172.20.10.14\",\"prefixlen\":28,\"broadcast\":\"172.20.10.15\",\"scope\":\"global\",\"secondary\":true,\"noprefixroute\":true,\"label\":\"wlan0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"2409:8900:21c7:a2ca:48cd:8f90:e7af:adf1\",\"prefixlen\":64,\"scope\":\"global\",\"temporary\":true,\"dynamic\":true,\"valid_life_time\":603557,\"preferred_life_time\":84965},{\"family\":\"inet6\",\"local\":\"2409:8900:21c7:a2ca:21d7:c405:122c:f910\",\"prefixlen\":64,\"scope\":\"global\",\"mngtmpaddr\":true,\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::cf04:1bdc:a1e7:7557\",\"prefixlen\":64,\"scope\":\"link\",\"noprefixroute\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]},{\"ifindex\":6,\"ifname\":\"l4tbr0\",\"flags\":[\"BROADCAST\",\"MULTICAST\"],\"mtu\":1500,\"qdisc\":\"noop\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"ae:08:1c:db:25:e9\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":7,\"ifname\":\"rndis0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"master\":\"l4tbr0\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"ae:08:1c:db:25:e9\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":8,\"ifname\":\"usb0\",\"flags\":[\"NO-CARRIER\",\"BROADCAST\",\"MULTICAST\",\"UP\"],\"mtu\":1500,\"qdisc\":\"pfifo_fast\",\"master\":\"l4tbr0\",\"operstate\":\"DOWN\",\"group\":\"default\",\"txqlen\":1000,\"link_type\":\"ether\",\"address\":\"ae:08:1c:db:25:eb\",\"broadcast\":\"ff:ff:ff:ff:ff:ff\",\"addr_info\":[]},{\"ifindex\":9,\"ifname\":\"tailscale0\",\"flags\":[\"POINTOPOINT\",\"MULTICAST\",\"NOARP\",\"UP\",\"LOWER_UP\"],\"mtu\":1280,\"qdisc\":\"pfifo_fast\",\"operstate\":\"UNKNOWN\",\"group\":\"default\",\"txqlen\":500,\"link_type\":\"none\",\"addr_info\":[{\"family\":\"inet\",\"local\":\"100.81.12.112\",\"prefixlen\":32,\"scope\":\"global\",\"label\":\"tailscale0\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fd7a:115c:a1e0::ef2b:c71\",\"prefixlen\":128,\"scope\":\"global\",\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295},{\"family\":\"inet6\",\"local\":\"fe80::aade:fabd:20d4:e4bf\",\"prefixlen\":64,\"scope\":\"link\",\"stable-privacy\":true,\"valid_life_time\":4294967295,\"preferred_life_time\":4294967295}]}]\n",
+      "stderr": "",
+      "seconds": 0.013
+    },
+    "versions": {
+      "argv": [
+        "dpkg-query",
+        "-W",
+        "-f=${Package}\t${Version}\n",
+        "nvidia-jetpack",
+        "nvidia-l4t-core",
+        "ros-noetic-ros-base",
+        "ros-noetic-desktop-full",
+        "python3-rospy",
+        "python3-serial",
+        "libeigen3-dev",
+        "libpcl-dev",
+        "libopencv-dev",
+        "cmake",
+        "g++"
+      ],
+      "returncode": 1,
+      "stdout": "cmake\t3.16.3-1ubuntu1.20.04.1\ng++\t4:9.3.0-1ubuntu2\nlibeigen3-dev\t3.3.7-2\nlibopencv-dev\t4.2.0+dfsg-5\nlibpcl-dev\t1.10.0+dfsg-5ubuntu1\nnvidia-l4t-core\t35.4.1-20230801124926\npython3-serial\t3.4-5.1\nros-noetic-ros-base\t1.5.0-1focal.20250521.024603\n",
+      "stderr": "dpkg-query: no packages found matching nvidia-jetpack\ndpkg-query: no packages found matching ros-noetic-desktop-full\ndpkg-query: no packages found matching python3-rospy\n",
+      "seconds": 0.039
+    },
+    "processes": {
+      "argv": [
+        "ps",
+        "-eo",
+        "pid,ppid,etimes,args"
+      ],
+      "returncode": 0,
+      "stdout": "   1091       1    1250 python3 -u /home/sjytt/jiaoda/console_backend.py\n   1092       1    1250 /usr/bin/python3 /opt/ros/noetic/bin/roslaunch unitree_lidar_ros run_without_rviz.launch\n   1094       1    1250 python3 -u /home/sjytt/jiaoda/cam_publisher.py\n   1096       1    1250 python3 -u /home/sjytt/jiaoda/chassis_gimbal_bridge.py\n   1097       1    1250 python3 -u /home/sjytt/jiaoda/cloud_restamp.py\n   1098       1    1250 /usr/bin/python3 /opt/ros/noetic/bin/roslaunch fast_livo mapping_unitree_l2.launch rviz:=false\n   1099       1    1250 python3 -u /home/sjytt/jiaoda/grid_bridge.py\n   1100       1    1250 python3 -u /home/sjytt/jiaoda/nav_simple.py\n   1101       1    1250 python3 -u /home/sjytt/jiaoda/nav_mission.py\n   1102       1    1250 python3 -u /home/sjytt/jiaoda/pose_bridge.py\n   2026       1    1249 /bin/bash /home/sjytt/jiaoda/power_log.sh\n   2514    1092    1246 /usr/bin/python3 /opt/ros/noetic/bin/rosmaster --core -p 11311 -w 3 __log:=/home/sjytt/.ros/log/2206fec4-cee3-11f1-89a8-3c6d66b13904/master.log\n   2625    1092    1245 /home/sjytt/unilidar_sdk2/unitree_lidar_ros/devel/lib/unitree_lidar_ros/unitree_lidar_ros_node __name:=unitree_lidar_ros_node __log:=/home/sjytt/.ros/log/2206fec4-cee3-11f1-89a8-3c6d66b13904/unitree_lidar_ros_node-2.log\n   3041    1098    1242 /home/sjytt/livo2_ws/devel/lib/fast_livo/fastlivo_mapping __name:=laserMapping __log:=/home/sjytt/.ros/log/2206fec4-cee3-11f1-89a8-3c6d66b13904/laserMapping-1.log",
+      "stderr": "",
+      "seconds": 0.024
+    },
+    "unit_properties": {
+      "argv": [
+        "systemctl",
+        "show",
+        "--no-pager",
+        "--property=Id,ActiveState,SubState,MainPID,NRestarts,ExecStart,User,WorkingDirectory,FragmentPath,ActiveEnterTimestampMonotonic",
+        "jiaoda-calib.service",
+        "jiaoda-campub.service",
+        "jiaoda-chassis.service",
+        "jiaoda-console.service",
+        "jiaoda-control.service",
+        "jiaoda-fastlivo.service",
+        "jiaoda-grid.service",
+        "jiaoda-lidar.service",
+        "jiaoda-mission.service",
+        "jiaoda-nav.service",
+        "jiaoda-netwatch.service",
+        "jiaoda-posebridge.service",
+        "jiaoda-powerlog.service",
+        "jiaoda-restamp.service",
+        "jiaoda-safe-stop.service"
+      ],
+      "returncode": 0,
+      "stdout": "MainPID=0\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_calib.sh ; argv[]=/home/sjytt/jiaoda/run_calib.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-calib.service\nActiveState=inactive\nSubState=dead\nFragmentPath=/etc/systemd/system/jiaoda-calib.service\nActiveEnterTimestampMonotonic=0\n\nMainPID=1094\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_campub.sh ; argv[]=/home/sjytt/jiaoda/run_campub.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-campub.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-campub.service\nActiveEnterTimestampMonotonic=16487088\n\nMainPID=0\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_chassis.sh ; argv[]=/home/sjytt/jiaoda/run_chassis.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-chassis.service\nActiveState=inactive\nSubState=dead\nFragmentPath=/etc/systemd/system/jiaoda-chassis.service\nActiveEnterTimestampMonotonic=0\n\nMainPID=1091\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run.sh ; argv[]=/home/sjytt/jiaoda/run.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-console.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-console.service\nActiveEnterTimestampMonotonic=16483260\n\nMainPID=1096\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_control.sh ; argv[]=/home/sjytt/jiaoda/run_control.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-control.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-control.service\nActiveEnterTimestampMonotonic=16489007\n\nMainPID=1098\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_fastlivo.sh ; argv[]=/home/sjytt/jiaoda/run_fastlivo.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-fastlivo.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-fastlivo.service\nActiveEnterTimestampMonotonic=16492907\n\nMainPID=1099\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_grid.sh ; argv[]=/home/sjytt/jiaoda/run_grid.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-grid.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-grid.service\nActiveEnterTimestampMonotonic=16494812\n\nMainPID=1092\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_lidar.sh ; argv[]=/home/sjytt/jiaoda/run_lidar.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-lidar.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-lidar.service\nActiveEnterTimestampMonotonic=16485244\n\nMainPID=1101\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_mission.sh ; argv[]=/home/sjytt/jiaoda/run_mission.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-mission.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-mission.service\nActiveEnterTimestampMonotonic=16498563\n\nMainPID=1100\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_nav_simple.sh ; argv[]=/home/sjytt/jiaoda/run_nav_simple.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-nav.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-nav.service\nActiveEnterTimestampMonotonic=16496683\n\nMainPID=0\nNRestarts=0\nWorkingDirectory=\nUser=\nId=jiaoda-netwatch.service\nActiveState=inactive\nSubState=dead\nFragmentPath=/etc/systemd/system/jiaoda-netwatch.service\nActiveEnterTimestampMonotonic=0\n\nMainPID=1102\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_pose_bridge.sh ; argv[]=/home/sjytt/jiaoda/run_pose_bridge.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-posebridge.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-posebridge.service\nActiveEnterTimestampMonotonic=16500410\n\nMainPID=2026\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/power_log.sh ; argv[]=/home/sjytt/jiaoda/power_log.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=\nId=jiaoda-powerlog.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-powerlog.service\nActiveEnterTimestampMonotonic=17894280\n\nMainPID=1097\nNRestarts=0\nExecStart={ path=/home/sjytt/jiaoda/run_restamp.sh ; argv[]=/home/sjytt/jiaoda/run_restamp.sh ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=sjytt\nId=jiaoda-restamp.service\nActiveState=active\nSubState=running\nFragmentPath=/etc/systemd/system/jiaoda-restamp.service\nActiveEnterTimestampMonotonic=16490940\n\nMainPID=0\nNRestarts=0\nExecStart={ path=/usr/bin/python3 ; argv[]=/usr/bin/python3 /home/sjytt/jiaoda/safe_stop.py ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }\nWorkingDirectory=\nUser=\nId=jiaoda-safe-stop.service\nActiveState=inactive\nSubState=dead\nFragmentPath=/etc/systemd/system/jiaoda-safe-stop.service\nActiveEnterTimestampMonotonic=0\n",
+      "stderr": "",
+      "seconds": 0.061
+    }
+  },
+  "device_links": {
+    "/dev/serial/by-id/usb-1a86_USB_Single_Serial_5B14050145-if00": "/dev/ttyACM0",
+    "/dev/serial/by-id/usb-Espressif_USB_JTAG_serial_debug_unit_E8:F6:0A:85:8F:04-if00": "/dev/ttyACM1",
+    "/dev/serial/by-path/platform-3610000.xhci-usb-0:4.3:1.0": "/dev/ttyACM0",
+    "/dev/serial/by-path/platform-3610000.xhci-usb-0:4.4:1.0": "/dev/ttyACM1",
+    "/dev/v4l/by-id/usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index0": "/dev/video4",
+    "/dev/v4l/by-id/usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index1": "/dev/video3",
+    "/dev/v4l/by-path/platform-3610000.xhci-usb-0:4.2.1.3:1.0-video-index0": "/dev/video2",
+    "/dev/v4l/by-path/platform-3610000.xhci-usb-0:4.2.1.3:1.0-video-index1": "/dev/video3",
+    "/dev/v4l/by-path/platform-3610000.xhci-usb-0:4.2.2:1.0-video-index0": "/dev/video0",
+    "/dev/v4l/by-path/platform-3610000.xhci-usb-0:4.2.2:1.0-video-index1": "/dev/video1",
+    "/dev/v4l/by-path/platform-3610000.xhci-usb-0:4.2.4:1.0-video-index0": "/dev/video4",
+    "/dev/v4l/by-path/platform-3610000.xhci-usb-0:4.2.4:1.0-video-index1": "/dev/video5",
+    "/dev/ttyACM0": "/dev/ttyACM0",
+    "/dev/ttyACM1": "/dev/ttyACM1",
+    "/dev/video0": "/dev/video0",
+    "/dev/video1": "/dev/video1",
+    "/dev/video2": "/dev/video2",
+    "/dev/video3": "/dev/video3",
+    "/dev/video4": "/dev/video4",
+    "/dev/video5": "/dev/video5"
+  },
+  "home_directories": [
+    "Desktop",
+    "Documents",
+    "Downloads",
+    "Music",
+    "Pictures",
+    "Public",
+    "Sophus_src",
+    "Templates",
+    "Videos",
+    "backup",
+    "ch343ser_linux",
+    "dog_backup",
+    "jiaoda",
+    "livo2_ws",
+    "rslidar_ws",
+    "unilidar_sdk",
+    "unilidar_sdk2"
+  ]
+}

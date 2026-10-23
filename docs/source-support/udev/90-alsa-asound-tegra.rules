@@ -1,0 +1,6 @@
+SUBSYSTEM!="sound", GOTO="sound_end"
+KERNEL!="card*", GOTO="sound_end"
+
+ATTRS{id}=="APE", RUN+="/bin/ln -sf /etc/asound.conf.tegra-ape /etc/asound.conf"
+
+LABEL="sound_end"

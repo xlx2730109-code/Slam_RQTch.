@@ -1,0 +1,788 @@
+{
+  "utc": "2026-10-23T13:47:12.969293Z",
+  "method": "direct TCPROS subscriptions using ROS-generated message deserializers; no node registration, ROS publication or remote file writes",
+  "streams": [
+    {
+      "topic": "/unilidar/cloud",
+      "publishers": [
+        "/unitree_lidar_ros_node"
+      ],
+      "requested_seconds": 3,
+      "count": 37,
+      "received_hz": 11.955562080384526,
+      "stamp_hz": 11.956594682653037,
+      "samples": [
+        {
+          "type": "sensor_msgs/PointCloud2",
+          "frame_id": "unilidar_lidar",
+          "stamp": 1792763223.789485,
+          "wall_age_seconds": 0.08514165878295898,
+          "width": 5237,
+          "height": 1,
+          "point_step": 32,
+          "fields": [
+            {
+              "name": "x",
+              "offset": 0,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "y",
+              "offset": 4,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "z",
+              "offset": 8,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "intensity",
+              "offset": 16,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "ring",
+              "offset": 20,
+              "datatype": 4,
+              "count": 1
+            },
+            {
+              "name": "time",
+              "offset": 24,
+              "datatype": 7,
+              "count": 1
+            }
+          ],
+          "sampled_points": 5237,
+          "ranges": {
+            "x": {
+              "finite": 5237,
+              "min": -0.917183518409729,
+              "max": 3.157759428024292
+            },
+            "y": {
+              "finite": 5237,
+              "min": -1.7113220691680908,
+              "max": 3.080540180206299
+            },
+            "z": {
+              "finite": 5237,
+              "min": -0.047603633254766464,
+              "max": 23.851722717285156
+            },
+            "time": {
+              "finite": 5237,
+              "min": 7.72333351051202e-06,
+              "max": 0.0811840295791626
+            }
+          }
+        },
+        {
+          "type": "sensor_msgs/PointCloud2",
+          "frame_id": "unilidar_lidar",
+          "stamp": 1792763223.8730013,
+          "wall_age_seconds": 0.08485817909240723,
+          "width": 5211,
+          "height": 1,
+          "point_step": 32,
+          "fields": [
+            {
+              "name": "x",
+              "offset": 0,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "y",
+              "offset": 4,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "z",
+              "offset": 8,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "intensity",
+              "offset": 16,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "ring",
+              "offset": 20,
+              "datatype": 4,
+              "count": 1
+            },
+            {
+              "name": "time",
+              "offset": 24,
+              "datatype": 7,
+              "count": 1
+            }
+          ],
+          "sampled_points": 5211,
+          "ranges": {
+            "x": {
+              "finite": 5211,
+              "min": -0.8259586095809937,
+              "max": 3.398691177368164
+            },
+            "y": {
+              "finite": 5211,
+              "min": -1.6693679094314575,
+              "max": 3.1254959106445312
+            },
+            "z": {
+              "finite": 5211,
+              "min": 0.005934702232480049,
+              "max": 23.953758239746094
+            },
+            "time": {
+              "finite": 5211,
+              "min": 0.0,
+              "max": 0.0811692327260971
+            }
+          }
+        }
+      ]
+    },
+    {
+      "topic": "/unilidar/imu",
+      "publishers": [
+        "/unitree_lidar_ros_node"
+      ],
+      "requested_seconds": 3,
+      "count": 755,
+      "received_hz": 251.48225701838945,
+      "stamp_hz": 251.48740867244848,
+      "samples": [
+        {
+          "type": "sensor_msgs/Imu",
+          "frame_id": "unilidar_imu",
+          "stamp": 1792763223.8190405,
+          "wall_age_seconds": 0.0003559589385986328,
+          "acceleration": [
+            9.886856079101562,
+            0.19273324310779572,
+            0.23822307586669922
+          ],
+          "angular_velocity": [
+            4.610194082488306e-05,
+            0.0009379606926813722,
+            -0.002672199159860611
+          ]
+        },
+        {
+          "type": "sensor_msgs/Imu",
+          "frame_id": "unilidar_imu",
+          "stamp": 1792763223.8230095,
+          "wall_age_seconds": 0.0003418922424316406,
+          "acceleration": [
+            9.882067680358887,
+            0.19393034279346466,
+            0.17238251864910126
+          ],
+          "angular_velocity": [
+            0.00010723682498792186,
+            -0.0030286209657788277,
+            -0.002740301424637437
+          ]
+        }
+      ]
+    },
+    {
+      "topic": "/synced/cloud",
+      "publishers": [
+        "/cloud_restamp"
+      ],
+      "requested_seconds": 3,
+      "count": 37,
+      "received_hz": 12.002510545126585,
+      "stamp_hz": 11.955343160321057,
+      "samples": [
+        {
+          "type": "sensor_msgs/PointCloud2",
+          "frame_id": "unilidar_lidar",
+          "stamp": 1792763223.8744056,
+          "wall_age_seconds": 0.013293981552124023,
+          "width": 5237,
+          "height": 1,
+          "point_step": 32,
+          "fields": [
+            {
+              "name": "x",
+              "offset": 0,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "y",
+              "offset": 4,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "z",
+              "offset": 8,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "intensity",
+              "offset": 16,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "ring",
+              "offset": 20,
+              "datatype": 4,
+              "count": 1
+            },
+            {
+              "name": "time",
+              "offset": 24,
+              "datatype": 7,
+              "count": 1
+            }
+          ],
+          "sampled_points": 5237,
+          "ranges": {
+            "x": {
+              "finite": 5237,
+              "min": -0.917183518409729,
+              "max": 3.157759428024292
+            },
+            "y": {
+              "finite": 5237,
+              "min": -1.7113220691680908,
+              "max": 3.080540180206299
+            },
+            "z": {
+              "finite": 5237,
+              "min": -0.047603633254766464,
+              "max": 23.851722717285156
+            },
+            "time": {
+              "finite": 5237,
+              "min": 7.72333351051202e-06,
+              "max": 0.0811840295791626
+            }
+          }
+        },
+        {
+          "type": "sensor_msgs/PointCloud2",
+          "frame_id": "unilidar_lidar",
+          "stamp": 1792763223.9577463,
+          "wall_age_seconds": 0.01156163215637207,
+          "width": 5211,
+          "height": 1,
+          "point_step": 32,
+          "fields": [
+            {
+              "name": "x",
+              "offset": 0,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "y",
+              "offset": 4,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "z",
+              "offset": 8,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "intensity",
+              "offset": 16,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "ring",
+              "offset": 20,
+              "datatype": 4,
+              "count": 1
+            },
+            {
+              "name": "time",
+              "offset": 24,
+              "datatype": 7,
+              "count": 1
+            }
+          ],
+          "sampled_points": 5211,
+          "ranges": {
+            "x": {
+              "finite": 5211,
+              "min": -0.8259586095809937,
+              "max": 3.398691177368164
+            },
+            "y": {
+              "finite": 5211,
+              "min": -1.6693679094314575,
+              "max": 3.1254959106445312
+            },
+            "z": {
+              "finite": 5211,
+              "min": 0.005934702232480049,
+              "max": 23.953758239746094
+            },
+            "time": {
+              "finite": 5211,
+              "min": 0.0,
+              "max": 0.0811692327260971
+            }
+          }
+        }
+      ]
+    },
+    {
+      "topic": "/left_camera/image",
+      "publishers": [
+        "/cam_publisher"
+      ],
+      "requested_seconds": 3,
+      "count": 46,
+      "received_hz": 14.98830640811848,
+      "stamp_hz": 14.977706474894818,
+      "samples": [
+        {
+          "type": "sensor_msgs/Image",
+          "frame_id": "camera",
+          "stamp": 1792763223.8422647,
+          "wall_age_seconds": 0.013689517974853516,
+          "width": 1280,
+          "height": 720,
+          "encoding": "bgr8"
+        },
+        {
+          "type": "sensor_msgs/Image",
+          "frame_id": "camera",
+          "stamp": 1792763223.9090343,
+          "wall_age_seconds": 0.010397672653198242,
+          "width": 1280,
+          "height": 720,
+          "encoding": "bgr8"
+        }
+      ]
+    },
+    {
+      "topic": "/aft_mapped_to_init",
+      "publishers": [
+        "/laserMapping"
+      ],
+      "requested_seconds": 3,
+      "count": 37,
+      "received_hz": 11.970842093196936,
+      "stamp_hz": 11.96791192336412,
+      "samples": [
+        {
+          "type": "nav_msgs/Odometry",
+          "frame_id": "camera_init",
+          "stamp": 1792763226.8891194,
+          "wall_age_seconds": 0.001483917236328125,
+          "position": [
+            17240255.941711206,
+            3555533.5325613045,
+            -8148234.628321767
+          ],
+          "quaternion": [
+            -0.0781807551735965,
+            -0.2548283381558764,
+            0.016548801294463285,
+            0.9636785899712191
+          ]
+        },
+        {
+          "type": "nav_msgs/Odometry",
+          "frame_id": "camera_init",
+          "stamp": 1792763226.9733303,
+          "wall_age_seconds": 0.000667572021484375,
+          "position": [
+            17241630.866724405,
+            3555782.389144079,
+            -8148918.193156894
+          ],
+          "quaternion": [
+            -0.07819600717696605,
+            -0.25485277887745544,
+            0.01660447328197993,
+            0.9636699315777404
+          ]
+        }
+      ]
+    },
+    {
+      "topic": "/cloud_registered",
+      "publishers": [
+        "/laserMapping"
+      ],
+      "requested_seconds": 3,
+      "count": 37,
+      "received_hz": 11.966392144346095,
+      "stamp_hz": 11.965182530216861,
+      "samples": [
+        {
+          "type": "sensor_msgs/PointCloud2",
+          "frame_id": "camera_init",
+          "stamp": 1792763226.8920126,
+          "wall_age_seconds": 0.0010671615600585938,
+          "width": 1776,
+          "height": 1,
+          "point_step": 48,
+          "fields": [
+            {
+              "name": "x",
+              "offset": 0,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "y",
+              "offset": 4,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "z",
+              "offset": 8,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "intensity",
+              "offset": 32,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "normal_x",
+              "offset": 16,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "normal_y",
+              "offset": 20,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "normal_z",
+              "offset": 24,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "curvature",
+              "offset": 36,
+              "datatype": 7,
+              "count": 1
+            }
+          ],
+          "sampled_points": 1776,
+          "ranges": {
+            "x": {
+              "finite": 1776,
+              "min": 17238866.0,
+              "max": 17240256.0
+            },
+            "y": {
+              "finite": 1776,
+              "min": 3555282.5,
+              "max": 3555533.0
+            },
+            "z": {
+              "finite": 1776,
+              "min": -8148235.0,
+              "max": -8147528.0
+            }
+          }
+        },
+        {
+          "type": "sensor_msgs/PointCloud2",
+          "frame_id": "camera_init",
+          "stamp": 1792763226.9756424,
+          "wall_age_seconds": 0.0018422603607177734,
+          "width": 1745,
+          "height": 1,
+          "point_step": 48,
+          "fields": [
+            {
+              "name": "x",
+              "offset": 0,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "y",
+              "offset": 4,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "z",
+              "offset": 8,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "intensity",
+              "offset": 32,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "normal_x",
+              "offset": 16,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "normal_y",
+              "offset": 20,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "normal_z",
+              "offset": 24,
+              "datatype": 7,
+              "count": 1
+            },
+            {
+              "name": "curvature",
+              "offset": 36,
+              "datatype": 7,
+              "count": 1
+            }
+          ],
+          "sampled_points": 1745,
+          "ranges": {
+            "x": {
+              "finite": 1745,
+              "min": 17240244.0,
+              "max": 17241634.0
+            },
+            "y": {
+              "finite": 1745,
+              "min": 3555531.75,
+              "max": 3555782.25
+            },
+            "z": {
+              "finite": 1745,
+              "min": -8148916.5,
+              "max": -8148213.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "topic": "/slam_pose",
+      "publishers": [
+        "/pose_bridge"
+      ],
+      "requested_seconds": 3,
+      "count": 36,
+      "received_hz": 11.972174912776573,
+      "stamp_hz": 11.970589336126894,
+      "samples": [
+        {
+          "type": "geometry_msgs/PoseStamped",
+          "frame_id": "map",
+          "stamp": 1792763226.9733303,
+          "wall_age_seconds": 0.002195596694946289,
+          "position": [
+            17241630.866724405,
+            3555782.389144079,
+            -8148918.193156894
+          ],
+          "quaternion": [
+            -0.07819600717696605,
+            -0.25485277887745544,
+            0.01660447328197993,
+            0.9636699315777404
+          ]
+        },
+        {
+          "type": "geometry_msgs/PoseStamped",
+          "frame_id": "map",
+          "stamp": 1792763227.0574815,
+          "wall_age_seconds": 0.03633427619934082,
+          "position": [
+            17243009.724134617,
+            3556031.952952267,
+            -8149603.717800208
+          ],
+          "quaternion": [
+            -0.07818614155350706,
+            -0.25482733787816647,
+            0.016560085145699795,
+            0.9636782236404791
+          ]
+        }
+      ]
+    },
+    {
+      "topic": "/map",
+      "publishers": [
+        "/grid_bridge"
+      ],
+      "requested_seconds": 3,
+      "count": 5,
+      "received_hz": 1.223127047171444,
+      "stamp_hz": 0.9998968350040083,
+      "samples": [
+        {
+          "type": "nav_msgs/OccupancyGrid",
+          "frame_id": "map",
+          "stamp": 1792763226.1065435,
+          "wall_age_seconds": 0.900402307510376,
+          "width": 2000,
+          "height": 2000,
+          "resolution": 0.05000000074505806,
+          "origin": [
+            -50.0,
+            -50.0
+          ],
+          "known_cells": 12172,
+          "occupied_cells": 858
+        },
+        {
+          "type": "nav_msgs/OccupancyGrid",
+          "frame_id": "map",
+          "stamp": 1792763227.1066353,
+          "wall_age_seconds": 0.6094417572021484,
+          "width": 2000,
+          "height": 2000,
+          "resolution": 0.05000000074505806,
+          "origin": [
+            -50.0,
+            -50.0
+          ],
+          "known_cells": 12172,
+          "occupied_cells": 858
+        }
+      ]
+    },
+    {
+      "topic": "/tf",
+      "publishers": [
+        "/unitree_lidar_ros_node",
+        "/laserMapping"
+      ],
+      "requested_seconds": 3,
+      "count": 1503,
+      "received_hz": 500.8618947864219,
+      "stamp_hz": null,
+      "samples": [
+        {
+          "type": "tf2_msgs/TFMessage",
+          "edges": [
+            {
+              "parent": "unilidar_imu_initial",
+              "child": "unilidar_imu"
+            }
+          ]
+        },
+        {
+          "type": "tf2_msgs/TFMessage",
+          "edges": [
+            {
+              "parent": "unilidar_imu",
+              "child": "unilidar_lidar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "topic": "/cmd_vel",
+      "publishers": [
+        "/console_backend_1091_1792761038143",
+        "/nav_simple"
+      ],
+      "requested_seconds": 3,
+      "count": 0,
+      "received_hz": null,
+      "stamp_hz": null,
+      "samples": []
+    },
+    {
+      "topic": "/jiaoda/esp_tel",
+      "publishers": [
+        "/chassis_gimbal_bridge"
+      ],
+      "requested_seconds": 3,
+      "count": 89,
+      "received_hz": 29.832301648722513,
+      "stamp_hz": null,
+      "samples": [
+        {
+          "type": "std_msgs/String",
+          "text": "Serial T:0 S:0 P:0 Y:0"
+        },
+        {
+          "type": "std_msgs/String",
+          "text": "Serial T:0 S:0 P:0 Y:0"
+        }
+      ]
+    }
+  ],
+  "http_get": {
+    "/api/pose": {
+      "status": 200,
+      "data": {
+        "x": 17339470.147,
+        "y": 3573479.24,
+        "th": 0.0833
+      }
+    },
+    "/api/ctl/status": {
+      "status": 200,
+      "data": {
+        "bat": null,
+        "temp": 41.1,
+        "hz": 12.0,
+        "nav": "待命",
+        "ros": true,
+        "sensors": null
+      }
+    },
+    "/api/mapinfo": {
+      "status": 200,
+      "data": {
+        "x0": -15.4,
+        "y0top": 50.0,
+        "mpp": 0.05,
+        "w": 1308,
+        "h": 1054
+      }
+    },
+    "/api/nav/status": {
+      "status": 200,
+      "data": {
+        "state": "idle",
+        "cur": 0,
+        "total": 0,
+        "msg": "",
+        "t": 1792761038.783601
+      }
+    }
+  }
+}

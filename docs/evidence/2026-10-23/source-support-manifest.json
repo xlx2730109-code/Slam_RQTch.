@@ -1,0 +1,386 @@
+[
+  {
+    "name": "udev/91-xorg-conf-tegra.rules",
+    "source": "/etc/udev/rules.d/91-xorg-conf-tegra.rules",
+    "bytes": 175,
+    "sha256": "f280b90a16fa19a76f95c129829ee482a3ff746b6acd1925249023c5f708cf70"
+  },
+  {
+    "name": "udev/99-nv-wifibt.rules",
+    "source": "/etc/udev/rules.d/99-nv-wifibt.rules",
+    "bytes": 634,
+    "sha256": "83416fe11b96ff152afd09b0b82653c217afede683171af72d322d6568db7315"
+  },
+  {
+    "name": "udev/99-tegra-mmc-ra.rules",
+    "source": "/etc/udev/rules.d/99-tegra-mmc-ra.rules",
+    "bytes": 130,
+    "sha256": "57df5fa2490369901983680d89e8638f398e040f6c90a0e0911b1ee6f9168ee7"
+  },
+  {
+    "name": "udev/90-alsa-asound-tegra.rules",
+    "source": "/etc/udev/rules.d/90-alsa-asound-tegra.rules",
+    "bytes": 172,
+    "sha256": "e9b22f7b149a9abe3c7d47fa64b4afcb3ea974c8cd30d301b8b352e28b0c2faa"
+  },
+  {
+    "name": "udev/99-nv-l4t-usb-device-mode.rules",
+    "source": "/etc/udev/rules.d/99-nv-l4t-usb-device-mode.rules",
+    "bytes": 297,
+    "sha256": "e4f4f7f13ffaf8dac0346298d54afda7e748646f24c0cf8c6e3a0cb48de5045a"
+  },
+  {
+    "name": "udev/10-nv-jetson-dm.rules",
+    "source": "/etc/udev/rules.d/10-nv-jetson-dm.rules",
+    "bytes": 204,
+    "sha256": "3de7b2a3489becb424f4132e4ea52c5a9026346c30b898c21ef3a9ce1d8bf7c3"
+  },
+  {
+    "name": "udev/99-nv-ufs-mount.rules",
+    "source": "/etc/udev/rules.d/99-nv-ufs-mount.rules",
+    "bytes": 427,
+    "sha256": "5bd12355f36aa9fc9c94b80e9764503438547992302313026c10565e877941a6"
+  },
+  {
+    "name": "udev/99-tegra-devices.rules",
+    "source": "/etc/udev/rules.d/99-tegra-devices.rules",
+    "bytes": 4005,
+    "sha256": "046632a1f3091cffcd669cb6e3a878a89f0d48eae69ec9a82b7027a87ac7698d"
+  },
+  {
+    "name": "udev/99-nv-l4t-usb-host-config.rules",
+    "source": "/etc/udev/rules.d/99-nv-l4t-usb-host-config.rules",
+    "bytes": 1326,
+    "sha256": "7826ee4b3bbd3eac6c797f8fd9e762c8a8fd27fa649bb1f4493b1df5b64b51c4"
+  },
+  {
+    "name": "reference/dog_backup/start_all.sh",
+    "source": "/home/sjytt/dog_backup/start_all.sh",
+    "bytes": 2924,
+    "sha256": "1e531d961c825dd176f89ba251e4f2ba0721f32d4f0b97a91521c169576fa700"
+  },
+  {
+    "name": "reference/dog_backup/start_nav.sh",
+    "source": "/home/sjytt/dog_backup/start_nav.sh",
+    "bytes": 3929,
+    "sha256": "744ef43bb442a14cbebaaa7e229dd17032c6f765290fac9ed3c1824f3b5f220b"
+  },
+  {
+    "name": "reference/ch343ser_linux/README.md",
+    "source": "/home/sjytt/ch343ser_linux/README.md",
+    "bytes": 2579,
+    "sha256": "b09235a4318ec47fcfe4adac15fd132938d675677332e1b1b1f141181337974a"
+  },
+  {
+    "name": "reference/ch343ser_linux/udev/README.md",
+    "source": "/home/sjytt/ch343ser_linux/udev/README.md",
+    "bytes": 262,
+    "sha256": "794a8868c23bb6ee329f9b0e91986fbb1d7a44d6d95f071239b1d29dab7b7ee2"
+  },
+  {
+    "name": "reference/ch343ser_linux/udev/99-ch34x.rules",
+    "source": "/home/sjytt/ch343ser_linux/udev/99-ch34x.rules",
+    "bytes": 6896,
+    "sha256": "e9c70c67fc2e7842601034a2ab8e1d9110da29d2443d6ba9aa79056df088605c"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabi/static/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabi/static/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabi/static/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabi/static/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabi/static/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabi/static/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabi/dynamic/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabi/dynamic/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabi/dynamic/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabi/dynamic/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabi/dynamic/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabi/dynamic/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips64/static/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips64/static/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips64/static/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips64/static/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips64/static/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips64/static/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips64/dynamic/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips64/dynamic/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips64/dynamic/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips64/dynamic/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips64/dynamic/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips64/dynamic/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/x64/static/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/x64/static/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/x64/static/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/x64/static/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/x64/static/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/x64/static/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/x64/dynamic/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/x64/dynamic/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/x64/dynamic/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/x64/dynamic/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/x64/dynamic/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/x64/dynamic/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabihf/static/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabihf/static/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabihf/static/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabihf/static/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabihf/static/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabihf/static/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabihf/dynamic/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabihf/dynamic/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabihf/dynamic/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabihf/dynamic/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/arm-gnueabihf/dynamic/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/arm-gnueabihf/dynamic/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips32/static/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips32/static/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips32/static/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips32/static/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips32/static/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips32/static/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips32/dynamic/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips32/dynamic/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips32/dynamic/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips32/dynamic/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/mips32/dynamic/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/mips32/dynamic/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/aarch64/static/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/aarch64/static/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/aarch64/static/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/aarch64/static/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/aarch64/static/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/aarch64/static/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/aarch64/dynamic/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/aarch64/dynamic/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/aarch64/dynamic/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/aarch64/dynamic/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/lib/aarch64/dynamic/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/lib/aarch64/dynamic/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/driver/Makefile",
+    "source": "/home/sjytt/ch343ser_linux/driver/Makefile",
+    "bytes": 2467,
+    "sha256": "46fafb708b0282439d859f11511abb8d9032e20cfc394d038bd92eeba2c1fbc6"
+  },
+  {
+    "name": "reference/ch343ser_linux/driver/ch343.h",
+    "source": "/home/sjytt/ch343ser_linux/driver/ch343.h",
+    "bytes": 4907,
+    "sha256": "fc17bc4b1bcf71e1e4d7779a6a61f944d481087435860fe9fca5fb5ddce4d58c"
+  },
+  {
+    "name": "reference/ch343ser_linux/driver/ch343.mod.c",
+    "source": "/home/sjytt/ch343ser_linux/driver/ch343.mod.c",
+    "bytes": 5441,
+    "sha256": "9d3b54655912d3f57d400bf4145dd4145a10602f62e986003acb0dd9dbb159e3"
+  },
+  {
+    "name": "reference/ch343ser_linux/demo/param_config/ch34x_cfg_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/demo/param_config/ch34x_cfg_lib.h",
+    "bytes": 5594,
+    "sha256": "c6bfaa2377575c672a75c68054d669fad3884d1c22a29185965b9532efcd6370"
+  },
+  {
+    "name": "reference/ch343ser_linux/demo/param_config/ch34x_demo_param_config.c",
+    "source": "/home/sjytt/ch343ser_linux/demo/param_config/ch34x_demo_param_config.c",
+    "bytes": 4700,
+    "sha256": "1cc2847a81bc8780f5be90d13e261622da6fc881fd70e3a92c7eecf8db31dcb2"
+  },
+  {
+    "name": "reference/ch343ser_linux/demo/param_config/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/demo/param_config/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/demo/param_config/README.md",
+    "source": "/home/sjytt/ch343ser_linux/demo/param_config/README.md",
+    "bytes": 13943,
+    "sha256": "b92290290b508866992fa056e6881ed13a92c3e1321ddbea84566aa5a6391261"
+  },
+  {
+    "name": "reference/ch343ser_linux/demo/param_config/ch9344_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/demo/param_config/ch9344_lib.h",
+    "bytes": 7479,
+    "sha256": "063b66b3342987e3a8a8f163555169fd9369b2b999421a6b9d735532da4837ed"
+  },
+  {
+    "name": "reference/ch343ser_linux/demo/gpio/ch343_lib.h",
+    "source": "/home/sjytt/ch343ser_linux/demo/gpio/ch343_lib.h",
+    "bytes": 6098,
+    "sha256": "18183634e4afa110090e14a838d7a87d05a15ff8714e068fd3f399fb673cef06"
+  },
+  {
+    "name": "reference/ch343ser_linux/demo/gpio/ch343_demo_gpio.c",
+    "source": "/home/sjytt/ch343ser_linux/demo/gpio/ch343_demo_gpio.c",
+    "bytes": 7748,
+    "sha256": "42165424789920007e5be760551bdf6032c2cc25dc434f72b1eed18fc85d5f69"
+  },
+  {
+    "name": "reference/unilidar_sdk2/LICENSE",
+    "source": "/home/sjytt/unilidar_sdk2/LICENSE",
+    "bytes": 1503,
+    "sha256": "2b22fbf7fd2d6905791f56ff431bd58c5a95b0472f3e6895334acbffd9830ae4"
+  },
+  {
+    "name": "reference/unilidar_sdk2/README.md",
+    "source": "/home/sjytt/unilidar_sdk2/README.md",
+    "bytes": 12265,
+    "sha256": "fa05a0ffbcfd7370714a2f15e9501f49de9748e05f4af419990b0b6e1ffe15aa"
+  },
+  {
+    "name": "reference/unilidar_sdk2/README_CN.md",
+    "source": "/home/sjytt/unilidar_sdk2/README_CN.md",
+    "bytes": 10895,
+    "sha256": "3feb074bfd41e552fcfc873bd1e625494d0d65f15488b0f3d199eb6df7ecb145"
+  },
+  {
+    "name": "reference/unilidar_sdk2/VERSION.md",
+    "source": "/home/sjytt/unilidar_sdk2/VERSION.md",
+    "bytes": 1272,
+    "sha256": "b618fdb69ae24f2daf51925e3459e94fa6719d54ca1e6cbf73b7d658c2778559"
+  }
+]

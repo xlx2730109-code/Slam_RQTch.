@@ -1,0 +1,74 @@
+#
+# Copyright (c) 2020-2023, NVIDIA CORPORATION.  All rights reserved.
+#
+
+ACTION=="remove" GOTO="nvidia_end"
+KERNEL=="camera.pcl", RUN+="/usr/sbin/camera_device_detect"
+
+# root only devices
+KERNEL=="knvrm" OWNER="root" GROUP="root" MODE="0660"
+KERNEL=="knvmap" OWNER="root" GROUP="root" MODE="0660"
+
+# display devices
+DEVPATH=="/module/nvidia", ACTION=="add", RUN+="/bin/mknod -m 666 /dev/nvidiactl c 195 255"
+DEVPATH=="/module/nvidia", ACTION=="add", RUN+="/bin/mknod -m 666 /dev/nvidia0 c 195 0"
+DEVPATH=="/module/nvidia_modeset", ACTION=="add", RUN+="/bin/mknod -m 666 /dev/nvidia-modeset c 195 254"
+
+# Populate v4l2 encoder device node for upstream linux on Tegra194 platforms
+KERNEL=="154c0000.nvenc", DRIVER=="tegra-nvenc", ACTION=="bind", RUN+="/bin/mknod -m 666 /dev/v4l2-nvenc c 1 3"
+
+# graphics devices
+KERNEL=="l3cache" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="nvmap" OWNER="root" GROUP="video" MODE="0660"
+SUBSYSTEM=="dma_heap" KERNEL=="system_heap" OWNER="root" GROUP="video" MODE="0660"
+SUBSYSTEM=="dma_heap" KERNEL=="system" OWNER="root" GROUP="video" MODE="0660"
+SUBSYSTEM=="host1x" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="nvram" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="nvhdcp*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="nvhost*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="nvhost-ctxsw-gpu" OWNER="root" GROUP="debug" MODE="0660"
+KERNEL=="nvhost-dbg-gpu" OWNER="root" GROUP="debug" MODE="0660"
+KERNEL=="nvhost-prof-ctx-gpu" OWNER="root" GROUP="debug" MODE="0660"
+KERNEL=="nvhost-prof-dev-gpu" OWNER="root" GROUP="debug" MODE="0660"
+KERNEL=="nvhost-prof-gpu" OWNER="root" GROUP="debug" MODE="0660"
+KERNEL=="nvhost-sched-gpu" OWNER="root" GROUP="root" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2-power" KERNEL=="power" OWNER="root" GROUP="video" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="as" OWNER="root" GROUP="video" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="channel" OWNER="root" GROUP="video" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="ctrl" OWNER="root" GROUP="video" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="ctxsw" OWNER="root" GROUP="debug" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="dbg" OWNER="root" GROUP="debug" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="prof" OWNER="root" GROUP="debug" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="prof-ctx" OWNER="root" GROUP="debug" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="prof-dev" OWNER="root" GROUP="debug" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="sched" OWNER="root" GROUP="root" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="tsg" OWNER="root" GROUP="video" MODE="0660"
+SUBSYSTEM=="nvidia-gpu-v2" KERNEL=="nvsched" OWNER="root" GROUP="video" MODE="0640"
+KERNEL=="tegra_camera_ctrl" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="tegra_cec" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="tegra_dc*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="tegra_mipi_cal" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="tegra-vi*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="ion" OWNER="root" GROUP="video" MODE="0660"
+
+KERNEL=="tegra-soc-hwpm" OWNER="root" GROUP="debug" MODE="0660"
+
+# camera and related devices
+KERNEL=="torch" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="ov*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="focuser*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="camera*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="imx*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="sh5*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="tps*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="mipi-cal" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="ar*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="camchar*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="capture-*" OWNER="root" GROUP="video" MODE="0660"
+KERNEL=="cdi_tsc" OWNER="root" GROUP="video" MODE="0660"
+
+# security related devices
+KERNEL=="tegra-crypto" OWNER="root" GROUP="crypto" MODE="0660"
+KERNEL=="trusty-ipc-dev*" OWNER="root" GROUP="trusty" MODE="0660"
+
+LABEL="nvidia_end"
