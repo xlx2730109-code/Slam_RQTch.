@@ -369,7 +369,7 @@ function joystick(el,cb){let drag=false;const k=el.querySelector('.knob');const 
   const rel=()=>{drag=false;k.style.left='50%';k.style.top='50%';cb(0,0);};el.addEventListener('pointerup',rel);el.addEventListener('pointerleave',rel);}
 let drv={v:0,w:0};
 joystick($('#joyL'),(x,y)=>{drv.v=y;sendDrive();});
-joystick($('#joyR'),(x,y)=>{drv.w=x;sendDrive();});
+joystick($('#joyR'),(x,y)=>{drv.w=-x;sendDrive();});
 let driveT=0;function sendDrive(){const now=Date.now();if(now-driveT<80)return;driveT=now;call(EP.ctl+'/drive',{method:'POST',body:JSON.stringify(drv)});if(DEMO&&app.mode==='map'){app.pose.x+=drv.v*.05*Math.cos(app.pose.th);app.pose.y+=drv.v*.05*Math.sin(app.pose.th);app.pose.th+=drv.w*.04;draw();}}
 
 // ===== gear + sliders =====
